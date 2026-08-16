@@ -23,10 +23,44 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "aspirant"],
       required: true,
     },
+
+    age: {
+      type: Number,
+    },
+
+    college: {
+      type: String,
+    },
+
+    course: {
+      type: String,
+    },
+
+    studyGoal: {
+      type: String,
+    },
+
+    targetExam: {
+      type: String,
+    },
+
+    dailyStudyHours: {
+      type: Number,
+    },
+
+    subjects: {
+      type: [String],
+      default: [],
+    },
+
+    bio: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports =
+  mongoose.models.User || mongoose.model("User", userSchema);

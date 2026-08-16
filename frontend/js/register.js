@@ -1,6 +1,4 @@
-const registerForm = document.getElementById("registerForm");
-
-registerForm.addEventListener("submit", async (e) => {
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const name = document.getElementById("name").value;
@@ -9,7 +7,7 @@ registerForm.addEventListener("submit", async (e) => {
     const role = document.getElementById("role").value;
 
     try {
-        const response = await fetch("http://localhost:5000/api/auth/register", {
+        const response = await fetch("http://localhost:5000/api/users/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -26,13 +24,15 @@ registerForm.addEventListener("submit", async (e) => {
 
         if (response.ok) {
             alert("Registration Successful!");
+            console.log(data);
 
             window.location.href = "login.html";
         } else {
-            alert(data.message);
+            alert(data.message || "Registration failed");
         }
 
     } catch (error) {
-        alert("Server Error");
+        console.error("Error:", error);
+        alert("Server connection failed");
     }
 });

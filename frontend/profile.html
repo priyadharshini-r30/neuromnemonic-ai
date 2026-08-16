@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | NeuroMnemonic AI</title>
+
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+
+<body>
+
+    <div class="profile-container">
+
+        <div class="profile-header">
+            <div class="avatar">👤</div>
+            <div>
+                <h1>My Profile</h1>
+                <p>Manage your learning goals and personal details</p>
+            </div>
+        </div>
+
+        <form id="profileForm">
+
+            <div class="form-section">
+                <h2>👤 Personal Information</h2>
+
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" id="name" placeholder="Enter your name">
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="email" disabled>
+                </div>
+
+                <div class="input-group">
+                    <label>Role</label>
+                    <input type="text" id="role" disabled>
+                </div>
+
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" id="age" placeholder="Enter your age">
+                </div>
+            </div>
+
+
+            <div class="form-section">
+                <h2>🎓 Education</h2>
+
+                <div class="input-group">
+                    <label>College</label>
+                    <input type="text" id="college" placeholder="Enter your college">
+                </div>
+
+                <div class="input-group">
+                    <label>Course</label>
+                    <input type="text" id="course" placeholder="Enter your course">
+                </div>
+            </div>
+
+
+            <div class="form-section">
+                <h2>🎯 Learning Goals</h2>
+
+                <div class="input-group">
+                    <label>Study Goal</label>
+                    <input type="text" id="studyGoal"
+                           placeholder="What is your study goal?">
+                </div>
+
+                <div class="input-group">
+                    <label>Target Exam</label>
+                    <input type="text" id="targetExam"
+                           placeholder="Example: TNPSC">
+                </div>
+
+                <div class="input-group">
+                    <label>Daily Study Hours</label>
+                    <input type="number" id="dailyStudyHours"
+                           placeholder="Example: 4">
+                </div>
+
+                <div class="input-group">
+                    <label>Subjects</label>
+                    <input type="text" id="subjects"
+                           placeholder="Example: Tamil, English, General Studies">
+                </div>
+            </div>
+
+
+            <div class="form-section">
+                <h2>📝 About You</h2>
+
+                <div class="input-group">
+                    <label>Bio</label>
+                    <textarea id="bio"
+                              placeholder="Tell us about your learning journey..."></textarea>
+                </div>
+            </div>
+
+
+            <button type="submit" id="saveBtn">
+                💾 Save Profile
+            </button>
+
+            <p id="message"></p>
+
+        </form>
+
+        <button class="back-btn" onclick="goDashboard()">
+            ← Back to Dashboard
+        </button>
+
+    </div>
+
+<script src="./js/profile.js"></script>
+
+</body>
+</html>
