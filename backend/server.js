@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const testRoutes = require("./routes/testRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const roadmapRoutes = require("./routes/roadmapRoutes");
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use("/api/users", authRoutes);
 app.use("/api/test", testRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/roadmaps", roadmapRoutes);
 
 // Basic test route
 app.get("/", (req, res) => {
