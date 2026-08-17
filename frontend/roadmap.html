@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Learning Assistant | NeuroMnemonic AI</title>
+
+    <link rel="stylesheet" href="css/roadmap.css">
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <!-- Header -->
+        <header class="page-header">
+            <div>
+                <h1>🧠 NeuroMnemonic AI</h1>
+                <p>AI Personalized Learning Assistant</p>
+            </div>
+
+            <button id="backDashboardBtn" class="back-btn">
+                ← Dashboard
+            </button>
+        </header>
+
+
+        <!-- Main Learning Section -->
+        <main class="learning-container">
+
+            <div class="welcome-section">
+                <h2>What do you want to learn?</h2>
+                <p>
+                    Enter any subject or topic. Our AI will help you understand
+                    it through simple explanations, mnemonics and stories.
+                </p>
+            </div>
+
+
+            <!-- Topic Input -->
+            <div class="input-section">
+
+                <label for="topic">
+                    📚 Learning Topic
+                </label>
+
+                <input
+                    type="text"
+                    id="topic"
+                    placeholder="Example: Python, OSI Layers, Photosynthesis..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <!-- Preferences -->
+            <div class="preferences">
+
+                <div class="preference-box">
+
+                    <label for="language">
+                        🌐 Language
+                    </label>
+
+                    <select id="language">
+
+                        <option value="English">
+                            English
+                        </option>
+
+                        <option value="Tamil">
+                            Tamil
+                        </option>
+
+                        <option value="Bilingual">
+                            Bilingual
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="preference-box">
+
+                    <label for="level">
+                        🎯 Learning Level
+                    </label>
+
+                    <select id="level">
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI Learning Options -->
+            <section class="options-section">
+
+                <h2>What would you like to learn?</h2>
+
+                <div class="options-grid">
+
+                    <button class="learning-option" data-type="roadmap">
+                        <span class="option-icon">📚</span>
+                        <span class="option-title">Roadmap</span>
+                        <span class="option-description">
+                            Get a personalized learning path
+                        </span>
+                    </button>
+
+
+                    <button class="learning-option" data-type="explain">
+                        <span class="option-icon">💡</span>
+                        <span class="option-title">Explain</span>
+                        <span class="option-description">
+                            Understand the topic simply
+                        </span>
+                    </button>
+
+
+                    <button class="learning-option" data-type="mnemonic">
+                        <span class="option-icon">🧠</span>
+                        <span class="option-title">Mnemonic</span>
+                        <span class="option-description">
+                            Create an easy memory trick
+                        </span>
+                    </button>
+
+
+                    <button class="learning-option" data-type="story">
+                        <span class="option-icon">📖</span>
+                        <span class="option-title">Story</span>
+                        <span class="option-description">
+                            Learn through a memorable story
+                        </span>
+                    </button>
+
+                </div>
+
+
+                <!-- Teach Everything -->
+                <button
+                    id="teachEverythingBtn"
+                    class="teach-everything"
+                    data-type="everything"
+                >
+                    ✨ Teach Me Everything
+                </button>
+
+            </section>
+
+
+            <!-- Loading -->
+            <div id="loading" class="loading hidden">
+                <div class="loader"></div>
+                <p>🤖 AI is preparing your learning content...</p>
+            </div>
+
+
+            <!-- AI Result -->
+            <section
+                id="resultSection"
+                class="result-section hidden"
+            >
+
+                <div class="result-header">
+                    <h2 id="resultTitle">
+                        AI Learning Result
+                    </h2>
+                </div>
+
+                <div id="resultContent">
+                    <!-- AI response will appear here -->
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="js/roadmap.js"></script>
+
+</body>
+</html>

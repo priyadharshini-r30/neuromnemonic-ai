@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const testRoutes = require("./routes/testRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const roadmapRoutes = require("./routes/roadmapRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use("/api/users", authRoutes);
 app.use("/api/test", testRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/roadmaps", roadmapRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Basic test route
 app.get("/", (req, res) => {

@@ -122,6 +122,96 @@
             cursor: pointer;
         }
 
+        .start-btn:hover {
+            background: #4338ca;
+        }
+
+        /* =========================
+           AI CHAT TUTOR
+        ========================= */
+
+        .ai-section {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 25px;
+        }
+
+        .ai-card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .ai-card h2 {
+            color: #4f46e5;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .ai-card p {
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        #chatBox {
+            height: 280px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+        }
+
+        .user-message,
+        .ai-message {
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            line-height: 1.5;
+        }
+
+        .user-message {
+            background: #e0e7ff;
+        }
+
+        .ai-message {
+            background: #f1f5f9;
+        }
+
+        .ai-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #aiMessage {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        #aiMessage:focus {
+            border-color: #4f46e5;
+        }
+
+        .ask-btn {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .ask-btn:hover {
+            background: #4338ca;
+        }
+
         .footer {
             text-align: center;
             margin: 50px 0 25px;
@@ -130,6 +220,7 @@
         }
 
         @media (max-width: 800px) {
+
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
@@ -140,6 +231,14 @@
 
             .hero h1 {
                 font-size: 28px;
+            }
+
+            .ai-input-area {
+                flex-direction: column;
+            }
+
+            .ask-btn {
+                width: 100%;
             }
         }
     </style>
@@ -191,6 +290,7 @@
     <!-- Dashboard Cards -->
     <section class="dashboard-grid">
 
+        <!-- Personalized Roadmap -->
         <div class="card">
 
             <div class="icon">🗺️</div>
@@ -202,13 +302,17 @@
                 based on your goals.
             </p>
 
-            <button class="start-btn">
+            <!-- FIXED: Explore button -->
+            <button
+                class="start-btn"
+                onclick="goToRoadmap()">
                 Explore
             </button>
 
         </div>
 
 
+        <!-- AI Learning Assistant -->
         <div class="card">
 
             <div class="icon">🤖</div>
@@ -220,13 +324,16 @@
                 explanations for your studies.
             </p>
 
-            <button class="start-btn">
+            <button
+                class="start-btn"
+                onclick="document.getElementById('aiMessage').focus()">
                 Start Learning
             </button>
 
         </div>
 
 
+        <!-- Mnemonic Generator -->
         <div class="card">
 
             <div class="icon">🧠</div>
@@ -245,6 +352,7 @@
         </div>
 
 
+        <!-- Story-Based Learning -->
         <div class="card">
 
             <div class="icon">📖</div>
@@ -263,6 +371,7 @@
         </div>
 
 
+        <!-- Daily Study Planner -->
         <div class="card">
 
             <div class="icon">📅</div>
@@ -281,6 +390,7 @@
         </div>
 
 
+        <!-- Progress Tracking -->
         <div class="card">
 
             <div class="icon">📊</div>
@@ -301,10 +411,57 @@
     </section>
 
 
+    <!-- AI Chat Tutor -->
+    <section class="ai-section">
+
+        <div class="ai-card">
+
+            <h2>🤖 AI Chat Tutor</h2>
+
+            <p>
+                Ask NeuroMnemonic AI any study-related question.
+            </p>
+
+            <div id="chatBox">
+
+                <div class="ai-message">
+                    <strong>AI:</strong>
+                    Hello! I'm your AI Learning Assistant.
+                    Ask me anything about your studies.
+                </div>
+
+            </div>
+
+            <div class="ai-input-area">
+
+                <input
+                    type="text"
+                    id="aiMessage"
+                    placeholder="Ask your study question..."
+                    onkeydown="if(event.key === 'Enter') askAI()"
+                >
+
+                <button
+                    class="ask-btn"
+                    onclick="askAI()">
+                    Ask AI
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
     <!-- Footer -->
     <div class="footer">
         © 2026 NeuroMnemonic AI • Learn Smarter 🧠
     </div>
+
+
+    <!-- AI Chat JavaScript -->
+    <script src="js/aiChat.js"></script>
 
 
     <script>
@@ -312,6 +469,12 @@
         // Go to Profile
         function goToProfile() {
             window.location.href = "profile.html";
+        }
+
+
+        // Go to Personalized Roadmap
+        function goToRoadmap() {
+            window.location.href = "roadmap.html";
         }
 
 
