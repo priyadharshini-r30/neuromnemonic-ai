@@ -8,7 +8,7 @@ async function askAI() {
         return;
     }
 
-    // Create user message safely
+    // User message
     const userMessage = document.createElement("div");
     userMessage.className = "user-message";
 
@@ -26,7 +26,7 @@ async function askAI() {
     const loadingMessage = document.createElement("div");
     loadingMessage.className = "ai-message";
     loadingMessage.id = "loadingMessage";
-    loadingMessage.textContent = "AI: Thinking...";
+    loadingMessage.textContent = "AI: Thinking... 🤔";
 
     chatBox.appendChild(loadingMessage);
 
@@ -39,7 +39,7 @@ async function askAI() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: message
+                question: message
             })
         });
 
@@ -50,27 +50,68 @@ async function askAI() {
         const aiMessage = document.createElement("div");
         aiMessage.className = "ai-message";
 
-        const aiLabel = document.createElement("strong");
-        aiLabel.textContent = "AI: ";
+        if (data.success) {
 
-        aiMessage.appendChild(aiLabel);
-        aiMessage.appendChild(
-            document.createTextNode(
-                data.success
-                    ? data.reply
-                    : "Sorry, I couldn't process your question."
-            )
-        );
+            const aiLabel = document.createElement("strong");
+            aiLabel.textContent = "AI: ";
+
+            aiMessage.appendChild(aiLabel);
+
+            const answer = document.createElement("div");
+
+            let formattedAnswer = data.answer;
+
+            // Escape HTML to keep AI output safe
+            formattedAnswer = formattedAnswer
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            // Convert **bold text** to <strong>
+            formattedAnswer = formattedAnswer.replace(
+                /\*\*(.*?)\*\*/g,
+                "<strong>$1</strong>"
+            );
+
+            // Convert numbered lists
+            formattedAnswer = formattedAnswer.replace(
+                /^(\d+)\.\s+(.*)$/gm,
+                "<div class='ai-list-item'><strong>$1.</strong> $2</div>"
+            );
+
+            // Convert bullet points
+            formattedAnswer = formattedAnswer.replace(
+                /^[*-]\s+(.*)$/gm,
+                "<div class='ai-list-item'>• $1</div>"
+            );
+
+            // Convert paragraphs and line breaks
+            formattedAnswer = formattedAnswer
+                .replace(/\n\n/g, "<br><br>")
+                .replace(/\n/g, "<br>");
+
+            answer.innerHTML = formattedAnswer;
+
+            aiMessage.appendChild(answer);
+
+        } else {
+
+            aiMessage.textContent =
+                "AI: Sorry, I couldn't process your question.";
+
+        }
 
         chatBox.appendChild(aiMessage);
 
     } catch (error) {
+
         console.error("AI Request Error:", error);
 
         loadingMessage.remove();
 
         const errorMessage = document.createElement("div");
         errorMessage.className = "ai-message";
+
         errorMessage.textContent =
             "AI: Unable to connect to the AI server.";
 
