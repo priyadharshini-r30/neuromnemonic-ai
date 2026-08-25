@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NeuroMnemonic AI - Mnemonic & Story Generator</title>
+
+    <link rel="stylesheet" href="css/mnemonic.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🧠 NeuroMnemonic AI</h1>
+
+        <p class="subtitle">
+            Mnemonic & Story Generator
+        </p>
+
+        <div class="generator-card">
+
+            <!-- Topic -->
+            <label for="topic">Enter Topic</label>
+
+            <input
+                type="text"
+                id="topic"
+                placeholder="Example: Java OOP Concepts"
+            >
+
+
+            <!-- Language -->
+            <label for="language">Preferred Language</label>
+
+            <select id="language">
+                <option value="English">English</option>
+                <option value="Tamil">Tamil</option>
+            </select>
+
+
+            <!-- Generation Type -->
+            <label for="type">Generation Type</label>
+
+            <select id="type">
+                <option value="mnemonic">🧠 Mnemonic</option>
+                <option value="story">📖 Story</option>
+            </select>
+
+
+            <!-- Generate Button -->
+            <button id="generateBtn">
+                ✨ Generate
+            </button>
+
+        </div>
+
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            Generating... Please wait ⏳
+        </div>
+
+
+        <!-- Result -->
+        <div class="result-card">
+
+            <h2>📚 Generated Result</h2>
+
+            <div id="result">
+                Your mnemonic or story will appear here.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/mnemonic.js"></script>
+
+</body>
+</html>
