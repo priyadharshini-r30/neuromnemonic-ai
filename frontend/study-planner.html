@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NeuroMnemonic AI - Daily Study Planner</title>
+
+    <link rel="stylesheet" href="css/study-planner.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>📅 Daily Study Planner</h1>
+
+        <p class="subtitle">
+            Plan your study schedule and track your daily progress.
+        </p>
+
+        <!-- Create Study Plan -->
+        <div class="planner-card">
+
+            <h2>📝 Create Study Plan</h2>
+
+            <form id="studyPlanForm">
+
+                <label for="subject">Subject</label>
+                <input
+                    type="text"
+                    id="subject"
+                    placeholder="Example: Java"
+                    required
+                >
+
+                <label for="topic">Topic</label>
+                <input
+                    type="text"
+                    id="topic"
+                    placeholder="Example: Inheritance"
+                    required
+                >
+
+                <label for="date">Study Date</label>
+                <input
+                    type="date"
+                    id="date"
+                    required
+                >
+
+                <label for="duration">Duration (minutes)</label>
+                <input
+                    type="number"
+                    id="duration"
+                    placeholder="Example: 60"
+                    min="1"
+                    required
+                >
+
+                <button type="submit">
+                    ➕ Add Study Plan
+                </button>
+
+            </form>
+
+            <p id="message"></p>
+
+        </div>
+
+        <!-- Study Plans -->
+        <div class="plans-card">
+
+            <h2>📚 My Study Plans</h2>
+
+            <div id="studyPlans">
+                <p class="empty-message">
+                    No study plans yet.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/study-planner.js"></script>
+
+</body>
+</html>

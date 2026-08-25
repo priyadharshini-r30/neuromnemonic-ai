@@ -8,6 +8,7 @@ const authRoutes = require("./routes/authRoutes");
 const testRoutes = require("./routes/testRoutes");
 const aiTutorRoutes = require("./routes/aiTutorRoutes");
 const mnemonicRoutes = require("./routes/mnemonicRoutes");
+const studyPlanRoutes = require("./routes/studyPlanRoutes");
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use("/api/users", authRoutes);
 app.use("/api/test", testRoutes);
 app.use("/api/ai", aiTutorRoutes);
 app.use("/api/mnemonic", mnemonicRoutes);
+app.use("/api/study-plans", studyPlanRoutes);
 
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
