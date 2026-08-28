@@ -1,231 +1,522 @@
 const API_URL = "http://localhost:5000";
 
-// Elements
+// ========================================
+// GET HTML ELEMENTS
+// ========================================
+
 const topicInput = document.getElementById("topic");
 const languageSelect = document.getElementById("language");
 const levelSelect = document.getElementById("level");
+const durationInput = document.getElementById("duration");
 
-const loading = document.getElementById("loading");
-const resultSection = document.getElementById("resultSection");
-const resultTitle = document.getElementById("resultTitle");
-const resultContent = document.getElementById("resultContent");
+const generateRoadmapBtn =
+    document.getElementById("generateRoadmapBtn");
 
-const learningOptions = document.querySelectorAll(".learning-option");
-const teachEverythingBtn = document.getElementById("teachEverythingBtn");
-const backDashboardBtn = document.getElementById("backDashboardBtn");
+const loading =
+    document.getElementById("loading");
+
+const resultSection =
+    document.getElementById("resultSection");
+
+const resultContent =
+    document.getElementById("resultContent");
+
+const backDashboardBtn =
+    document.getElementById("backDashboardBtn");
 
 
-// Get login token
+// ========================================
+// GET LOGIN TOKEN
+// ========================================
+
 function getToken() {
     return localStorage.getItem("token");
 }
 
 
-// Show loading
+// ========================================
+// SHOW LOADING
+// ========================================
+
 function showLoading() {
     loading.classList.remove("hidden");
     resultSection.classList.add("hidden");
+    generateRoadmapBtn.disabled = true;
 }
 
 
-// Hide loading
+// ========================================
+// HIDE LOADING
+// ========================================
+
 function hideLoading() {
     loading.classList.add("hidden");
+    generateRoadmapBtn.disabled = false;
 }
 
 
-// Display normal result
-function displayResult(title, content) {
-    resultTitle.textContent = title;
-    resultContent.textContent = content;
+// ========================================
+// DISPLAY ROADMAP
+// ========================================
 
-    resultSection.classList.remove("hidden");
-}
-
-
-// Display roadmap
 function displayRoadmap(roadmapData) {
-    resultTitle.textContent = "🗺️ Your Personalized Roadmap";
 
     resultContent.innerHTML = "";
 
-    const roadmapList = document.createElement("div");
-    roadmapList.className = "roadmap-list";
+    const journey = document.createElement("div");
+    journey.className = "learning-journey";
 
-    roadmapData.forEach(day => {
 
-        const dayCard = document.createElement("div");
-        dayCard.className = "roadmap-day";
+    // ========================================
+    // HEADER
+    // ========================================
 
-        dayCard.innerHTML = `
-            <h3>Day ${day.day} — ${day.topic}</h3>
-            <p>${day.description}</p>
-            <span class="status">
-                ${day.completed ? "✅ Completed" : "⏳ Not Completed"}
-            </span>
-        `;
+    const journeyHeader = document.createElement("div");
+    journeyHeader.className = "journey-header";
 
-        roadmapList.appendChild(dayCard);
+    const journeyIcon = document.createElement("div");
+    journeyIcon.className = "journey-icon";
+    journeyIcon.textContent = "🗺️";
+
+    const journeyText = document.createElement("div");
+
+    const journeyTitle = document.createElement("h2");
+    journeyTitle.textContent = "Your Learning Journey";
+
+    const journeySubtitle = document.createElement("p");
+    journeySubtitle.textContent =
+        roadmapData.length + " days personalized for you";
+
+    journeyText.appendChild(journeyTitle);
+    journeyText.appendChild(journeySubtitle);
+
+    journeyHeader.appendChild(journeyIcon);
+    journeyHeader.appendChild(journeyText);
+
+    journey.appendChild(journeyHeader);
+
+
+    // ========================================
+    // EACH DAY
+    // ========================================
+
+    roadmapData.forEach(function (day, index) {
+
+        const dayWrapper =
+            document.createElement("div");
+
+        dayWrapper.className = "journey-day";
+
+
+        // Day number
+        const dayNumber =
+            document.createElement("div");
+
+        dayNumber.className = "day-number";
+
+        dayNumber.textContent =
+            String(day.day).padStart(2, "0");
+
+
+        // Card
+        const card =
+            document.createElement("div");
+
+        card.className = "journey-card";
+
+
+        // ========================================
+        // CARD TOP
+        // ========================================
+
+        const cardTop =
+            document.createElement("div");
+
+        cardTop.className =
+            "journey-card-top";
+
+
+        const dayLabel =
+            document.createElement("span");
+
+        dayLabel.className =
+            "day-label";
+
+        dayLabel.textContent =
+            "DAY " +
+            String(day.day).padStart(2, "0");
+
+
+        const status =
+            document.createElement("span");
+
+        status.className =
+            day.completed
+                ? "status completed"
+                : "status pending";
+
+        status.textContent =
+            day.completed
+                ? "✓ Completed"
+                : "⏳ Not Completed";
+
+
+        cardTop.appendChild(dayLabel);
+        cardTop.appendChild(status);
+
+
+        // ========================================
+        // TOPIC
+        // ========================================
+
+        const topic =
+            document.createElement("h3");
+
+        topic.textContent =
+            day.topic;
+
+
+        // ========================================
+        // DESCRIPTION
+        // ========================================
+
+        const description =
+            document.createElement("p");
+
+        description.textContent =
+            day.description ||
+            "Study this topic and practice the important concepts.";
+
+
+        // ========================================
+        // FOOTER
+        // ========================================
+
+        const footer =
+            document.createElement("div");
+
+        footer.className =
+            "journey-footer";
+
+
+        const footerText =
+            document.createElement("span");
+
+        footerText.textContent =
+            day.completed
+                ? "🎉 Great work!"
+                : "📖 Keep learning";
+
+
+        footer.appendChild(footerText);
+
+
+        // ========================================
+        // BUILD CARD
+        // ========================================
+
+        card.appendChild(cardTop);
+        card.appendChild(topic);
+        card.appendChild(description);
+        card.appendChild(footer);
+
+
+        // ========================================
+        // BUILD DAY
+        // ========================================
+
+        dayWrapper.appendChild(dayNumber);
+        dayWrapper.appendChild(card);
+
+        journey.appendChild(dayWrapper);
+
+
+        // ========================================
+        // CONNECTOR
+        // ========================================
+
+        if (index < roadmapData.length - 1) {
+
+            const line =
+                document.createElement("div");
+
+            line.className =
+                "journey-line";
+
+            journey.appendChild(line);
+        }
+
     });
 
-    resultContent.appendChild(roadmapList);
+
+    resultContent.appendChild(journey);
 
     resultSection.classList.remove("hidden");
+
+
+    resultSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 }
 
 
-// Generate learning content
-async function generateLearningContent(type) {
+// ========================================
+// GENERATE ROADMAP
+// ========================================
 
-    const topic = topicInput.value.trim();
-    const language = languageSelect.value;
-    const level = levelSelect.value;
+async function generateRoadmap() {
 
-    // Validate topic
+    const topic =
+        topicInput.value.trim();
+
+    const preferredLanguage =
+        languageSelect.value;
+
+    const learningLevel =
+        levelSelect.value;
+
+    const duration =
+        parseInt(
+            durationInput.value,
+            10
+        );
+
+
+    // ========================================
+    // VALIDATE TOPIC
+    // ========================================
+
     if (!topic) {
-        alert("Please enter a topic you want to learn.");
+
+        alert(
+            "Please enter a topic you want to learn."
+        );
+
         topicInput.focus();
+
         return;
     }
 
-    // Check login
-    const token = getToken();
+
+    // ========================================
+    // VALIDATE DAYS
+    // ========================================
+
+    if (
+        isNaN(duration) ||
+        duration < 1
+    ) {
+
+        alert(
+            "Please enter your available study days."
+        );
+
+        durationInput.focus();
+
+        return;
+    }
+
+
+    // ========================================
+    // CHECK LOGIN
+    // ========================================
+
+    const token =
+        getToken();
 
     if (!token) {
-        alert("Please login first.");
-        window.location.href = "login.html";
+
+        alert(
+            "Please login first."
+        );
+
+        window.location.href =
+            "login.html";
+
         return;
     }
+
+
+    // ========================================
+    // SHOW LOADING
+    // ========================================
 
     showLoading();
 
+
     try {
 
-        // Roadmap request
-        if (type === "roadmap") {
+        // ========================================
+        // SEND REQUEST
+        // ========================================
 
-            const response = await fetch(
-                `${API_URL}/api/roadmaps`,
+        const response =
+            await fetch(
+                API_URL + "/api/roadmaps",
                 {
                     method: "POST",
 
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            "Bearer " + token
                     },
 
-                    body: JSON.stringify({
-                        topic: topic,
-                        preferredLanguage: language,
-                        learningLevel: level,
-                        duration: 7
-                    })
+                    body:
+                        JSON.stringify({
+                            topic:
+                                topic,
+
+                            preferredLanguage:
+                                preferredLanguage,
+
+                            learningLevel:
+                                learningLevel,
+
+                            duration:
+                                duration
+                        })
                 }
             );
 
-            const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Failed to generate roadmap"
-                );
-            }
+        // ========================================
+        // READ RESPONSE
+        // ========================================
 
-            // Display AI-generated roadmap
-            displayRoadmap(data.roadmap.roadmap);
-
-            return;
-        }
+        const data =
+            await response.json();
 
 
-        // Other AI learning options
-        const prompts = {
+        // ========================================
+        // ERROR CHECK
+        // ========================================
 
-            explain:
-                `Explain "${topic}" to a ${level} learner in ${language}. Use simple and clear language.`,
+        if (!response.ok) {
 
-            mnemonic:
-                `Create an easy mnemonic to remember "${topic}" for a ${level} learner. Respond in ${language}.`,
-
-            story:
-                `Explain "${topic}" through a memorable educational story for a ${level} learner. Respond in ${language}.`,
-
-            everything:
-                `Teach "${topic}" to a ${level} learner in ${language} using explanation, examples, mnemonic and a short story.`
-        };
-
-
-        const prompt = prompts[type];
-
-        const response = await fetch(
-            `${API_URL}/api/ai/ask`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    message: prompt
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
             throw new Error(
-                data.message || "AI request failed"
+                data.message ||
+                data.error ||
+                "Failed to generate roadmap"
             );
         }
 
-        displayResult(
-            `${topic} — ${type}`,
-            data.reply
+
+        // ========================================
+        // CHECK ROADMAP
+        // ========================================
+
+        if (
+            !data.roadmap ||
+            !data.roadmap.roadmap ||
+            !Array.isArray(
+                data.roadmap.roadmap
+            )
+        ) {
+
+            throw new Error(
+                "Invalid roadmap response"
+            );
+        }
+
+
+        // ========================================
+        // DISPLAY
+        // ========================================
+
+        displayRoadmap(
+            data.roadmap.roadmap
         );
+
 
     } catch (error) {
 
-        console.error("Learning Error:", error);
-
-        displayResult(
-            "❌ Something went wrong",
-            error.message
+        console.error(
+            "Roadmap Error:",
+            error
         );
+
+
+        resultContent.innerHTML = "";
+
+
+        const errorDiv =
+            document.createElement("div");
+
+        errorDiv.className =
+            "error-message";
+
+
+        const errorHeading =
+            document.createElement("h3");
+
+        errorHeading.textContent =
+            "❌ Something went wrong";
+
+
+        const errorText =
+            document.createElement("p");
+
+        errorText.textContent =
+            error.message;
+
+
+        errorDiv.appendChild(
+            errorHeading
+        );
+
+        errorDiv.appendChild(
+            errorText
+        );
+
+        resultContent.appendChild(
+            errorDiv
+        );
+
+        resultSection.classList.remove(
+            "hidden"
+        );
+
 
     } finally {
 
         hideLoading();
+
     }
 }
 
 
-// Learning option buttons
-learningOptions.forEach(button => {
+// ========================================
+// GENERATE BUTTON
+// ========================================
 
-    button.addEventListener("click", () => {
+if (generateRoadmapBtn) {
 
-        const type = button.dataset.type;
+    generateRoadmapBtn.addEventListener(
+        "click",
+        generateRoadmap
+    );
 
-        generateLearningContent(type);
-
-    });
-
-});
-
-
-// Teach everything
-teachEverythingBtn.addEventListener("click", () => {
-
-    generateLearningContent("everything");
-
-});
+}
 
 
-// Back to dashboard
-backDashboardBtn.addEventListener("click", () => {
+// ========================================
+// BACK TO DASHBOARD
+// ========================================
 
-    window.location.href = "dashboard.html";
+if (backDashboardBtn) {
 
-});
+    backDashboardBtn.addEventListener(
+        "click",
+        function () {
+
+            window.location.href =
+                "dashboard.html";
+
+        }
+    );
+
+}

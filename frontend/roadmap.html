@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Learning Assistant | NeuroMnemonic AI</title>
+    <title>Personalized Learning Roadmap | NeuroMnemonic AI</title>
 
     <link rel="stylesheet" href="css/roadmap.css">
 </head>
@@ -13,32 +14,44 @@
 
     <div class="page-container">
 
-        <!-- Header -->
+        <!-- HEADER -->
         <header class="page-header">
+
             <div>
                 <h1>🧠 NeuroMnemonic AI</h1>
-                <p>AI Personalized Learning Assistant</p>
+                <p>Personalized Learning Roadmap</p>
             </div>
 
-            <button id="backDashboardBtn" class="back-btn">
+            <button
+                id="backDashboardBtn"
+                class="back-btn"
+                type="button"
+            >
                 ← Dashboard
             </button>
+
         </header>
 
 
-        <!-- Main Learning Section -->
+        <!-- MAIN -->
         <main class="learning-container">
 
+            <!-- WELCOME -->
             <div class="welcome-section">
-                <h2>What do you want to learn?</h2>
+
+                <h2>
+                    Create Your Personalized Learning Roadmap
+                </h2>
+
                 <p>
-                    Enter any subject or topic. Our AI will help you understand
-                    it through simple explanations, mnemonics and stories.
+                    Enter your learning details and generate a
+                    personalized day-wise learning roadmap.
                 </p>
+
             </div>
 
 
-            <!-- Topic Input -->
+            <!-- TOPIC -->
             <div class="input-section">
 
                 <label for="topic">
@@ -48,20 +61,21 @@
                 <input
                     type="text"
                     id="topic"
-                    placeholder="Example: Python, OSI Layers, Photosynthesis..."
+                    placeholder="Example: Java, Python, OSI Layers..."
                     autocomplete="off"
                 >
 
             </div>
 
 
-            <!-- Preferences -->
+            <!-- PREFERENCES -->
             <div class="preferences">
 
+                <!-- LANGUAGE -->
                 <div class="preference-box">
 
                     <label for="language">
-                        🌐 Language
+                        🌐 Preferred Language
                     </label>
 
                     <select id="language">
@@ -83,6 +97,7 @@
                 </div>
 
 
+                <!-- LEVEL -->
                 <div class="preference-box">
 
                     <label for="level">
@@ -107,87 +122,74 @@
 
                 </div>
 
-            </div>
 
+                <!-- DURATION -->
+                <div class="preference-box">
 
-            <!-- AI Learning Options -->
-            <section class="options-section">
+                    <label for="duration">
+                        📅 Duration (Days)
+                    </label>
 
-                <h2>What would you like to learn?</h2>
-
-                <div class="options-grid">
-
-                    <button class="learning-option" data-type="roadmap">
-                        <span class="option-icon">📚</span>
-                        <span class="option-title">Roadmap</span>
-                        <span class="option-description">
-                            Get a personalized learning path
-                        </span>
-                    </button>
-
-
-                    <button class="learning-option" data-type="explain">
-                        <span class="option-icon">💡</span>
-                        <span class="option-title">Explain</span>
-                        <span class="option-description">
-                            Understand the topic simply
-                        </span>
-                    </button>
-
-
-                    <button class="learning-option" data-type="mnemonic">
-                        <span class="option-icon">🧠</span>
-                        <span class="option-title">Mnemonic</span>
-                        <span class="option-description">
-                            Create an easy memory trick
-                        </span>
-                    </button>
-
-
-                    <button class="learning-option" data-type="story">
-                        <span class="option-icon">📖</span>
-                        <span class="option-title">Story</span>
-                        <span class="option-description">
-                            Learn through a memorable story
-                        </span>
-                    </button>
+                    <input
+                        type="number"
+                        id="duration"
+                        min="1"
+                        max="30"
+                        value="7"
+                        placeholder="Enter number of days"
+                    >
 
                 </div>
 
+            </div>
 
-                <!-- Teach Everything -->
+
+            <!-- GENERATE BUTTON -->
+            <section class="options-section">
+
                 <button
-                    id="teachEverythingBtn"
+                    id="generateRoadmapBtn"
                     class="teach-everything"
-                    data-type="everything"
+                    type="button"
                 >
-                    ✨ Teach Me Everything
+                    🚀 Generate My Roadmap
                 </button>
 
             </section>
 
 
-            <!-- Loading -->
-            <div id="loading" class="loading hidden">
+            <!-- LOADING -->
+            <div
+                id="loading"
+                class="loading hidden"
+            >
+
                 <div class="loader"></div>
-                <p>🤖 AI is preparing your learning content...</p>
+
+                <p>
+                    🤖 AI is preparing your personalized roadmap...
+                </p>
+
             </div>
 
 
-            <!-- AI Result -->
+            <!-- RESULT -->
             <section
                 id="resultSection"
                 class="result-section hidden"
             >
 
                 <div class="result-header">
-                    <h2 id="resultTitle">
-                        AI Learning Result
+
+                    <h2>
+                        📚 Your Personalized Roadmap
                     </h2>
+
                 </div>
 
+
                 <div id="resultContent">
-                    <!-- AI response will appear here -->
+
                 </div>
 
             </section>
@@ -200,4 +202,5 @@
     <script src="js/roadmap.js"></script>
 
 </body>
+
 </html>
