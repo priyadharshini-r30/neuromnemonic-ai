@@ -7,101 +7,260 @@ const form = document.getElementById("studyPlanForm");
 const message = document.getElementById("message");
 const studyPlansContainer = document.getElementById("studyPlans");
 
-// If user is not logged in
+
+// ===============================
+// SET MINIMUM DATE AS TODAY
+// ===============================
+
+const dateInput = document.getElementById("date");
+
+const today = new Date();
+
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
+
+const todayString = `${year}-${month}-${day}`;
+
+dateInput.min = todayString;
+
+
+// ===============================
+// LOGIN CHECK
+// ===============================
+
 if (!token) {
     message.textContent = "Please login first.";
     message.style.color = "red";
 }
 
-// Create study plan
+
+// ===============================
+// CREATE STUDY PLAN
+// ===============================
+
 form.addEventListener("submit", async (e) => {
+
     e.preventDefault();
 
     if (!token) {
+
         message.textContent = "Please login first.";
         message.style.color = "red";
+
         return;
     }
 
-    const subject = document.getElementById("subject").value.trim();
-    const topic = document.getElementById("topic").value.trim();
-    const date = document.getElementById("date").value;
-    const duration = document.getElementById("duration").value;
+
+    const subject =
+        document.getElementById("subject").value.trim();
+
+    const topic =
+        document.getElementById("topic").value.trim();
+
+    const date =
+        dateInput.value;
+
+    const duration =
+        document.getElementById("duration").value;
+
+
+    // ===============================
+    // DATE VALIDATION
+    // ===============================
+
+    if (!date) {
+
+        message.textContent =
+            "Please select a study date.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+
+    // Past date check
+    if (date < todayString) {
+
+        message.textContent =
+            "Past dates are not allowed. Please select today or a future date.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+
+    // ===============================
+    // DURATION VALIDATION
+    // ===============================
+
+    if (!duration || Number(duration) <= 0) {
+
+        message.textContent =
+            "Please enter a valid study duration.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
 
     try {
+
         const response = await fetch(API_URL, {
+
             method: "POST",
 
             headers: {
+
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+
+                "Authorization":
+                    `Bearer ${token}`
+
             },
 
             body: JSON.stringify({
+
                 subject,
+
                 topic,
+
                 date,
-                duration: Number(duration)
+
+                duration:
+                    Number(duration)
+
             })
+
         });
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
-            throw new Error(data.message || "Failed to create study plan");
+
+            throw new Error(
+                data.message ||
+                "Failed to create study plan"
+            );
+
         }
 
-        message.textContent = "Study plan added successfully!";
-        message.style.color = "green";
+
+        message.textContent =
+            "Study plan added successfully!";
+
+        message.style.color =
+            "green";
+
 
         form.reset();
 
+
+        // Reset minimum date
+        dateInput.min =
+            todayString;
+
+
         loadStudyPlans();
 
-    } catch (error) {
-        console.error("Create study plan error:", error);
 
-        message.textContent = error.message;
-        message.style.color = "red";
+    } catch (error) {
+
+        console.error(
+            "Create study plan error:",
+            error
+        );
+
+
+        message.textContent =
+            error.message;
+
+        message.style.color =
+            "red";
+
     }
+
 });
 
-// Load study plans
+
+// ===============================
+// LOAD STUDY PLANS
+// ===============================
+
 async function loadStudyPlans() {
 
     if (!token) {
         return;
     }
 
+
     try {
-        const response = await fetch(API_URL, {
-            method: "GET",
 
-            headers: {
-                "Authorization": `Bearer ${token}`
+        const response = await fetch(
+            API_URL,
+            {
+
+                method: "GET",
+
+                headers: {
+
+                    "Authorization":
+                        `Bearer ${token}`
+
+                }
+
             }
-        });
+        );
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
-            throw new Error(data.message || "Failed to load study plans");
+
+            throw new Error(
+                data.message ||
+                "Failed to load study plans"
+            );
+
         }
 
-        displayStudyPlans(data.studyPlans);
+
+        displayStudyPlans(
+            data.studyPlans
+        );
+
 
     } catch (error) {
-        console.error("Load study plans error:", error);
+
+        console.error(
+            "Load study plans error:",
+            error
+        );
+
 
         studyPlansContainer.innerHTML = `
             <p class="empty-message">
                 Unable to load study plans.
             </p>
         `;
+
     }
+
 }
 
-// Display study plans
+
+// ===============================
+// DISPLAY STUDY PLANS
+// ===============================
+
 function displayStudyPlans(plans) {
 
     if (!plans || plans.length === 0) {
@@ -113,21 +272,34 @@ function displayStudyPlans(plans) {
         `;
 
         return;
+
     }
+
 
     studyPlansContainer.innerHTML = "";
 
+
     plans.forEach((plan) => {
 
-        const planDiv = document.createElement("div");
+        const planDiv =
+            document.createElement("div");
 
-        planDiv.className = "plan-item";
+
+        planDiv.className =
+            "plan-item";
+
 
         if (plan.completed) {
-            planDiv.classList.add("completed");
+
+            planDiv.classList.add(
+                "completed"
+            );
+
         }
 
+
         planDiv.innerHTML = `
+
             <h3>📚 ${plan.subject}</h3>
 
             <p>
@@ -147,63 +319,113 @@ function displayStudyPlans(plans) {
 
             ${
                 plan.completed
+
                     ? `
-                        <button class="complete-btn" disabled>
+
+                        <button
+                            class="complete-btn"
+                            disabled
+                        >
                             ✅ Completed
                         </button>
+
                     `
+
                     : `
+
                         <button
                             class="complete-btn"
                             onclick="completeStudyPlan('${plan._id}')"
                         >
                             ✔ Mark as Complete
                         </button>
+
                     `
             }
+
         `;
 
-        studyPlansContainer.appendChild(planDiv);
+
+        studyPlansContainer.appendChild(
+            planDiv
+        );
+
     });
+
 }
 
-// Mark study plan as completed
+
+// ===============================
+// MARK AS COMPLETED
+// ===============================
+
 async function completeStudyPlan(id) {
 
     if (!token) {
         return;
     }
 
+
     try {
 
         const response = await fetch(
+
             `${API_URL}/${id}/complete`,
+
             {
+
                 method: "PUT",
 
                 headers: {
-                    "Authorization": `Bearer ${token}`
+
+                    "Authorization":
+                        `Bearer ${token}`
+
                 }
+
             }
+
         );
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
+
             throw new Error(
-                data.message || "Failed to complete study plan"
+
+                data.message ||
+                "Failed to complete study plan"
+
             );
+
         }
+
 
         loadStudyPlans();
 
+
     } catch (error) {
 
-        console.error("Complete study plan error:", error);
+        console.error(
+            "Complete study plan error:",
+            error
+        );
 
-        alert(error.message);
+
+        alert(
+            error.message
+        );
+
     }
+
 }
 
-// Load plans when page opens
+
+// ===============================
+// LOAD PLANS ON PAGE OPEN
+// ===============================
+
 loadStudyPlans();

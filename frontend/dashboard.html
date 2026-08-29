@@ -1,252 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>NeuroMnemonic AI | Dashboard</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #eef2ff, #f8fafc);
-            color: #1e293b;
-        }
-
-        .navbar {
-            height: 70px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 45px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #4f46e5;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .nav-buttons button {
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .profile-btn {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .logout-btn {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .hero {
-            max-width: 1100px;
-            margin: 45px auto 25px;
-            padding: 0 25px;
-        }
-
-        .hero h1 {
-            font-size: 34px;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            color: #64748b;
-            font-size: 16px;
-        }
-
-        .dashboard-grid {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 25px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-            transition: 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .icon {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-
-        .card h2 {
-            font-size: 19px;
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            color: #64748b;
-            line-height: 1.5;
-            font-size: 14px;
-        }
-
-        .start-btn {
-            margin-top: 15px;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 9px;
-            background: #4f46e5;
-            color: white;
-            cursor: pointer;
-        }
-
-        .start-btn:hover {
-            background: #4338ca;
-        }
-
-        /* =========================
-           AI CHAT TUTOR
-        ========================= */
-
-        .ai-section {
-            max-width: 1100px;
-            margin: 35px auto;
-            padding: 0 25px;
-        }
-
-        .ai-card {
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-        }
-
-        .ai-card h2 {
-            color: #4f46e5;
-            margin-bottom: 8px;
-            font-size: 22px;
-        }
-
-        .ai-card p {
-            color: #64748b;
-            margin-bottom: 18px;
-        }
-
-        #chatBox {
-            height: 280px;
-            overflow-y: auto;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #f8fafc;
-        }
-
-        .user-message,
-        .ai-message {
-            padding: 10px 12px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            line-height: 1.5;
-        }
-
-        .user-message {
-            background: #e0e7ff;
-        }
-
-        .ai-message {
-            background: #f1f5f9;
-        }
-
-        .ai-input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        #aiMessage {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        #aiMessage:focus {
-            border-color: #4f46e5;
-        }
-
-        .ask-btn {
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            background: #4f46e5;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .ask-btn:hover {
-            background: #4338ca;
-        }
-
-        .footer {
-            text-align: center;
-            margin: 50px 0 25px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-
-        @media (max-width: 800px) {
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .navbar {
-                padding: 0 20px;
-            }
-
-            .hero h1 {
-                font-size: 28px;
-            }
-
-            .ai-input-area {
-                flex-direction: column;
-            }
-
-            .ask-btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
 
-    <!-- Navigation -->
+    <!-- NAVBAR -->
     <nav class="navbar">
 
         <div class="logo">
@@ -255,15 +21,11 @@
 
         <div class="nav-buttons">
 
-            <button
-                class="profile-btn"
-                onclick="goToProfile()">
+            <button class="profile-btn" onclick="goToProfile()">
                 👤 My Profile
             </button>
 
-            <button
-                class="logout-btn"
-                onclick="logout()">
+            <button class="logout-btn" onclick="logout()">
                 Logout
             </button>
 
@@ -272,7 +34,7 @@
     </nav>
 
 
-    <!-- Welcome Section -->
+    <!-- WELCOME SECTION -->
     <section class="hero">
 
         <h1 id="welcomeMessage">
@@ -287,10 +49,11 @@
     </section>
 
 
-    <!-- Dashboard Cards -->
+    <!-- DASHBOARD MODULES -->
     <section class="dashboard-grid">
 
-        <!-- Personalized Roadmap -->
+
+        <!-- ROADMAP -->
         <div class="card">
 
             <div class="icon">🗺️</div>
@@ -299,20 +62,17 @@
 
             <p>
                 Follow a personalized learning roadmap
-                based on your goals.
+                based on your goals and learning level.
             </p>
 
-            <!-- FIXED: Explore button -->
-            <button
-                class="start-btn"
-                onclick="goToRoadmap()">
+            <button class="start-btn" onclick="goToRoadmap()">
                 Explore
             </button>
 
         </div>
 
 
-        <!-- AI Learning Assistant -->
+        <!-- AI TUTOR -->
         <div class="card">
 
             <div class="icon">🤖</div>
@@ -320,58 +80,37 @@
             <h2>AI Learning Assistant</h2>
 
             <p>
-                Ask questions and get AI-powered
-                explanations for your studies.
+                Ask questions and receive simple
+                AI-powered explanations for your studies.
             </p>
 
-            <button
-                class="start-btn"
-                onclick="document.getElementById('aiMessage').focus()">
+            <button class="start-btn" onclick="goToAITutor()">
                 Start Learning
             </button>
 
         </div>
 
 
-        <!-- Mnemonic Generator -->
+        <!-- MNEMONIC -->
         <div class="card">
 
             <div class="icon">🧠</div>
 
-            <h2>Mnemonic Generator</h2>
+            <h2>Mnemonic & Story Learning</h2>
 
             <p>
-                Convert difficult concepts into
-                easy-to-remember mnemonics.
+                Learn difficult concepts using mnemonics,
+                memorable stories and quizzes.
             </p>
 
-            <button class="start-btn">
-                Generate
+            <button class="start-btn" onclick="goToMnemonic()">
+                Start Learning
             </button>
 
         </div>
 
 
-        <!-- Story-Based Learning -->
-        <div class="card">
-
-            <div class="icon">📖</div>
-
-            <h2>Story-Based Learning</h2>
-
-            <p>
-                Learn difficult topics through
-                simple and memorable stories.
-            </p>
-
-            <button class="start-btn">
-                Create Story
-            </button>
-
-        </div>
-
-
-        <!-- Daily Study Planner -->
+        <!-- DAILY PLANNER -->
         <div class="card">
 
             <div class="icon">📅</div>
@@ -380,17 +119,17 @@
 
             <p>
                 Organize your daily study schedule
-                and stay consistent.
+                and build a consistent learning routine.
             </p>
 
-            <button class="start-btn">
+            <button class="start-btn" onclick="goToPlanner()">
                 Plan Today
             </button>
 
         </div>
 
 
-        <!-- Progress Tracking -->
+        <!-- PROGRESS -->
         <div class="card">
 
             <div class="icon">📊</div>
@@ -398,11 +137,11 @@
             <h2>Progress Tracking</h2>
 
             <p>
-                Track your learning progress and
-                improve your preparation.
+                Track your learning progress
+                and improve your preparation.
             </p>
 
-            <button class="start-btn">
+            <button class="start-btn" onclick="progressNotAvailable()">
                 View Progress
             </button>
 
@@ -411,7 +150,7 @@
     </section>
 
 
-    <!-- AI Chat Tutor -->
+    <!-- AI CHAT TUTOR -->
     <section class="ai-section">
 
         <div class="ai-card">
@@ -441,9 +180,7 @@
                     onkeydown="if(event.key === 'Enter') askAI()"
                 >
 
-                <button
-                    class="ask-btn"
-                    onclick="askAI()">
+                <button class="ask-btn" onclick="askAI()">
                     Ask AI
                 </button>
 
@@ -454,40 +191,46 @@
     </section>
 
 
-    <!-- Footer -->
-    <div class="footer">
+    <!-- FOOTER -->
+    <footer class="footer">
         © 2026 NeuroMnemonic AI • Learn Smarter 🧠
-    </div>
+    </footer>
 
 
-    <!-- AI Chat JavaScript -->
+    <!-- JAVASCRIPT -->
     <script src="js/aiChat.js"></script>
-
 
     <script>
 
-        // Go to Profile
         function goToProfile() {
             window.location.href = "profile.html";
         }
 
-
-        // Go to Personalized Roadmap
         function goToRoadmap() {
             window.location.href = "roadmap.html";
         }
 
+        function goToAITutor() {
+            window.location.href = "ai-tutor.html";
+        }
 
-        // Logout
+        function goToMnemonic() {
+            window.location.href = "mnemonic.html";
+        }
+
+        function goToPlanner() {
+            window.location.href = "study-planner.html";
+        }
+
+        function progressNotAvailable() {
+            alert("Progress Tracking will be connected soon.");
+        }
+
         function logout() {
-
             localStorage.removeItem("token");
-
             window.location.href = "login.html";
         }
 
-
-        // Check login
         const token = localStorage.getItem("token");
 
         if (!token) {
