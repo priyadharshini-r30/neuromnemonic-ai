@@ -1,12 +1,10 @@
 const askAITutor = async (req, res) => {
-  console.log("🔥 AI CONTROLLER IS RUNNING");
-
   try {
     const { question } = req.body;
 
-    console.log("🔥 USER QUESTION:", question);
+    console.log("OLLAMA AI CONTROLLER IS RUNNING");
+    console.log("USER QUESTION:", question);
 
-    // Check question
     if (!question || question.trim() === "") {
       return res.status(400).json({
         success: false,
@@ -14,158 +12,88 @@ const askAITutor = async (req, res) => {
       });
     }
 
-    const lowerMessage = question.trim().toLowerCase();
+    const prompt = `
+You are NeuroMnemonic AI, a friendly AI tutor for college students.
 
-    // -----------------------------------
-    // TEMPORARY TEST
-    // -----------------------------------
-    if (lowerMessage === "hi da") {
-      console.log("🔥 HI DA MATCHED - NOT GOING TO OLLAMA");
-
-      return res.status(200).json({
-        success: true,
-        reply: "Hi da 😄 enna help venum?"
-      });
-    }
-
-    // -----------------------------------
-    // Ollama
-    // -----------------------------------
-    console.log("🔥 Sending to Ollama:", question);
-
-    const response = await fetch(
-      "http://localhost:11434/api/generate",
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
-          model: "llama3.2:3b",
-
-          prompt: `
-You are NeuroMnemonic AI, a friendly AI tutor.
-
-IMPORTANT:
-Always understand the user's actual intention.
-
-LANGUAGE RULE:
-
-If the user writes in Tanglish,
-reply in Tanglish using English alphabets.
-
-If the user writes in Tamil script,
-reply in Tanglish using English alphabets.
-
-If the user writes in English,
-reply in simple English.
-
-NEVER use Tamil Unicode characters.
+LANGUAGE RULES:
+- If the user writes in English, reply in simple English.
+- If the user writes in Tamil script, reply in readable Tamil script.
+- If the user writes in Tanglish, reply in Tanglish using English alphabets.
+- Do not unnecessarily change the user's language.
 
 CHAT STYLE:
-
-Talk naturally like a friendly WhatsApp conversation.
-
-Use simple and casual language.
-
-If the user uses "da", you can naturally use "da".
-
-Do not sound like a textbook.
-
-Do not translate the user's message.
-
-Do not create unnecessary definitions.
-
-Do not turn casual conversation into a study lesson.
-
-For casual messages, give a short natural reply.
-
-For study questions, give a clear and useful explanation.
-
-Example:
-
-User:
-"ennada pandra nee"
-
-Good:
-"Onnum illa da 😄 un kooda pesitu iruken. Enna venum?"
-
-User:
-"saptiya?"
-
-Good:
-"Naan AI da 😂 enakku sapadu thevai illa. Nee saptiya?"
-
-User:
-"inheritance na enna da?"
-
-Good:
-"Inheritance na oru class-oda properties and methods-ah innoru class reuse pannradhu da. Java-la code reusability-ku useful."
-
-User:
-"What is inheritance in Java?"
-
-Good:
-"Inheritance is a feature in Java where one class can reuse the properties and methods of another class."
-
-Remember:
-
-NEVER reply in Tamil Unicode.
-
-Always use English alphabets for Tamil/Tanglish replies.
+- Talk naturally like a friendly WhatsApp conversation.
+- Keep casual messages short.
+- If the user uses "da", you can naturally use "da".
+- Do not sound like a textbook.
+- For study questions, explain clearly with simple examples.
+- Avoid unnecessarily long answers.
 
 USER MESSAGE:
 ${question}
-`,
+`;
 
-          stream: false
-        })
-      }
-    );
+    console.log("Sending request to Ollama...");
 
-    // -----------------------------------
-    // Check Ollama Response
-    // -----------------------------------
+    const response = await fetch("http://localhost:11434/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3.2:3b",
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        stream: false,
+        keep_alive: "30m",
+        options: {
+          num_ctx: 1024,
+          num_predict: 200
+        }
+      })
+    });
+
     if (!response.ok) {
-      console.log("🔥 OLLAMA ERROR:", response.status);
+      const errorText = await response.text();
+
+      console.error("OLLAMA HTTP ERROR:", errorText);
 
       return res.status(500).json({
         success: false,
-        message: "AI service error"
+        message: "Ollama request failed",
+        error: errorText
       });
     }
 
     const data = await response.json();
 
-    console.log("🔥 OLLAMA RESPONSE RECEIVED");
+    const reply = data.message?.content;
 
-    // -----------------------------------
-    // Check AI Response
-    // -----------------------------------
-    if (!data.response || data.response.trim() === "") {
+    console.log("OLLAMA RESPONSE RECEIVED");
+
+    if (!reply || reply.trim() === "") {
       return res.status(500).json({
         success: false,
-        message: "AI did not return a response"
+        message: "Ollama did not return a response"
       });
     }
 
-    // -----------------------------------
-    // Send AI Reply
-    // -----------------------------------
     return res.status(200).json({
       success: true,
-      reply: data.response.trim()
+      reply: reply.trim()
     });
 
   } catch (error) {
 
-    console.error("🔥 AI CONTROLLER ERROR:", error);
+    console.error("OLLAMA AI ERROR:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Something went wrong with AI Tutor",
+      message: "Something went wrong with Ollama",
       error: error.message
     });
   }

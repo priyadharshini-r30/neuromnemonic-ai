@@ -2,202 +2,257 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Personalized Learning Roadmap | NeuroMnemonic AI</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/roadmap.css">
+    <title>Personalized Roadmap | NeuroMnemonic AI</title>
+
+    <!-- Roadmap page CSS -->
+    <link
+        rel="stylesheet"
+        href="css/roadmap.css"
+    >
+
 </head>
 
 <body>
 
-    <div class="page-container">
+    <div class="roadmap-container">
 
-        <!-- HEADER -->
-        <header class="page-header">
+        <!-- =========================
+             PAGE HEADER
+        ========================== -->
 
-            <div>
-                <h1>🧠 NeuroMnemonic AI</h1>
-                <p>Personalized Learning Roadmap</p>
-            </div>
+        <div class="welcome-section">
 
-            <button
-                id="backDashboardBtn"
-                class="back-btn"
-                type="button"
-            >
-                ← Dashboard
-            </button>
+            <h1>
+                🧠 Your Personalized Learning Roadmap
+            </h1>
 
-        </header>
+            <p>
+                NeuroMnemonic AI will create a learning
+                path based on your selected goals.
+            </p>
 
-
-        <!-- MAIN -->
-        <main class="learning-container">
-
-            <!-- WELCOME -->
-            <div class="welcome-section">
-
-                <h2>
-                    Create Your Personalized Learning Roadmap
-                </h2>
-
-                <p>
-                    Enter your learning details and generate a
-                    personalized day-wise learning roadmap.
-                </p>
-
-            </div>
+        </div>
 
 
-            <!-- TOPIC -->
-            <div class="input-section">
+        <!-- =========================
+             SELECTED GOAL SUMMARY
+        ========================== -->
+
+        <div
+            class="goal-summary"
+            id="goalSummary"
+        >
+
+            <h2>
+                🎯 Your Selected Goals
+            </h2>
+
+            <p>
+                <strong>Goal:</strong>
+                <span id="summaryGoal">
+                    Loading...
+                </span>
+            </p>
+
+            <p>
+                <strong>Subjects / Exam:</strong>
+                <span id="summaryTopic">
+                    Loading...
+                </span>
+            </p>
+
+            <p>
+                <strong>Preparation Level:</strong>
+                <span id="summaryLevel">
+                    Loading...
+                </span>
+            </p>
+
+            <p>
+                <strong>Daily Study Time:</strong>
+                <span id="summaryStudyHours">
+                    Loading...
+                </span>
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             ROADMAP CREATION FORM
+        ========================== -->
+
+        <div class="roadmap-form">
+
+            <h2>
+                Create Your Roadmap
+            </h2>
+
+
+            <!-- Topic -->
+
+            <div class="form-group">
 
                 <label for="topic">
-                    📚 Learning Topic
+                    What do you want to learn?
                 </label>
 
                 <input
                     type="text"
                     id="topic"
-                    placeholder="Example: Java, Python, OSI Layers..."
-                    autocomplete="off"
+                    placeholder="Enter subject or topic"
                 >
 
             </div>
 
 
-            <!-- PREFERENCES -->
-            <div class="preferences">
+            <!-- Language -->
 
-                <!-- LANGUAGE -->
-                <div class="preference-box">
+            <div class="form-group">
 
-                    <label for="language">
-                        🌐 Preferred Language
-                    </label>
+                <label for="language">
+                    Preferred Language
+                </label>
 
-                    <select id="language">
+                <select id="language">
 
-                        <option value="English">
-                            English
-                        </option>
+                    <option value="English">
+                        English
+                    </option>
 
-                        <option value="Tamil">
-                            Tamil
-                        </option>
+                    <option value="Tamil">
+                        Tamil
+                    </option>
 
-                        <option value="Bilingual">
-                            Bilingual
-                        </option>
+                    <option value="Bilingual">
+                        Bilingual
+                    </option>
 
-                    </select>
-
-                </div>
-
-
-                <!-- LEVEL -->
-                <div class="preference-box">
-
-                    <label for="level">
-                        🎯 Learning Level
-                    </label>
-
-                    <select id="level">
-
-                        <option value="Beginner">
-                            Beginner
-                        </option>
-
-                        <option value="Intermediate">
-                            Intermediate
-                        </option>
-
-                        <option value="Advanced">
-                            Advanced
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- DURATION -->
-                <div class="preference-box">
-
-                    <label for="duration">
-                        📅 Duration (Days)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="duration"
-                        min="1"
-                        max="30"
-                        value="7"
-                        placeholder="Enter number of days"
-                    >
-
-                </div>
+                </select>
 
             </div>
 
 
-            <!-- GENERATE BUTTON -->
-            <section class="options-section">
+            <!-- Learning Level -->
+
+            <div class="form-group">
+
+                <label for="level">
+                    Learning Level
+                </label>
+
+                <select id="level">
+
+                    <option value="Beginner">
+                        Beginner
+                    </option>
+
+                    <option value="Intermediate">
+                        Intermediate
+                    </option>
+
+                    <option value="Advanced">
+                        Advanced
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Duration -->
+
+            <div class="form-group">
+
+                <label for="duration">
+                    Roadmap Duration (Days)
+                </label>
+
+                <input
+                    type="number"
+                    id="duration"
+                    min="1"
+                    max="40"
+                    value="7"
+                >
+
+            </div>
+
+
+            <!-- Generate Button -->
+
+            <button
+                type="button"
+                id="generateRoadmapBtn"
+                class="generate-btn"
+            >
+                ✨ Generate Personalized Roadmap
+            </button>
+
+
+            <!-- Loading -->
+
+            <div id="loading">
+
+                🧠 Creating your personalized roadmap...
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             GENERATED ROADMAP
+        ========================== -->
+
+        <div id="resultSection">
+
+            <h2>
+                📚 Your Learning Roadmap
+            </h2>
+
+
+            <!-- JS will insert roadmap cards here -->
+
+            <div id="resultContent"></div>
+
+
+            <!-- Action Buttons -->
+
+            <div class="action-buttons">
 
                 <button
-                    id="generateRoadmapBtn"
-                    class="teach-everything"
                     type="button"
+                    id="backDashboardBtn"
                 >
-                    🚀 Generate My Roadmap
+                    ← Back to Dashboard
                 </button>
 
-            </section>
 
-
-            <!-- LOADING -->
-            <div
-                id="loading"
-                class="loading hidden"
-            >
-
-                <div class="loader"></div>
-
-                <p>
-                    🤖 AI is preparing your personalized roadmap...
-                </p>
+                <button
+                    type="button"
+                    class="start-learning-btn"
+                    onclick="startLearning()"
+                >
+                    Start Learning →
+                </button>
 
             </div>
 
-
-            <!-- RESULT -->
-            <section
-                id="resultSection"
-                class="result-section hidden"
-            >
-
-                <div class="result-header">
-
-                    <h2>
-                        📚 Your Personalized Roadmap
-                    </h2>
-
-                </div>
-
-
-                <div id="resultContent">
-
-                </div>
-
-            </section>
-
-        </main>
+        </div>
 
     </div>
 
+
+    <!-- Roadmap JavaScript -->
 
     <script src="js/roadmap.js"></script>
 

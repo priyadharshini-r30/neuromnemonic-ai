@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NeuroMnemonic AI - Progress</title>
+
+    <link rel="stylesheet" href="css/progress.css">
+</head>
+
+<body>
+
+    <div class="progress-container">
+
+        <header class="page-header">
+            <h1>📊 My Learning Progress</h1>
+            <p>Track your learning performance and study progress</p>
+        </header>
+
+
+        <!-- Overall Progress -->
+
+        <section class="overall-card">
+
+            <h2>🎯 Overall Progress</h2>
+
+            <div class="progress-circle">
+                <span id="overallProgress">0%</span>
+            </div>
+
+            <p>
+                Your overall learning progress
+            </p>
+
+        </section>
+
+
+        <!-- Statistics -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <h3>📝 Quiz Score</h3>
+
+                <p
+                    id="averageScore"
+                    class="stat-value"
+                >
+                    0%
+                </p>
+
+                <span>
+                    Average Score
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>🎯 Total Quizzes</h3>
+
+                <p
+                    id="totalQuizzes"
+                    class="stat-value"
+                >
+                    0
+                </p>
+
+                <span>
+                    Quizzes Completed
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>📚 Study Plans</h3>
+
+                <p
+                    id="studyCompletion"
+                    class="stat-value"
+                >
+                    0%
+                </p>
+
+                <span id="studyPlanCount">
+                    0 / 0 Completed
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>🧠 Revisions</h3>
+
+                <p
+                    id="revisionCompletion"
+                    class="stat-value"
+                >
+                    0%
+                </p>
+
+                <span id="revisionCount">
+                    0 / 0 Completed
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- Topic Performance -->
+
+        <section class="section-card">
+
+            <h2>📚 Topic Performance</h2>
+
+            <div id="topicPerformance">
+
+                <p class="loading">
+                    Loading topic performance...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Recent Quiz Attempts -->
+
+        <section class="section-card">
+
+            <h2>📝 Recent Quiz Attempts</h2>
+
+            <div id="recentAttempts">
+
+                <p class="loading">
+                    Loading quiz history...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Back Button -->
+
+        <div class="button-container">
+
+            <button
+                onclick="window.location.href='dashboard.html'"
+            >
+                🏠 Back to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/progress.js"></script>
+
+</body>
+</html>

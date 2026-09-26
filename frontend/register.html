@@ -1,63 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroMnemonic AI - Register</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Register - NeuroMnemonic AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/register.css"
+    >
+
 </head>
+
+
 <body>
 
-    <div class="login-container">
+    <div class="register-container">
 
-        <h1>NeuroMnemonic AI</h1>
+        <div class="register-card">
 
-        <h2>Register</h2>
+            <!-- ================================= -->
+            <!-- HEADER -->
+            <!-- ================================= -->
 
-        <form id="registerForm">
+            <div class="register-header">
 
-            <input
-                type="text"
-                id="name"
-                placeholder="Enter Full Name"
-                required
-            >
+                <div class="page-icon">
+                    🧠
+                </div>
 
-            <input
-                type="email"
-                id="email"
-                placeholder="Enter Email"
-                required
-            >
+                <h1>
+                    Create Your Account
+                </h1>
 
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter Password"
-                required
-            >
+                <p>
+                    Start your personalized learning journey
+                </p>
 
-            <select id="role" required>
-                <option value="">Select Role</option>
-                <option value="student">Student</option>
-                <option value="aspirant">Competitive Exam Aspirant</option>
-            </select>
+            </div>
 
-            <button type="submit">
-                Register
-            </button>
 
-        </form>
+            <!-- ================================= -->
+            <!-- REGISTER FORM -->
+            <!-- ================================= -->
 
-        <p>
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
+            <form id="registerForm">
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DATE OF BIRTH -->
+
+                <div class="form-group">
+
+                    <label for="dateOfBirth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateOfBirth"
+                        name="dateOfBirth"
+                        required
+                    >
+
+                    <small class="helper-text">
+                        Used for age-based exam eligibility.
+                    </small>
+
+                </div>
+
+
+                <!-- EDUCATION QUALIFICATION -->
+
+                <div class="form-group">
+
+                    <label for="educationQualification">
+                        Education Qualification
+                    </label>
+
+                    <select
+                        id="educationQualification"
+                        name="educationQualification"
+                        required
+                    >
+
+                        <option value="">
+                            Select your qualification
+                        </option>
+
+                        <option value="10th">
+                            10th
+                        </option>
+
+                        <option value="12th">
+                            12th
+                        </option>
+
+                        <option value="Diploma">
+                            Diploma
+                        </option>
+
+                        <option value="UG Degree">
+                            UG Degree
+                        </option>
+
+                        <option value="PG Degree">
+                            PG Degree
+                        </option>
+
+                    </select>
+
+                    <small class="helper-text">
+                        Used to check exam education eligibility.
+                    </small>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <p
+                    id="message"
+                    class="message"
+                ></p>
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button
+                    type="submit"
+                    class="register-btn"
+                >
+                    Create Account
+                </button>
+
+
+            </form>
+
+
+            <!-- LOGIN LINK -->
+
+            <div class="login-link">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </div>
+
+
+        </div>
 
     </div>
+
 
     <script src="js/register.js"></script>
 
 </body>
+
 </html>

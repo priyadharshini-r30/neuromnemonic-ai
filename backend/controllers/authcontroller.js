@@ -1,13 +1,23 @@
-const User = require("../models/User");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // Register User
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, dateOfBirth } = req.body;
 
-    const userExists = await User.findOne({ email });
+    // Check required fields
+    if (!name || !email || !password || !dateOfBirth) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
+    // Check if user already exists
+    const userExists = await User.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (userExists) {
       return res.status(400).json({
@@ -15,19 +25,35 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create user
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
-      role,
+      dateOfBirth,
     });
+
+    // Generate JWT
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
     res.status(201).json({
       message: "User Registered Successfully",
-      user,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        onboardingCompleted: user.onboardingCompleted,
+      },
     });
 
   } catch (error) {
@@ -43,7 +69,17 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // Check required fields
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (!user) {
       return res.status(400).json({
@@ -51,6 +87,7 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -59,6 +96,7 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Generate JWT
     const token = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
@@ -72,7 +110,8 @@ const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        dateOfBirth: user.dateOfBirth,
+        onboardingCompleted: user.onboardingCompleted,
       },
     });
 

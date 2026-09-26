@@ -1,68 +1,38 @@
 const express = require("express");
-const Profile = require("../models/Profile");
+const User = require("../models/User");
 const protect = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 
-// Create or update profile
-router.post("/", protect, async (req, res) => {
-    try {
-        const {
-            age,
-            college,
-            course,
-            studyGoal,
-            targetExam,
-            dailyStudyHours,
-            subjects,
-            bio
-        } = req.body;
+// ========================================
+// GET USER PROFILE
+// ========================================
 
-        // Validation
-        if (
-            !age ||
-            !college ||
-            !course ||
-            !studyGoal ||
-            !targetExam ||
-            !dailyStudyHours ||
-            !subjects ||
-            !Array.isArray(subjects) ||
-            subjects.length === 0
-        ) {
-            return res.status(400).json({
-                message: "Please fill all required profile details"
+router.get("/", protect, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(
+            req.user._id
+        ).select("-password");
+
+        if (!user) {
+
+            return res.status(404).json({
+                message: "User not found"
             });
+
         }
 
-        const profile = await Profile.findOneAndUpdate(
-            { user: req.user._id },
-            {
-                user: req.user._id,
-                age,
-                college,
-                course,
-                studyGoal,
-                targetExam,
-                dailyStudyHours,
-                subjects,
-                bio: bio || ""
-            },
-            {
-                new: true,
-                upsert: true,
-                runValidators: true
-            }
-        );
-
-        res.status(200).json({
-            message: "Profile saved successfully",
-            profile
-        });
+        res.status(200).json(user);
 
     } catch (error) {
-        console.error("Profile Save Error:", error);
+
+        console.error(
+            "Profile Load Error:",
+            error
+        );
 
         res.status(500).json({
             message: "Server error",
@@ -72,37 +42,100 @@ router.post("/", protect, async (req, res) => {
 });
 
 
-// Get profile
-router.get("/", protect, async (req, res) => {
-    try {
-        const profile = await Profile.findOne({
-            user: req.user._id
-        }).populate("user", "name email role");
+// ========================================
+// UPDATE USER PROFILE
+// ========================================
 
-        if (!profile) {
+router.put("/", protect, async (req, res) => {
+
+    try {
+
+        const {
+            name,
+            dateOfBirth,
+            educationQualification
+        } = req.body;
+
+
+        const user = await User.findById(
+            req.user._id
+        );
+
+        if (!user) {
+
             return res.status(404).json({
-                message: "Profile not found"
+                message: "User not found"
             });
+
         }
 
-        // Send User + Profile data together
-        res.status(200).json({
-            name: profile.user.name,
-            email: profile.user.email,
-            role: profile.user.role,
 
-            age: profile.age,
-            college: profile.college,
-            course: profile.course,
-            studyGoal: profile.studyGoal,
-            targetExam: profile.targetExam,
-            dailyStudyHours: profile.dailyStudyHours,
-            subjects: profile.subjects,
-            bio: profile.bio
+        // ========================================
+        // UPDATE NAME
+        // ========================================
+
+        if (name !== undefined) {
+
+            user.name =
+                name.trim();
+
+        }
+
+
+        // ========================================
+        // UPDATE DATE OF BIRTH
+        // ========================================
+
+        if (dateOfBirth !== undefined) {
+
+            user.dateOfBirth =
+                dateOfBirth;
+
+        }
+
+
+        // ========================================
+        // UPDATE EDUCATION
+        // ========================================
+
+        if (
+            educationQualification !== undefined
+        ) {
+
+            user.educationQualification =
+                educationQualification.trim();
+
+        }
+
+
+        await user.save();
+
+
+        res.status(200).json({
+
+            message:
+                "Profile updated successfully",
+
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                dateOfBirth:
+                    user.dateOfBirth,
+                educationQualification:
+                    user.educationQualification,
+                onboardingCompleted:
+                    user.onboardingCompleted
+            }
+
         });
 
     } catch (error) {
-        console.error("Profile Load Error:", error);
+
+        console.error(
+            "Profile Update Error:",
+            error
+        );
 
         res.status(500).json({
             message: "Server error",

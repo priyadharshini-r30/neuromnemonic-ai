@@ -5,12 +5,15 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
 
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
 
     password: {
@@ -18,43 +21,20 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    role: {
-      type: String,
-      enum: ["student", "aspirant"],
+    dateOfBirth: {
+      type: Date,
       required: true,
     },
 
-    age: {
-      type: Number,
-    },
-
-    college: {
+    educationQualification: {
       type: String,
+      default: "",
+      trim: true,
     },
 
-    course: {
-      type: String,
-    },
-
-    studyGoal: {
-      type: String,
-    },
-
-    targetExam: {
-      type: String,
-    },
-
-    dailyStudyHours: {
-      type: Number,
-    },
-
-    subjects: {
-      type: [String],
-      default: [],
-    },
-
-    bio: {
-      type: String,
+    onboardingCompleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -63,4 +43,5 @@ const userSchema = new mongoose.Schema(
 );
 
 module.exports =
-  mongoose.models.User || mongoose.model("User", userSchema);
+  mongoose.models.User ||
+  mongoose.model("User", userSchema);

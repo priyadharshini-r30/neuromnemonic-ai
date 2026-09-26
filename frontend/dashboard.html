@@ -21,11 +21,17 @@
 
         <div class="nav-buttons">
 
-            <button class="profile-btn" onclick="goToProfile()">
+            <button
+                class="profile-btn"
+                onclick="goToProfile()"
+            >
                 👤 My Profile
             </button>
 
-            <button class="logout-btn" onclick="logout()">
+            <button
+                class="logout-btn"
+                onclick="logout()"
+            >
                 Logout
             </button>
 
@@ -49,6 +55,24 @@
     </section>
 
 
+    <!-- CURRENT GOAL -->
+    <section class="hero">
+
+        <div class="card">
+
+            <div class="icon">🎯</div>
+
+            <h2>Current Goal</h2>
+
+            <p id="goalDetails">
+                Loading your goal...
+            </p>
+
+        </div>
+
+    </section>
+
+
     <!-- DASHBOARD MODULES -->
     <section class="dashboard-grid">
 
@@ -65,7 +89,10 @@
                 based on your goals and learning level.
             </p>
 
-            <button class="start-btn" onclick="goToRoadmap()">
+            <button
+                class="start-btn"
+                onclick="goToRoadmap()"
+            >
                 Explore
             </button>
 
@@ -84,7 +111,10 @@
                 AI-powered explanations for your studies.
             </p>
 
-            <button class="start-btn" onclick="goToAITutor()">
+            <button
+                class="start-btn"
+                onclick="goToAITutor()"
+            >
                 Start Learning
             </button>
 
@@ -103,7 +133,10 @@
                 memorable stories and quizzes.
             </p>
 
-            <button class="start-btn" onclick="goToMnemonic()">
+            <button
+                class="start-btn"
+                onclick="goToMnemonic()"
+            >
                 Start Learning
             </button>
 
@@ -122,7 +155,10 @@
                 and build a consistent learning routine.
             </p>
 
-            <button class="start-btn" onclick="goToPlanner()">
+            <button
+                class="start-btn"
+                onclick="goToPlanner()"
+            >
                 Plan Today
             </button>
 
@@ -137,11 +173,15 @@
             <h2>Progress Tracking</h2>
 
             <p>
-                Track your learning progress
-                and improve your preparation.
+                Track your quiz performance,
+                study plans, revisions and
+                overall learning progress.
             </p>
 
-            <button class="start-btn" onclick="progressNotAvailable()">
+            <button
+                class="start-btn"
+                onclick="goToProgress()"
+            >
                 View Progress
             </button>
 
@@ -161,15 +201,20 @@
                 Ask NeuroMnemonic AI any study-related question.
             </p>
 
+
             <div id="chatBox">
 
                 <div class="ai-message">
+
                     <strong>AI:</strong>
+
                     Hello! I'm your AI Learning Assistant.
                     Ask me anything about your studies.
+
                 </div>
 
             </div>
+
 
             <div class="ai-input-area">
 
@@ -180,7 +225,10 @@
                     onkeydown="if(event.key === 'Enter') askAI()"
                 >
 
-                <button class="ask-btn" onclick="askAI()">
+                <button
+                    class="ask-btn"
+                    onclick="askAI()"
+                >
                     Ask AI
                 </button>
 
@@ -193,51 +241,245 @@
 
     <!-- FOOTER -->
     <footer class="footer">
+
         © 2026 NeuroMnemonic AI • Learn Smarter 🧠
+
     </footer>
 
 
-    <!-- JAVASCRIPT -->
+    <!-- AI CHAT JAVASCRIPT -->
     <script src="js/aiChat.js"></script>
 
+
+    <!-- DASHBOARD JAVASCRIPT -->
     <script>
 
-        function goToProfile() {
-            window.location.href = "profile.html";
-        }
+        const token =
+            localStorage.getItem("token");
 
-        function goToRoadmap() {
-            window.location.href = "roadmap.html";
-        }
 
-        function goToAITutor() {
-            window.location.href = "ai-tutor.html";
-        }
-
-        function goToMnemonic() {
-            window.location.href = "mnemonic.html";
-        }
-
-        function goToPlanner() {
-            window.location.href = "study-planner.html";
-        }
-
-        function progressNotAvailable() {
-            alert("Progress Tracking will be connected soon.");
-        }
-
-        function logout() {
-            localStorage.removeItem("token");
-            window.location.href = "login.html";
-        }
-
-        const token = localStorage.getItem("token");
+        // -----------------------------------
+        // Authentication Check
+        // -----------------------------------
 
         if (!token) {
-            window.location.href = "login.html";
+
+            window.location.href =
+                "login.html";
+
         }
+
+
+        // -----------------------------------
+        // Navigation
+        // -----------------------------------
+
+        function goToProfile() {
+
+            window.location.href =
+                "profile.html";
+
+        }
+
+
+        function goToRoadmap() {
+
+            window.location.href =
+                "roadmap.html";
+
+        }
+
+
+        function goToAITutor() {
+
+            window.location.href =
+                "ai-tutor.html";
+
+        }
+
+
+        function goToMnemonic() {
+
+            window.location.href =
+                "mnemonic.html";
+
+        }
+
+
+        function goToPlanner() {
+
+            window.location.href =
+                "study-planner.html";
+
+        }
+
+
+        function goToProgress() {
+
+            window.location.href =
+                "progress.html";
+
+        }
+
+
+        // -----------------------------------
+        // Logout
+        // -----------------------------------
+
+        function logout() {
+
+            localStorage.removeItem("token");
+
+            window.location.href =
+                "login.html";
+
+        }
+
+
+        // -----------------------------------
+        // Load Current Goal
+        // -----------------------------------
+
+        async function loadGoal() {
+
+            const goalDetails =
+                document.getElementById(
+                    "goalDetails"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://localhost:5000/api/goals",
+                        {
+                            method: "GET",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    goalDetails.textContent =
+                        "No goal has been set yet.";
+
+                    return;
+
+                }
+
+
+                let goalText = "";
+
+
+                // -----------------------------------
+                // Academic Goal
+                // -----------------------------------
+
+                if (
+                    data.goalType ===
+                    "Academic"
+                ) {
+
+                    goalText =
+                        `🎓 Academic / College
+                        | Course: ${
+                            data.course ||
+                            "Not specified"
+                        }
+                        | Semester: ${
+                            data.semester ||
+                            "Not specified"
+                        }
+                        | Subjects: ${
+                            data.subjects &&
+                            data.subjects.length > 0
+                                ? data.subjects.join(", ")
+                                : "Not specified"
+                        }
+                        | Daily Study: ${
+                            data.dailyStudyHours ||
+                            0
+                        } hours`;
+
+                }
+
+
+                // -----------------------------------
+                // Competitive Exam Goal
+                // -----------------------------------
+
+                if (
+                    data.goalType ===
+                    "Competitive Exam"
+                ) {
+
+                    goalText =
+                        `🏆 ${
+                            data.examName ||
+                            "Competitive Exam"
+                        }
+                        | ${
+                            data.examGroup ||
+                            "Level not specified"
+                        }
+                        | Preparation: ${
+                            data.preparationLevel ||
+                            "Not specified"
+                        }
+                        | Target Attempt: ${
+                            data.targetAttempt ||
+                            "Not specified"
+                        }
+                        | Daily Study: ${
+                            data.dailyStudyHours ||
+                            0
+                        } hours`;
+
+                }
+
+
+                // -----------------------------------
+                // Display Goal
+                // -----------------------------------
+
+                goalDetails.textContent =
+                    goalText || 
+                    "No goal has been set yet.";
+
+            } catch (error) {
+
+                console.error(
+                    "Goal Load Error:",
+                    error
+                );
+
+
+                goalDetails.textContent =
+                    "Unable to load your goal.";
+
+            }
+
+        }
+
+
+        // -----------------------------------
+        // Load Dashboard
+        // -----------------------------------
+
+        loadGoal();
 
     </script>
 
 </body>
+
 </html>

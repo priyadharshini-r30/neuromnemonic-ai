@@ -1,5 +1,5 @@
 /* ========================================
-   GENERAL
+   RESET
 ======================================== */
 
 * {
@@ -8,60 +8,15 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     font-family: Arial, sans-serif;
     background: #f5f7ff;
     color: #222;
-}
-
-
-.page-container {
-    min-height: 100vh;
-}
-
-
-/* ========================================
-   HEADER
-======================================== */
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 20px 40px;
-
-    background: #ffffff;
-
-    border-bottom: 1px solid #e5e5e5;
-}
-
-
-.page-header h1 {
-    font-size: 25px;
-    margin-bottom: 5px;
-}
-
-
-.page-header p {
-    color: #777;
-    font-size: 14px;
-}
-
-
-.back-btn {
-    padding: 11px 18px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    cursor: pointer;
-
-    background: #eeeeff;
-
-    font-size: 14px;
+    line-height: 1.5;
 }
 
 
@@ -69,12 +24,11 @@ body {
    MAIN CONTAINER
 ======================================== */
 
-.learning-container {
-    max-width: 1000px;
-
-    margin: 40px auto;
-
-    padding: 0 25px;
+.roadmap-container {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 45px 30px 70px;
 }
 
 
@@ -84,122 +38,123 @@ body {
 
 .welcome-section {
     text-align: center;
-
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
-
-.welcome-section h2 {
-    font-size: 28px;
-
+.welcome-section h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #222;
     margin-bottom: 10px;
 }
-
 
 .welcome-section p {
     color: #666;
-
-    line-height: 1.6;
-}
-
-
-/* ========================================
-   INPUT
-======================================== */
-
-.input-section {
-    background: #ffffff;
-
-    padding: 25px;
-
-    border-radius: 18px;
-
-    margin-bottom: 20px;
-
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.06);
-}
-
-
-.input-section label {
-    display: block;
-
-    font-weight: bold;
-
-    margin-bottom: 10px;
-}
-
-
-.input-section input {
-    width: 100%;
-
-    padding: 14px 16px;
-
-    border: 1px solid #ddd;
-
-    border-radius: 10px;
-
     font-size: 16px;
-
-    outline: none;
-}
-
-
-.input-section input:focus {
-    border-color: #6c63ff;
 }
 
 
 /* ========================================
-   PREFERENCES
+   GOAL SUMMARY
 ======================================== */
 
-.preferences {
-    display: grid;
+.goal-summary {
+    width: 100%;
+    background: #ffffff;
+    padding: 26px 30px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
 
-    grid-template-columns:
-        repeat(3, 1fr);
+.goal-summary h2 {
+    font-size: 22px;
+    margin-bottom: 18px;
+}
 
-    gap: 20px;
+.goal-summary p {
+    margin-bottom: 10px;
+    color: #555;
+}
 
+.goal-summary strong {
+    color: #333;
+}
+
+.goal-summary span {
+    color: #6c63ff;
+    font-weight: 600;
+}
+
+
+/* ========================================
+   DYNAMIC GOAL SUMMARY
+======================================== */
+
+#welcomeSection #goalSummary {
+    max-width: 850px;
+    margin: 20px auto 0;
+}
+
+
+/* ========================================
+   ROADMAP FORM
+======================================== */
+
+.roadmap-form {
+    width: 100%;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+.roadmap-form h2 {
+    font-size: 23px;
     margin-bottom: 25px;
 }
 
 
-.preference-box {
-    background: #ffffff;
+/* ========================================
+   FORM
+======================================== */
 
-    padding: 20px;
-
-    border-radius: 16px;
-
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.06);
-}
-
-
-.preference-box label {
-    display: block;
-
-    font-weight: bold;
-
-    margin-bottom: 10px;
-}
-
-
-.preference-box select,
-.preference-box input {
+.form-group {
     width: 100%;
+    margin-bottom: 20px;
+}
 
-    padding: 12px;
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
 
-    border: 1px solid #ddd;
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
 
-    border-radius: 9px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
 
-    font-size: 14px;
+    background: #fff;
+    color: #222;
 
-    background: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.10);
 }
 
 
@@ -207,46 +162,33 @@ body {
    GENERATE BUTTON
 ======================================== */
 
-.options-section {
-    text-align: center;
-
-    margin-bottom: 35px;
-}
-
-
-.teach-everything {
+.generate-btn {
     width: 100%;
+    height: 50px;
 
-    padding: 16px;
+    margin-top: 5px;
 
     border: none;
-
-    border-radius: 13px;
+    border-radius: 11px;
 
     background: #6c63ff;
-
     color: white;
 
-    font-size: 17px;
-
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 700;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition: 0.2s ease;
 }
 
-
-.teach-everything:hover {
+.generate-btn:hover {
     transform: translateY(-2px);
-
-    opacity: 0.92;
+    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.22);
 }
 
-
-.teach-everything:disabled {
+.generate-btn:disabled {
     opacity: 0.6;
-
     cursor: not-allowed;
 }
 
@@ -255,46 +197,13 @@ body {
    LOADING
 ======================================== */
 
-.loading {
-    text-align: center;
-
-    padding: 30px;
-}
-
-
-.loader {
-    width: 40px;
-
-    height: 40px;
-
-    border: 4px solid #ddd;
-
-    border-top-color: #6c63ff;
-
-    border-radius: 50%;
-
-    margin: 0 auto 15px;
-
-    animation:
-        spin 1s linear infinite;
-}
-
-
-@keyframes spin {
-
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-
-}
-
-
-.hidden {
+#loading {
     display: none;
+    text-align: center;
+    padding: 20px 10px 5px;
+
+    color: #6c63ff;
+    font-weight: 600;
 }
 
 
@@ -302,20 +211,13 @@ body {
    RESULT SECTION
 ======================================== */
 
-.result-section {
+#resultSection {
+    width: 100%;
     margin-top: 35px;
 }
 
-
-.result-header {
-    text-align: center;
-
-    margin-bottom: 25px;
-}
-
-
-.result-header h2 {
-    font-size: 25px;
+#resultSection > h2 {
+    display: none;
 }
 
 
@@ -324,8 +226,8 @@ body {
 ======================================== */
 
 .learning-journey {
-    max-width: 850px;
-
+    width: 100%;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -336,67 +238,63 @@ body {
 
 .journey-header {
     display: flex;
-
     align-items: center;
+    gap: 16px;
 
-    gap: 15px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
 
     background: #ffffff;
-
-    padding: 22px;
-
     border-radius: 18px;
 
-    margin-bottom: 30px;
-
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
 }
 
-
 .journey-icon {
-    width: 60px;
+    width: 52px;
+    height: 52px;
 
-    height: 60px;
+    flex-shrink: 0;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
     background: #eeeeff;
 
-    font-size: 30px;
+    font-size: 27px;
 }
-
 
 .journey-header h2 {
-    font-size: 22px;
-
-    margin-bottom: 5px;
+    font-size: 25px;
+    margin-bottom: 3px;
+    color: #222;
 }
-
 
 .journey-header p {
     color: #777;
-
     font-size: 14px;
 }
 
 
 /* ========================================
-   DAY
+   EACH DAY
 ======================================== */
 
 .journey-day {
-    display: flex;
+    display: grid;
+
+    grid-template-columns: 65px 1fr;
+
+    column-gap: 18px;
 
     align-items: stretch;
 
-    gap: 20px;
+    position: relative;
+
+    width: 100%;
 }
 
 
@@ -405,60 +303,54 @@ body {
 ======================================== */
 
 .day-number {
-    min-width: 65px;
-
-    height: 65px;
+    width: 55px;
+    height: 55px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    border-radius: 50%;
+    margin-top: 4px;
 
-    background: #ffffff;
+    border-radius: 15px;
 
-    border: 3px solid #6c63ff;
+    background: #6c63ff;
+    color: #ffffff;
 
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 700;
 
-    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(108, 99, 255, 0.22);
 
-    box-shadow:
-        0 5px 15px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 2;
 }
 
 
 /* ========================================
-   DAY CARD
+   CARD
 ======================================== */
 
 .journey-card {
-    flex: 1;
+    width: 100%;
 
-    padding: 23px 26px;
-
-    border-radius: 18px;
+    padding: 22px 25px;
 
     background: #ffffff;
 
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.07);
+    border-radius: 17px;
 
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    border: 1px solid #eeeeee;
 
-    margin-bottom: 0;
+    box-shadow: 0 7px 22px rgba(0, 0, 0, 0.06);
+
+    transition: 0.2s ease;
 }
 
-
 .journey-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 
-    box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 11px 28px rgba(0, 0, 0, 0.10);
 }
 
 
@@ -469,39 +361,69 @@ body {
 .journey-card-top {
     display: flex;
 
+    align-items: center;
+
     justify-content: space-between;
 
-    align-items: center;
+    gap: 15px;
 
     margin-bottom: 12px;
 }
 
 
+/* ========================================
+   DAY LABEL
+======================================== */
+
 .day-label {
-    font-size: 12px;
+    display: inline-flex;
 
-    font-weight: bold;
+    align-items: center;
 
-    letter-spacing: 1.5px;
+    padding: 6px 11px;
+
+    border-radius: 8px;
+
+    background: #f0efff;
 
     color: #6c63ff;
-}
 
-
-.status {
     font-size: 13px;
 
-    font-weight: 600;
+    font-weight: 700;
+
+    letter-spacing: 0.3px;
 }
 
+
+/* ========================================
+   STATUS
+======================================== */
+
+.status {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
 
 .status.pending {
-    color: #777;
+    background: #fff7df;
+    color: #a06b00;
 }
 
-
 .status.completed {
-    color: #2e9b55;
+    background: #e8f8ef;
+    color: #16834b;
 }
 
 
@@ -510,35 +432,52 @@ body {
 ======================================== */
 
 .journey-card h3 {
-    font-size: 21px;
-
     margin-bottom: 9px;
-}
 
+    color: #222;
 
-.journey-card p {
-    color: #666;
+    font-size: 20px;
+    font-weight: 700;
 
-    line-height: 1.6;
-
-    font-size: 15px;
+    line-height: 1.4;
 }
 
 
 /* ========================================
-   FOOTER
+   DESCRIPTION
+======================================== */
+
+.journey-card p {
+    color: #666;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+
+    margin-bottom: 17px;
+}
+
+
+/* ========================================
+   CARD FOOTER
 ======================================== */
 
 .journey-footer {
-    margin-top: 18px;
+    display: flex;
+
+    align-items: center;
 
     padding-top: 13px;
 
     border-top: 1px solid #eeeeee;
+}
+
+.journey-footer span {
+    color: #6c63ff;
 
     font-size: 13px;
 
-    color: #777;
+    font-weight: 600;
 }
 
 
@@ -547,15 +486,105 @@ body {
 ======================================== */
 
 .journey-line {
-    width: 4px;
+    width: 3px;
+    height: 18px;
 
-    height: 28px;
+    margin-left: 31px;
 
-    margin-left: 30px;
-
-    background: #6c63ff;
+    background: #dcd9ff;
 
     border-radius: 5px;
+}
+
+
+/* ========================================
+   START LEARNING
+======================================== */
+
+#resultContent > div:last-child {
+    text-align: center;
+}
+
+#resultContent > div:last-child button {
+    min-width: 190px;
+
+    padding: 14px 28px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #6c63ff;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow: 0 7px 18px rgba(108, 99, 255, 0.20);
+
+    transition: 0.2s ease;
+}
+
+#resultContent > div:last-child button:hover {
+    transform: translateY(-2px);
+    opacity: 0.93;
+}
+
+
+/* ========================================
+   ACTION BUTTONS
+======================================== */
+
+.action-buttons {
+    display: flex;
+
+    gap: 15px;
+
+    width: 100%;
+    max-width: 900px;
+
+    margin: 20px auto 0;
+}
+
+.action-buttons button {
+    flex: 1;
+
+    min-height: 48px;
+
+    padding: 13px 20px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+#backDashboardBtn {
+    background: #eeeeff;
+    color: #444;
+}
+
+#backDashboardBtn:hover {
+    background: #e1e1ff;
+    transform: translateY(-2px);
+}
+
+.start-learning-btn {
+    background: #6c63ff;
+    color: white;
+}
+
+.start-learning-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.93;
 }
 
 
@@ -564,22 +593,23 @@ body {
 ======================================== */
 
 .error-message {
-    background: #fff0f0;
-
-    border: 1px solid #ffcccc;
+    width: 100%;
 
     padding: 20px;
 
     border-radius: 14px;
 
+    background: #fff0f0;
+
+    border: 1px solid #ffcccc;
+
     text-align: center;
 }
 
-
 .error-message h3 {
     margin-bottom: 8px;
+    color: #b00020;
 }
-
 
 .error-message p {
     color: #777;
@@ -587,68 +617,69 @@ body {
 
 
 /* ========================================
-   RESPONSIVE
+   MOBILE
 ======================================== */
 
 @media (max-width: 700px) {
 
-    .page-header {
-        padding: 18px 20px;
+    .roadmap-container {
+        padding: 30px 15px 50px;
     }
 
-
-    .page-header h1 {
-        font-size: 20px;
+    .welcome-section h1 {
+        font-size: 23px;
     }
 
-
-    .learning-container {
-        padding: 0 15px;
+    .roadmap-form,
+    .goal-summary {
+        padding: 20px;
     }
 
-
-    .preferences {
-        grid-template-columns: 1fr;
+    .journey-header {
+        padding: 20px;
     }
 
+    .journey-header h2 {
+        font-size: 21px;
+    }
 
     .journey-day {
-        gap: 12px;
+        grid-template-columns: 48px 1fr;
+        column-gap: 10px;
     }
-
 
     .day-number {
-        min-width: 50px;
+        width: 45px;
+        height: 45px;
 
-        width: 50px;
+        font-size: 15px;
 
-        height: 50px;
-
-        font-size: 14px;
+        border-radius: 12px;
     }
-
 
     .journey-card {
         padding: 18px;
     }
 
+    .journey-card-top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
 
     .journey-card h3 {
         font-size: 18px;
     }
 
-
-    .journey-card-top {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 8px;
+    .journey-card p {
+        font-size: 14px;
     }
-
 
     .journey-line {
-        margin-left: 23px;
+        margin-left: 21px;
     }
 
+    .action-buttons {
+        flex-direction: column;
+    }
 }

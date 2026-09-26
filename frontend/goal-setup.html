@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Goal Setup - NeuroMnemonic AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/goal-setup.css"
+    >
+
+    <style>
+
+        /* ================================= */
+        /* MULTI GOAL OPTIONS */
+        /* ================================= */
+
+        .goal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+
+        .goal-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 18px 20px;
+
+            background: #eeeeee;
+
+            border: 1px solid #d4d4d4;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+
+        .goal-option:hover {
+            background: #e3e3e3;
+
+            border-color: #bcbcbc;
+
+            transform: translateY(-1px);
+        }
+
+
+        .goal-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+
+            cursor: pointer;
+
+            accent-color: #6c63ff;
+
+            flex-shrink: 0;
+        }
+
+
+        .goal-option-content {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            flex: 1;
+        }
+
+
+        .goal-icon {
+            font-size: 28px;
+        }
+
+
+        .goal-option-content strong {
+            display: block;
+
+            color: #222222;
+
+            font-size: 16px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .goal-option-content small {
+            display: block;
+
+            color: #666666;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+        }
+
+
+        /* Selected goal */
+
+        .goal-option:has(input:checked) {
+            background: #e0e0e0;
+
+            border-color: #777777;
+
+            box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.08);
+        }
+
+
+        /* Helper text */
+
+        .helper-text {
+            display: block;
+
+            margin-top: 5px;
+
+            color: #777777;
+
+            font-size: 13px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="goal-container">
+
+
+        <!-- ================================= -->
+        <!-- HEADER -->
+        <!-- ================================= -->
+
+        <header class="goal-header">
+
+            <div class="page-icon">
+                🎯
+            </div>
+
+            <h1>
+                Set Your Learning Goals
+            </h1>
+
+            <p>
+                Tell us what you want to prepare for.
+            </p>
+
+        </header>
+
+
+        <!-- ================================= -->
+        <!-- MAIN CARD -->
+        <!-- ================================= -->
+
+        <div class="goal-card">
+
+            <form id="goalForm">
+
+
+                <!-- ================================= -->
+                <!-- GOAL SELECTION -->
+                <!-- ================================= -->
+
+                <div class="form-group">
+
+                    <label>
+                        What are your learning goals?
+                    </label>
+
+                    <small class="helper-text">
+                        You can select one or more goals.
+                    </small>
+
+
+                    <div class="goal-options">
+
+
+                        <!-- ACADEMIC -->
+
+                        <label class="goal-option">
+
+                            <input
+                                type="checkbox"
+                                id="academicGoal"
+                                value="Academic"
+                            >
+
+                            <div class="goal-option-content">
+
+                                <span class="goal-icon">
+                                    🎓
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Academic / College
+                                    </strong>
+
+                                    <small>
+                                        Prepare for college subjects and examinations.
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
+
+                        <!-- COMPETITIVE -->
+
+                        <label class="goal-option">
+
+                            <input
+                                type="checkbox"
+                                id="competitiveGoal"
+                                value="Competitive Exam"
+                            >
+
+                            <div class="goal-option-content">
+
+                                <span class="goal-icon">
+                                    🏆
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Competitive Exam
+                                    </strong>
+
+                                    <small>
+                                        Prepare for government and competitive examinations.
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================= -->
+                <!-- ACADEMIC SECTION -->
+                <!-- ================================= -->
+
+                <section
+                    id="academicSection"
+                    class="section-box hidden"
+                >
+
+                    <div class="section-heading">
+
+                        <span>
+                            🎓
+                        </span>
+
+                        <h2>
+                            Academic Details
+                        </h2>
+
+                    </div>
+
+
+                    <!-- Academic Year -->
+
+                    <div class="form-group">
+
+                        <label for="academicYear">
+                            Academic Year
+                        </label>
+
+                        <select id="academicYear">
+
+                            <option value="">
+                                Select year
+                            </option>
+
+                            <option value="1st Year">
+                                1st Year
+                            </option>
+
+                            <option value="2nd Year">
+                                2nd Year
+                            </option>
+
+                            <option value="3rd Year">
+                                3rd Year
+                            </option>
+
+                            <option value="4th Year">
+                                4th Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Course -->
+
+                    <div class="form-group">
+
+                        <label for="course">
+                            Course
+                        </label>
+
+                        <input
+                            type="text"
+                            id="course"
+                            placeholder="Example: B.Sc IT"
+                        >
+
+                    </div>
+
+
+                    <!-- Semester -->
+
+                    <div class="form-group">
+
+                        <label for="semester">
+                            Semester
+                        </label>
+
+                        <select id="semester">
+
+                            <option value="">
+                                Select semester
+                            </option>
+
+                            <option value="1">
+                                Semester 1
+                            </option>
+
+                            <option value="2">
+                                Semester 2
+                            </option>
+
+                            <option value="3">
+                                Semester 3
+                            </option>
+
+                            <option value="4">
+                                Semester 4
+                            </option>
+
+                            <option value="5">
+                                Semester 5
+                            </option>
+
+                            <option value="6">
+                                Semester 6
+                            </option>
+
+                            <option value="7">
+                                Semester 7
+                            </option>
+
+                            <option value="8">
+                                Semester 8
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Subjects -->
+
+                    <div class="form-group">
+
+                        <label for="subjects">
+                            Subjects
+                        </label>
+
+                        <input
+                            type="text"
+                            id="subjects"
+                            placeholder="Example: Java, Python, Tamil"
+                        >
+
+                        <small class="helper-text">
+                            Enter your subjects separated by commas.
+                        </small>
+
+                    </div>
+
+
+                    <!-- College Exam Date -->
+
+                    <div class="form-group">
+
+                        <label for="collegeExamDate">
+                            College Exam Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="collegeExamDate"
+                        >
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================================= -->
+                <!-- COMPETITIVE EXAM SECTION -->
+                <!-- ================================= -->
+
+                <section
+                    id="competitiveSection"
+                    class="section-box hidden"
+                >
+
+                    <div class="section-heading">
+
+                        <span>
+                            🏆
+                        </span>
+
+                        <h2>
+                            Competitive Exam Details
+                        </h2>
+
+                    </div>
+
+
+                    <!-- Examination -->
+
+                    <div class="form-group">
+
+                        <label for="examName">
+                            Examination
+                        </label>
+
+                        <select id="examName">
+
+                            <option value="">
+                                Select examination
+                            </option>
+
+                            <option value="TNPSC">
+                                TNPSC
+                            </option>
+
+                            <option value="UPSC">
+                                UPSC
+                            </option>
+
+                            <option value="SSC">
+                                SSC
+                            </option>
+
+                            <option value="Banking">
+                                Banking
+                            </option>
+
+                            <option value="Railway">
+                                Railway
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Group / Level -->
+
+                    <div class="form-group">
+
+                        <label for="examGroup">
+                            Group / Level
+                        </label>
+
+                        <input
+                            type="text"
+                            id="examGroup"
+                            placeholder="Example: Group 1"
+                        >
+
+                        <small class="helper-text">
+                            Example: Group 1, Group 2, CGL, PO, etc.
+                        </small>
+
+                    </div>
+
+
+                    <!-- Preparation Level -->
+
+                    <div class="form-group">
+
+                        <label for="preparationLevel">
+                            Preparation Level
+                        </label>
+
+                        <select id="preparationLevel">
+
+                            <option value="">
+                                Select your level
+                            </option>
+
+                            <option value="Beginner">
+                                Beginner
+                            </option>
+
+                            <option value="Intermediate">
+                                Intermediate
+                            </option>
+
+                            <option value="Advanced">
+                                Advanced
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Target Attempt -->
+
+                    <div class="form-group">
+
+                        <label for="targetAttempt">
+                            Target Attempt / Year
+                        </label>
+
+                        <input
+                            type="number"
+                            id="targetAttempt"
+                            placeholder="Example: 2027"
+                            min="2026"
+                            max="2100"
+                        >
+
+                        <small class="helper-text">
+                            Enter the examination year you are preparing for.
+                        </small>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- VERIFIED EXAM DATA -->
+                    <!-- ================================= -->
+
+                    <div
+                        id="examScheduleSection"
+                        class="schedule-box hidden"
+                    >
+
+                        <div class="schedule-heading">
+
+                            <span>
+                                📅
+                            </span>
+
+                            <h3>
+                                Verified Exam Details
+                            </h3>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Notification Date
+                            </span>
+
+                            <strong id="notificationDate">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Exam Date
+                            </span>
+
+                            <strong id="examDate">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Available Preparation Days
+                            </span>
+
+                            <strong id="availableDays">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Minimum Age
+                            </span>
+
+                            <strong id="minimumAge">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Maximum Age
+                            </span>
+
+                            <strong id="maximumAge">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Required Education
+                            </span>
+
+                            <strong id="requiredEducation">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Eligibility
+                            </span>
+
+                            <strong id="eligibilityStatus">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="schedule-source">
+
+                            <span>
+                                Source:
+                            </span>
+
+                            <a
+                                id="sourceLink"
+                                href="#"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Official Source
+                            </a>
+
+                        </div>
+
+
+                        <small
+                            id="verifiedDate"
+                            class="verified-date"
+                        ></small>
+
+                    </div>
+
+
+                    <p
+                        id="scheduleMessage"
+                        class="schedule-message"
+                    ></p>
+
+                </section>
+
+
+                <!-- ================================= -->
+                <!-- COMMON STUDY TIME -->
+                <!-- ================================= -->
+
+                <section
+                    id="commonSection"
+                    class="section-box hidden"
+                >
+
+                    <div class="section-heading">
+
+                        <span>
+                            ⏰
+                        </span>
+
+                        <h2>
+                            Study Time
+                        </h2>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="dailyStudyHours">
+                            Daily Study Hours
+                        </label>
+
+                        <input
+                            type="number"
+                            id="dailyStudyHours"
+                            min="1"
+                            max="12"
+                            placeholder="Example: 3"
+                        >
+
+                        <small class="helper-text">
+                            Enter how many hours you can study each day.
+                        </small>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================================= -->
+                <!-- MESSAGE -->
+                <!-- ================================= -->
+
+                <p
+                    id="message"
+                    class="message"
+                ></p>
+
+
+                <!-- ================================= -->
+                <!-- BUTTONS -->
+                <!-- ================================= -->
+
+                <div class="button-area">
+
+                    <button
+                        type="button"
+                        class="back-btn"
+                        onclick="goToDashboard()"
+                    >
+                        ← Back
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        Save Goal →
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================= -->
+
+    <script src="js/goal-setup.js"></script>
+
+</body>
+
+</html>

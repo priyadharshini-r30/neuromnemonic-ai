@@ -9,43 +9,59 @@ const askAITutor = async (req, res) => {
       });
     }
 
-    const response = await fetch("http://localhost:11434/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama3.2:3b",
+    const prompt = `
+You are NeuroMnemonic AI, a friendly AI tutor for students.
 
-        prompt: `You are NeuroMnemonic AI, a friendly AI tutor for students.
+Your job is to teach concepts clearly, correctly, and simply.
 
-Your job is to explain concepts clearly and simply.
-
-IMPORTANT LANGUAGE RULE:
-- Answer in the same language used by the student.
+LANGUAGE RULES:
 - If the student asks in English, answer in simple English.
-- If the student asks in Tamil, answer in Tamil.
-- If the student asks in Tanglish (Tamil written using English letters), answer in simple Tanglish.
+- If the student asks in Tamil script, answer in readable Tamil script.
+- If the student asks in Tanglish, answer in simple Tanglish.
+- If the student mixes Tamil and English, naturally use a simple mix.
 - Do not unnecessarily change the student's language.
-- If the student mixes Tamil and English, you may naturally use a simple mix of Tamil and English.
-- Keep the explanation student-friendly and easy to understand.
+- Never randomly switch to Hindi or another language.
 
-FORMATTING RULES:
-- Use short paragraphs.
-- Use headings when useful.
-- Use numbered lists or bullet points when appropriate.
-- Highlight important terms using **bold**.
-- Avoid unnecessary long explanations.
-- Give examples when they help understanding.
+TEACHING RULES:
+- Explain the concept step by step.
+- Keep the answer easy for a student to understand.
+- Give a simple example when useful.
+- For technical topics, explain with practical examples.
+- Do not invent facts.
+- If you are unsure about something, clearly say so.
+- Keep answers reasonably short.
+- Use headings and bullet points when they improve clarity.
 
 Student's question:
 ${question}
 
-Now answer the student's question following all the rules above.`,
+Now teach the student clearly and helpfully.
+`;
 
-        stream: false
-      })
-    });
+    const response = await fetch(
+      "http://localhost:11434/api/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama3.2:3b",
+          messages: [
+            {
+              role: "user",
+              content: prompt
+            }
+          ],
+          stream: false,
+          keep_alive: "30m",
+          options: {
+            num_ctx: 1024,
+            num_predict: 300
+          }
+        })
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Ollama request failed: ${response.status}`);
@@ -53,10 +69,16 @@ Now answer the student's question following all the rules above.`,
 
     const data = await response.json();
 
+    const answer = data?.message?.content?.trim();
+
+    if (!answer) {
+      throw new Error("Ollama returned an empty response");
+    }
+
     res.status(200).json({
       success: true,
       question,
-      answer: data.response
+      reply: answer
     });
 
   } catch (error) {
@@ -64,8 +86,7 @@ Now answer the student's question following all the rules above.`,
 
     res.status(500).json({
       success: false,
-      message: "AI Tutor is currently unavailable",
-      error: error.message
+      message: "AI Tutor is currently unavailable"
     });
   }
 };

@@ -4,13 +4,11 @@ const protect = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-
 // ========================================
 // CREATE PERSONALIZED ROADMAP
 // ========================================
 
 router.post("/", protect, async (req, res) => {
-
     try {
 
         const {
@@ -19,7 +17,6 @@ router.post("/", protect, async (req, res) => {
             learningLevel,
             duration
         } = req.body;
-
 
         // ========================================
         // VALIDATION
@@ -31,33 +28,26 @@ router.post("/", protect, async (req, res) => {
             !learningLevel ||
             !duration
         ) {
-
             return res.status(400).json({
                 success: false,
                 message:
                     "Please provide topic, preferred language, learning level and duration"
             });
-
         }
 
-
-        const numberOfDays =
-            Number(duration);
-
+        const numberOfDays = Number(duration);
 
         if (
             !Number.isInteger(numberOfDays) ||
-            numberOfDays < 1
+            numberOfDays < 1 ||
+            numberOfDays > 40
         ) {
-
             return res.status(400).json({
                 success: false,
                 message:
-                    "Duration must be at least 1 day"
+                    "Duration must be between 1 and 40 days"
             });
-
         }
-
 
         // ========================================
         // LANGUAGE INSTRUCTION
@@ -65,49 +55,35 @@ router.post("/", protect, async (req, res) => {
 
         let languageInstruction = "";
 
-
-        if (
-            preferredLanguage === "Tamil"
-        ) {
+        if (preferredLanguage === "Tamil") {
 
             languageInstruction = `
 The user selected Tamil.
 
-Write ALL roadmap topics in Tamil.
-Write ALL descriptions in Tamil.
+Write all roadmap topics in Tamil.
+Write all descriptions in simple Tamil.
 
-Do NOT write English sentences.
+Do not write complete English sentences.
 
 Technical terms such as Java, Python, HTML, CSS,
-SQL, API, OOP and similar programming terms
-may remain in English when necessary.
+SQL, API, OOP and similar terms may remain in English
+when necessary.
 
 Use simple Tamil that a student can easily understand.
 `;
 
-        }
-
-
-        else if (
-            preferredLanguage === "English"
-        ) {
+        } else if (preferredLanguage === "English") {
 
             languageInstruction = `
 The user selected English.
 
-Write ALL roadmap topics in English.
-Write ALL descriptions in English.
+Write all roadmap topics in English.
+Write all descriptions in simple and clear English.
 
 Do not write Tamil.
-Use simple and clear English.
 `;
 
-        }
-
-
-        else if (
-            preferredLanguage === "Bilingual"
-        ) {
+        } else if (preferredLanguage === "Bilingual") {
 
             languageInstruction = `
 The user selected Bilingual.
@@ -118,19 +94,19 @@ Write each description using both English and Tamil.
 
 Example:
 
-"topic": "Variables and Data Types"
+Topic:
+Variables and Data Types
 
-"description":
-"Learn variables and data types in Java.
+Description:
+Learn variables and data types in Java.
 Java-வில் variables மற்றும் data types எப்படி
-பயன்படுத்தப்படுகின்றன என்பதை கற்றுக்கொள்ளுங்கள்."
+பயன்படுத்தப்படுகின்றன என்பதை கற்றுக்கொள்ளுங்கள்.
 `;
 
         }
 
-
         // ========================================
-        // AI PROMPT
+        // OLLAMA PROMPT
         // ========================================
 
         const prompt = `
@@ -152,140 +128,140 @@ IMPORTANT RULES:
 3. Day numbers must continue in order.
 4. Do not skip any day.
 5. Every day must have a unique learning topic.
-6. Topics should progress from basic to advanced according
-   to the learning level.
-7. Descriptions must be short and useful.
-8. Do not repeat the same topic.
-9. completed must always be false.
-10. Follow the selected language exactly.
+6. Topics must progress logically from basic to advanced.
+7. Match the roadmap to the selected learning level.
+8. Keep descriptions short and useful.
+9. Do not repeat topics.
+10. completed must always be false.
+11. Follow the selected language exactly.
+12. Make the roadmap practical for a student.
 
-RETURN ONLY VALID JSON.
+Return ONLY valid JSON.
 
-Do not use Markdown.
-Do not use code fences.
-Do not add explanations.
-Do not add text before the JSON.
-Do not add text after the JSON.
+Do not add markdown.
+Do not add \`\`\`json.
+Do not add explanations before or after the JSON.
 
-The JSON must have exactly this structure:
+Use exactly this structure:
 
 {
-  "roadmap": [
-    {
-      "day": 1,
-      "topic": "Topic name",
-      "description": "Short explanation",
-      "completed": false
-    }
-  ]
+    "roadmap": [
+        {
+            "day": 1,
+            "topic": "Topic name",
+            "description": "Short explanation",
+            "completed": false
+        }
+    ]
 }
 
-Generate exactly ${numberOfDays} objects.
-
-Make the roadmap useful for a student who wants
-to learn ${topic} step by step.
+Generate exactly ${numberOfDays} roadmap objects.
 `;
 
-
         // ========================================
-        // CALL OLLAMA
+        // CALL OLLAMA API
         // ========================================
 
-        const aiResponse =
-            await fetch(
-                "http://localhost:11434/api/generate",
-                {
+        console.log("OLLAMA ROADMAP GENERATION STARTED");
 
-                    method: "POST",
+        const ollamaResponse = await fetch(
+            "http://localhost:11434/api/chat",
+            {
+                method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                    body:
-                        JSON.stringify({
+                body: JSON.stringify({
 
-                            model:
-                                "llama3.2:3b",
+                    model: "llama3.2:3b",
 
-                            prompt:
-                                prompt,
+                    messages: [
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ],
 
-                            stream:
-                                false,
+                    stream: false,
 
-                            format:
-                                "json"
+                    keep_alive: "30m",
 
-                        })
+                    options: {
+                        num_ctx: 2048,
+                        num_predict: 2500
+                    }
 
-                }
-            );
-
+                })
+            }
+        );
 
         // ========================================
         // CHECK OLLAMA RESPONSE
         // ========================================
 
-        if (!aiResponse.ok) {
+        if (!ollamaResponse.ok) {
+
+            const errorData =
+                await ollamaResponse.text();
+
+            console.error(
+                "Ollama API Error:",
+                errorData
+            );
 
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    "Ollama AI request failed"
-
+                    "Ollama AI request failed",
+                error:
+                    errorData
             });
 
         }
 
+        const ollamaData =
+            await ollamaResponse.json();
 
-        const aiData =
-            await aiResponse.json();
+        // ========================================
+        // GET OLLAMA TEXT
+        // ========================================
 
+        let aiText =
+            ollamaData
+                ?.message
+                ?.content;
 
-        if (
-            !aiData.response
-        ) {
+        if (!aiText) {
+
+            console.error(
+                "Empty Ollama response:",
+                ollamaData
+            );
 
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    "AI returned an empty response"
-
+                    "Ollama returned an empty response"
             });
 
         }
 
+        console.log("OLLAMA ROADMAP RESPONSE RECEIVED");
 
         // ========================================
         // CLEAN AI RESPONSE
         // ========================================
 
-        let aiText =
-            aiData.response.trim();
+        aiText = aiText.trim();
 
-
-        aiText =
-            aiText
-                .replace(
-                    /^```json\s*/i,
-                    ""
-                )
-                .replace(
-                    /^```\s*/i,
-                    ""
-                )
-                .replace(
-                    /\s*```$/i,
-                    ""
-                )
-                .trim();
-
+        // Remove markdown JSON wrapper if model adds it
+        aiText = aiText
+            .replace(/^```json\s*/i, "")
+            .replace(/^```\s*/i, "")
+            .replace(/\s*```$/i, "")
+            .trim();
 
         // ========================================
         // PARSE JSON
@@ -293,100 +269,51 @@ to learn ${topic} step by step.
 
         let parsedData;
 
-
         try {
 
             parsedData =
                 JSON.parse(aiText);
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
-                "AI JSON Parse Error:",
+                "Ollama JSON Parse Error:",
                 error.message
             );
 
             console.error(
-                "AI Response:",
+                "Ollama Response:",
                 aiText
             );
 
-
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    "AI generated invalid JSON"
-
+                    "Ollama generated invalid JSON"
             });
 
         }
-
 
         // ========================================
         // GET ROADMAP ARRAY
         // ========================================
 
         let generatedRoadmap =
-            null;
-
-
-        if (
-            parsedData &&
-            Array.isArray(
-                parsedData.roadmap
-            )
-        ) {
-
-            generatedRoadmap =
-                parsedData.roadmap;
-
-        }
-
-
-        else if (
-            Array.isArray(
-                parsedData
-            )
-        ) {
-
-            generatedRoadmap =
-                parsedData;
-
-        }
-
-
-        // ========================================
-        // CHECK ROADMAP FORMAT
-        // ========================================
+            parsedData?.roadmap;
 
         if (
-            !generatedRoadmap ||
             !Array.isArray(
                 generatedRoadmap
             )
         ) {
 
-            console.error(
-                "Invalid AI roadmap:",
-                parsedData
-            );
-
-
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    "Invalid roadmap format"
-
+                    "Invalid roadmap format returned by Ollama"
             });
 
         }
-
 
         // ========================================
         // CHECK NUMBER OF DAYS
@@ -398,16 +325,12 @@ to learn ${topic} step by step.
         ) {
 
             return res.status(500).json({
-
                 success: false,
-
                 message:
-                    `AI generated ${generatedRoadmap.length} days instead of ${numberOfDays} days. Please try again.`
-
+                    `Ollama generated ${generatedRoadmap.length} days instead of ${numberOfDays} days. Please try again.`
             });
 
         }
-
 
         // ========================================
         // NORMALIZE ROADMAP
@@ -415,15 +338,9 @@ to learn ${topic} step by step.
 
         generatedRoadmap =
             generatedRoadmap
-                .slice(
-                    0,
-                    numberOfDays
-                )
+                .slice(0, numberOfDays)
                 .map(
-                    function (
-                        item,
-                        index
-                    ) {
+                    function (item, index) {
 
                         return {
 
@@ -445,7 +362,6 @@ to learn ${topic} step by step.
 
                     }
                 );
-
 
         // ========================================
         // SAVE ROADMAP TO MONGODB
@@ -474,7 +390,6 @@ to learn ${topic} step by step.
 
             });
 
-
         // ========================================
         // SEND RESPONSE
         // ========================================
@@ -491,16 +406,12 @@ to learn ${topic} step by step.
 
         });
 
-    }
-
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "Roadmap Create Error:",
             error
         );
-
 
         return res.status(500).json({
 
@@ -517,7 +428,6 @@ to learn ${topic} step by step.
     }
 
 });
-
 
 // ========================================
 // GET USER ROADMAPS
@@ -541,7 +451,6 @@ router.get(
                     createdAt: -1
                 });
 
-
             return res.status(200).json({
 
                 success: true,
@@ -554,16 +463,12 @@ router.get(
 
             });
 
-        }
-
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "Roadmap Fetch Error:",
                 error
             );
-
 
             return res.status(500).json({
 
@@ -581,6 +486,5 @@ router.get(
 
     }
 );
-
 
 module.exports = router;

@@ -1,86 +1,96 @@
-const chatBox = document.getElementById("chatBox");
-const questionInput = document.getElementById("questionInput");
-const sendButton = document.getElementById("sendButton");
+async function askAI() {
+    const input = document.getElementById("questionInput");
+    const chatBox = document.getElementById("chatBox");
 
-async function askAITutor() {
-    const question = questionInput.value.trim();
+    const message = input.value.trim();
 
-    if (!question) {
-        return;
-    }
+    if (!message) return;
 
-    // Show user's question
+    // Show user message
     const userMessage = document.createElement("div");
     userMessage.className = "message user-message";
-    userMessage.innerHTML = `
-        <strong>You:</strong>
-        <p>${question}</p>
-    `;
 
+    userMessage.innerHTML = `<strong>You:</strong><p>${message}</p>`;
     chatBox.appendChild(userMessage);
 
-    // Clear input
-    questionInput.value = "";
+    input.value = "";
 
-    // Disable button while AI is responding
-    sendButton.disabled = true;
-    sendButton.textContent = "Thinking...";
+    // Loading message
+    const loadingMessage = document.createElement("div");
+    loadingMessage.className = "message ai-message";
+    loadingMessage.innerHTML = "<strong>AI Tutor:</strong><p>Thinking... 🤔</p>";
 
-    // Show temporary AI message
-    const aiMessage = document.createElement("div");
-    aiMessage.className = "message ai-message";
-    aiMessage.innerHTML = `
-        <strong>AI Tutor:</strong>
-        <p>Thinking... 🤔</p>
-    `;
-
-    chatBox.appendChild(aiMessage);
-
+    chatBox.appendChild(loadingMessage);
     chatBox.scrollTop = chatBox.scrollHeight;
 
     try {
-        const response = await fetch("http://localhost:5000/api/ai/ask", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                question: question
-            })
-        });
+        const response = await fetch(
+            "http://localhost:5000/api/ai/ask",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    question: message
+                })
+            }
+        );
 
         const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.message || "Something went wrong");
+        loadingMessage.remove();
+
+        const aiMessage = document.createElement("div");
+        aiMessage.className = "message ai-message";
+
+        if (response.ok && data.success) {
+            aiMessage.innerHTML = `
+                <strong>AI Tutor:</strong>
+                <p>${data.reply}</p>
+            `;
+        } else {
+            aiMessage.innerHTML = `
+                <strong>AI Tutor:</strong>
+                <p>${data.message || "Sorry da, AI couldn't answer."}</p>
+            `;
         }
 
-        aiMessage.innerHTML = `
-            <strong>AI Tutor:</strong>
-            <p>${data.answer.replace(/\n/g, "<br>")}</p>
-        `;
+        chatBox.appendChild(aiMessage);
 
     } catch (error) {
-        console.error("AI Tutor Error:", error);
+        console.error("AI Request Error:", error);
 
-        aiMessage.innerHTML = `
+        loadingMessage.remove();
+
+        const errorMessage = document.createElement("div");
+        errorMessage.className = "message ai-message";
+
+        errorMessage.innerHTML = `
             <strong>AI Tutor:</strong>
             <p>Sorry 😕 I couldn't connect to the AI Tutor.</p>
         `;
-    }
 
-    sendButton.disabled = false;
-    sendButton.textContent = "Send";
+        chatBox.appendChild(errorMessage);
+    }
 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Send button
-sendButton.addEventListener("click", askAITutor);
 
-// Press Enter to send
-questionInput.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        askAITutor();
+// Send button
+document.getElementById("sendButton").addEventListener(
+    "click",
+    askAI
+);
+
+
+// Enter key support
+document.getElementById("questionInput").addEventListener(
+    "keypress",
+    function (event) {
+        if (event.key === "Enter") {
+            askAI();
+        }
     }
-});
+);

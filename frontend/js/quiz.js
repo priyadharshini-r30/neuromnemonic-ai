@@ -1,247 +1,370 @@
-const quizContent = document.getElementById("quizContent");
+const quizContent =
+    document.getElementById("quizContent");
 
-// ===============================
-// Get Quiz
-// ===============================
-const quizData = sessionStorage.getItem("generatedQuiz");
+const quizData =
+    sessionStorage.getItem("generatedQuiz");
 
-console.log("Quiz data:", quizData);
+console.log(
+    "Quiz data:",
+    quizData
+);
 
 let quiz;
 
 try {
-    quiz = JSON.parse(quizData);
+    quiz =
+        JSON.parse(quizData);
 } catch (error) {
-    console.error("Quiz parsing error:", error);
+    console.error(
+        "Quiz parsing error:",
+        error
+    );
     quiz = null;
 }
 
-
-// ===============================
-// Check Quiz
-// ===============================
-if (!quiz || !quiz.questions || quiz.questions.length === 0) {
-
+if (
+    !quiz ||
+    !quiz.questions ||
+    quiz.questions.length === 0
+) {
     quizContent.innerHTML = `
         <div class="error-message">
             ❌ No quiz found.
             <br><br>
-            Please go back and generate a quiz first.
+            Please go back and generate
+            a quiz first.
         </div>
     `;
-
 } else {
-
     displayQuiz(quiz);
 }
 
 
-// ===============================
-// Display Quiz
-// ===============================
+// ========================================
+// DISPLAY QUIZ
+// ========================================
+
 function displayQuiz(quiz) {
 
     quizContent.innerHTML = "";
 
-    const form = document.createElement("form");
+    const form =
+        document.createElement("form");
 
-    form.id = "quizForm";
+    form.id =
+        "quizForm";
 
+    quiz.questions.forEach(
+        (item, index) => {
 
-    quiz.questions.forEach((item, index) => {
+            const questionBox =
+                document.createElement("div");
 
-        const questionBox = document.createElement("div");
+            questionBox.className =
+                "question-box";
 
-        questionBox.className = "question-box";
-
-        questionBox.innerHTML = `
-            <h3>
-                ${index + 1}. ${escapeHTML(item.question)}
-            </h3>
-        `;
-
-
-        item.options.forEach((option, optionIndex) => {
-
-            const optionLabel = document.createElement("label");
-
-            optionLabel.className = "option";
-
-            optionLabel.innerHTML = `
-                <input
-                    type="radio"
-                    name="question${index}"
-                    value="${optionIndex}"
-                >
-
-                <span>
-                    ${escapeHTML(option)}
-                </span>
+            questionBox.innerHTML = `
+                <h3>
+                    ${index + 1}.
+                    ${escapeHTML(
+                        item.question
+                    )}
+                </h3>
             `;
 
-            questionBox.appendChild(optionLabel);
-        });
+            item.options.forEach(
+                (option, optionIndex) => {
+
+                    const optionLabel =
+                        document.createElement(
+                            "label"
+                        );
+
+                    optionLabel.className =
+                        "option";
+
+                    optionLabel.innerHTML = `
+                        <input
+                            type="radio"
+                            name="question${index}"
+                            value="${optionIndex}"
+                        >
+
+                        <span>
+                            ${escapeHTML(
+                                option
+                            )}
+                        </span>
+                    `;
+
+                    questionBox.appendChild(
+                        optionLabel
+                    );
+                }
+            );
+
+            form.appendChild(
+                questionBox
+            );
+        }
+    );
 
 
-        form.appendChild(questionBox);
-    });
+    const submitButton =
+        document.createElement("button");
+
+    submitButton.type =
+        "submit";
+
+    submitButton.id =
+        "submitQuiz";
+
+    submitButton.textContent =
+        "✅ Submit Quiz";
+
+    form.appendChild(
+        submitButton
+    );
 
 
-    // ===============================
-    // Submit Button
-    // ===============================
-    const submitButton = document.createElement("button");
+    const resultDiv =
+        document.createElement("div");
 
-    submitButton.type = "submit";
-    submitButton.id = "submitQuiz";
-    submitButton.textContent = "✅ Submit Quiz";
+    resultDiv.id =
+        "quizResult";
 
-    form.appendChild(submitButton);
+    form.appendChild(
+        resultDiv
+    );
 
-
-    // ===============================
-    // Result
-    // ===============================
-    const resultDiv = document.createElement("div");
-
-    resultDiv.id = "quizResult";
-
-    form.appendChild(resultDiv);
+    quizContent.appendChild(
+        form
+    );
 
 
-    quizContent.appendChild(form);
+    form.addEventListener(
+        "submit",
+        function (event) {
 
+            event.preventDefault();
 
-    form.addEventListener("submit", function (event) {
+            checkAnswers(quiz);
 
-        event.preventDefault();
-
-        checkAnswers(quiz);
-
-    });
+        }
+    );
 }
 
 
-// ===============================
-// Check Answers
-// ===============================
-function checkAnswers(quiz) {
+// ========================================
+// CHECK ANSWERS
+// ========================================
+
+async function checkAnswers(quiz) {
 
     let score = 0;
+
     let answered = 0;
+
 
     let resultHTML = `
         <div class="result-summary">
-            <h2>🎉 Quiz Completed!</h2>
+            <h2>
+                🎉 Quiz Completed!
+            </h2>
         </div>
     `;
 
 
-    quiz.questions.forEach((item, index) => {
+    quiz.questions.forEach(
+        (item, index) => {
 
-        const selected = document.querySelector(
-            `input[name="question${index}"]:checked`
+            const selected =
+                document.querySelector(
+                    `input[name="question${index}"]:checked`
+                );
+
+
+            if (selected) {
+
+                answered++;
+
+                const userAnswer =
+                    Number(
+                        selected.value
+                    );
+
+
+                if (
+                    userAnswer ===
+                    item.answer
+                ) {
+                    score++;
+                }
+
+            }
+
+        }
+    );
+
+
+    const totalQuestions =
+        quiz.questions.length;
+
+
+    const percentage =
+        Math.round(
+            (score / totalQuestions) * 100
         );
 
 
-        if (selected) {
-
-            answered++;
-
-            const userAnswer = Number(selected.value);
-
-            if (userAnswer === item.answer) {
-                score++;
-            }
-        }
-    });
-
-
-    // ===============================
-    // Score
-    // ===============================
     resultHTML += `
         <div class="score">
 
             <h2>
-                📊 Your Score: ${score} / ${quiz.questions.length}
+                📊 Your Score:
+                ${score}
+                /
+                ${totalQuestions}
             </h2>
 
             <p>
-                Answered: ${answered} / ${quiz.questions.length}
+                Answered:
+                ${answered}
+                /
+                ${totalQuestions}
+            </p>
+
+            <p>
+                Percentage:
+                ${percentage}%
             </p>
 
         </div>
     `;
 
 
-    // ===============================
-    // Answer Review
-    // ===============================
-    quiz.questions.forEach((item, index) => {
+    // ========================================
+    // ANSWER REVIEW
+    // ========================================
 
-        const selected = document.querySelector(
-            `input[name="question${index}"]:checked`
-        );
+    quiz.questions.forEach(
+        (item, index) => {
 
-
-        const userAnswer = selected
-            ? Number(selected.value)
-            : -1;
+            const selected =
+                document.querySelector(
+                    `input[name="question${index}"]:checked`
+                );
 
 
-        const isCorrect = userAnswer === item.answer;
+            const userAnswer =
+                selected
+                    ? Number(
+                        selected.value
+                    )
+                    : -1;
 
 
-        resultHTML += `
-            <div class="answer-review">
+            const isCorrect =
+                userAnswer ===
+                item.answer;
 
-                <h3>
-                    Question ${index + 1}
-                </h3>
 
-                <p>
-                    ${escapeHTML(item.question)}
-                </p>
+            resultHTML += `
+                <div class="answer-review">
 
-                <p>
-                    <strong>Your Answer:</strong>
+                    <h3>
+                        Question
+                        ${index + 1}
+                    </h3>
 
-                    ${
-                        userAnswer >= 0
+                    <p>
+                        ${escapeHTML(
+                            item.question
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Your Answer:
+                        </strong>
+
+                        ${
+                            userAnswer >= 0
                             ? escapeHTML(
-                                item.options[userAnswer]
+                                item.options[
+                                    userAnswer
+                                ]
                             )
                             : "Not answered"
-                    }
-                </p>
+                        }
+                    </p>
 
-                <p>
-                    <strong>Correct Answer:</strong>
+                    <p>
+                        <strong>
+                            Correct Answer:
+                        </strong>
 
-                    ${escapeHTML(
-                        item.options[item.answer]
-                    )}
-                </p>
+                        ${escapeHTML(
+                            item.options[
+                                item.answer
+                            ]
+                        )}
+                    </p>
 
-                <p class="${isCorrect ? "correct" : "incorrect"}">
+                    <p
+                        class="${
+                            isCorrect
+                                ? "correct"
+                                : "incorrect"
+                        }"
+                    >
+                        ${
+                            isCorrect
+                                ? "✅ Correct"
+                                : "❌ Incorrect"
+                        }
+                    </p>
 
-                    ${
-                        isCorrect
-                            ? "✅ Correct"
-                            : "❌ Incorrect"
-                    }
+                </div>
+            `;
 
-                </p>
-
-            </div>
-        `;
-    });
+        }
+    );
 
 
-    // ===============================
-    // Try Another Quiz Button
-    // ===============================
+    // ========================================
+    // REVISION MESSAGE
+    // ========================================
+
+    resultHTML += `
+        <div
+            id="revisionMessage"
+            class="revision-message"
+        >
+            ⏳ Creating your
+            automatic revision schedule...
+        </div>
+    `;
+
+
+    // ========================================
+    // PROGRESS SAVE MESSAGE
+    // ========================================
+
+    resultHTML += `
+        <div
+            id="progressMessage"
+            class="progress-message"
+        >
+            ⏳ Saving your quiz progress...
+        </div>
+    `;
+
+
+    // ========================================
+    // ANOTHER QUIZ BUTTON
+    // ========================================
+
     resultHTML += `
         <div class="another-quiz-container">
 
@@ -257,69 +380,425 @@ function checkAnswers(quiz) {
 
 
     const resultDiv =
-        document.getElementById("quizResult");
+        document.getElementById(
+            "quizResult"
+        );
 
-    resultDiv.innerHTML = resultHTML;
+
+    resultDiv.innerHTML =
+        resultHTML;
 
 
     // Disable answers
+
     document
-        .querySelectorAll("#quizForm input")
-        .forEach(input => {
-            input.disabled = true;
-        });
+        .querySelectorAll(
+            "#quizForm input"
+        )
+        .forEach(
+            input => {
+                input.disabled =
+                    true;
+            }
+        );
 
 
-    // Disable submit
     document
-        .getElementById("submitQuiz")
+        .getElementById(
+            "submitQuiz"
+        )
         .disabled = true;
 
 
-    // ===============================
-    // Try Another Quiz
-    // ===============================
+    // ========================================
+    // SAVE QUIZ PROGRESS
+    // ========================================
+
+    await saveQuizAttempt(
+        quiz,
+        score,
+        totalQuestions
+    );
+
+
+    // ========================================
+    // CREATE AUTOMATIC REVISION
+    // ========================================
+
+    await createAutomaticRevision(
+        quiz,
+        score,
+        totalQuestions
+    );
+
+
+    // ========================================
+    // ANOTHER QUIZ
+    // ========================================
+
     document
-        .getElementById("anotherQuizBtn")
-        .addEventListener("click", generateAnotherQuiz);
+        .getElementById(
+            "anotherQuizBtn"
+        )
+        .addEventListener(
+            "click",
+            generateAnotherQuiz
+        );
 }
 
 
-// ===============================
-// Generate Another Quiz
-// ===============================
-async function generateAnotherQuiz() {
+// ========================================
+// SAVE QUIZ ATTEMPT
+// ========================================
 
-    const button =
-        document.getElementById("anotherQuizBtn");
+async function saveQuizAttempt(
+    quiz,
+    score,
+    totalQuestions
+) {
 
-    button.disabled = true;
-    button.textContent = "Generating New Quiz... ⏳";
+    const progressMessage =
+        document.getElementById(
+            "progressMessage"
+        );
+
+
+    const token =
+        localStorage.getItem(
+            "token"
+        );
+
+
+    if (!token) {
+
+        progressMessage.innerHTML = `
+            ❌ Please login again
+            to save your progress.
+        `;
+
+        return;
+
+    }
+
+
+    const topic =
+        quiz.topic ||
+        quiz.subject ||
+        sessionStorage.getItem(
+            "currentTopic"
+        ) ||
+        sessionStorage.getItem(
+            "topic"
+        ) ||
+        "Current Learning Topic";
+
+
+    const subject =
+        quiz.subject ||
+        sessionStorage.getItem(
+            "currentSubject"
+        ) ||
+        "General";
 
 
     try {
 
-        // Get study content
-        const generatedContent =
-            sessionStorage.getItem("generatedContent");
+        const response =
+            await fetch(
+                "http://localhost:5000/api/quiz-attempts",
+                {
+                    method: "POST",
 
-        /*
-         * If generatedContent is not available,
-         * go back to mnemonic page.
-         */
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+
+                        subject,
+
+                        topic,
+
+                        score,
+
+                        totalQuestions
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to save quiz progress"
+            );
+
+        }
+
+
+        progressMessage.innerHTML = `
+            <div>
+
+                📈
+                <strong>
+                    Quiz Progress Saved!
+                </strong>
+
+                <br><br>
+
+                Your score has been added
+                to your progress tracking.
+
+            </div>
+        `;
+
+        progressMessage.style.color =
+            "#4caf50";
+
+
+        console.log(
+            "Quiz attempt saved:",
+            data
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Save quiz attempt error:",
+            error
+        );
+
+
+        progressMessage.innerHTML = `
+            ❌ Quiz completed,
+            but progress could not be saved.
+        `;
+
+        progressMessage.style.color =
+            "red";
+
+    }
+}
+
+
+// ========================================
+// AUTOMATIC REVISION
+// ========================================
+
+async function createAutomaticRevision(
+    quiz,
+    score,
+    totalQuestions
+) {
+
+    const revisionMessage =
+        document.getElementById(
+            "revisionMessage"
+        );
+
+
+    const token =
+        localStorage.getItem(
+            "token"
+        );
+
+
+    if (!token) {
+
+        revisionMessage.innerHTML = `
+            ❌ Please login again
+            to create revision.
+        `;
+
+        return;
+
+    }
+
+
+    const topic =
+        quiz.topic ||
+        quiz.subject ||
+        sessionStorage.getItem(
+            "currentTopic"
+        ) ||
+        sessionStorage.getItem(
+            "topic"
+        ) ||
+        "Current Learning Topic";
+
+
+    const subject =
+        quiz.subject ||
+        sessionStorage.getItem(
+            "currentSubject"
+        ) ||
+        "General";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:5000/api/revisions",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+
+                        subject,
+
+                        topic,
+
+                        score,
+
+                        totalQuestions
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Revision creation failed"
+            );
+
+        }
+
+
+        const revision =
+            data.revision;
+
+
+        revisionMessage.innerHTML = `
+            <div>
+
+                🧠
+                <strong>
+                    Automatic Revision Scheduled!
+                </strong>
+
+                <br><br>
+
+                📊 Quiz Score:
+                ${revision.score}
+                /
+                ${revision.totalQuestions}
+
+                <br>
+
+                📈 Percentage:
+                ${revision.percentage}%
+
+                <br>
+
+                ⏰ Revise after:
+                ${revision.intervalDays}
+                day(s)
+
+                <br>
+
+                📅 Revision Date:
+                ${revision.revisionDate}
+
+            </div>
+        `;
+
+
+        revisionMessage.style.color =
+            "#4caf50";
+
+
+    } catch (error) {
+
+        console.error(
+            "Automatic revision error:",
+            error
+        );
+
+
+        revisionMessage.innerHTML = `
+            ❌ Quiz completed,
+            but automatic revision
+            could not be scheduled.
+        `;
+
+        revisionMessage.style.color =
+            "red";
+
+    }
+}
+
+
+// ========================================
+// GENERATE ANOTHER QUIZ
+// ========================================
+
+async function generateAnotherQuiz() {
+
+    const button =
+        document.getElementById(
+            "anotherQuizBtn"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Generating New Quiz... ⏳";
+
+
+    try {
+
+        const generatedContent =
+            sessionStorage.getItem(
+                "generatedContent"
+            );
+
+
         if (!generatedContent) {
 
             alert(
                 "Please generate the study content again."
             );
 
-            window.location.href = "mnemonic.html";
+
+            window.location.href =
+                "mnemonic.html";
+
 
             return;
+
         }
 
 
-        // Get previous questions
         const previousQuestions =
             JSON.parse(
                 sessionStorage.getItem(
@@ -328,24 +807,32 @@ async function generateAnotherQuiz() {
             );
 
 
-        const response = await fetch(
-            "http://localhost:5000/api/quiz/generate",
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                "http://localhost:5000/api/quiz/generate",
+                {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                body: JSON.stringify({
-                    content: generatedContent,
-                    previousQuestions: previousQuestions
-                })
-            }
-        );
+                    body: JSON.stringify({
+
+                        content:
+                            generatedContent,
+
+                        previousQuestions:
+                            previousQuestions
+
+                    })
+                }
+            );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (!response.ok) {
@@ -354,20 +841,22 @@ async function generateAnotherQuiz() {
                 data.message ||
                 "New quiz generation failed"
             );
+
         }
 
 
-        // Save new quiz
         sessionStorage.setItem(
             "generatedQuiz",
-            JSON.stringify(data.quiz)
+            JSON.stringify(
+                data.quiz
+            )
         );
 
 
-        // Save new questions
         const newQuestions =
             data.quiz.questions.map(
-                question => question.question
+                question =>
+                    question.question
             );
 
 
@@ -380,7 +869,6 @@ async function generateAnotherQuiz() {
         );
 
 
-        // Reload quiz page
         window.location.reload();
 
 
@@ -391,27 +879,38 @@ async function generateAnotherQuiz() {
             error
         );
 
+
         alert(
             "❌ Failed to generate another quiz."
         );
 
-        button.disabled = false;
+
+        button.disabled =
+            false;
+
 
         button.textContent =
             "🔄 Try Another Quiz";
+
     }
 }
 
 
-// ===============================
-// Security Helper
-// ===============================
+// ========================================
+// ESCAPE HTML
+// ========================================
+
 function escapeHTML(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    div.textContent = text;
+
+    div.textContent =
+        text;
+
 
     return div.innerHTML;
 }

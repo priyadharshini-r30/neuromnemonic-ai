@@ -1,38 +1,188 @@
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+const API_URL = "http://localhost:5000";
 
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const role = document.getElementById("role").value;
 
-    try {
-        const response = await fetch("http://localhost:5000/api/users/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name,
-                email,
-                password,
-                role
-            })
-        });
+// ========================================
+// GET FORM ELEMENTS
+// ========================================
 
-        const data = await response.json();
+const registerForm =
+    document.getElementById("registerForm");
 
-        if (response.ok) {
-            alert("Registration Successful!");
-            console.log(data);
+const message =
+    document.getElementById("message");
 
-            window.location.href = "login.html";
-        } else {
-            alert(data.message || "Registration failed");
+
+// ========================================
+// REGISTER
+// ========================================
+
+registerForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+
+        // ========================================
+        // GET FORM VALUES
+        // ========================================
+
+        const name =
+            document.getElementById("name")
+                .value
+                .trim();
+
+        const email =
+            document.getElementById("email")
+                .value
+                .trim();
+
+        const password =
+            document.getElementById("password")
+                .value;
+
+        const dateOfBirth =
+            document.getElementById("dateOfBirth")
+                .value;
+
+        const educationQualification =
+            document.getElementById(
+                "educationQualification"
+            )
+                .value;
+
+
+        // ========================================
+        // VALIDATION
+        // ========================================
+
+        if (
+            !name ||
+            !email ||
+            !password ||
+            !dateOfBirth ||
+            !educationQualification
+        ) {
+
+            message.textContent =
+                "Please fill all required fields.";
+
+            return;
         }
 
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Server connection failed");
+
+        // ========================================
+        // SEND DATA
+        // ========================================
+
+        message.textContent =
+            "Creating your account...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL +
+                    "/api/users/register",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                name:
+                                    name,
+
+                                email:
+                                    email,
+
+                                password:
+                                    password,
+
+                                dateOfBirth:
+                                    dateOfBirth,
+
+                                educationQualification:
+                                    educationQualification
+
+                            })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            // ========================================
+            // HANDLE ERROR
+            // ========================================
+
+            if (!response.ok) {
+
+                message.textContent =
+                    data.message ||
+                    "Registration failed.";
+
+                return;
+            }
+
+
+            // ========================================
+            // SAVE TOKEN
+            // ========================================
+
+            if (data.token) {
+
+                localStorage.setItem(
+                    "token",
+                    data.token
+                );
+
+            }
+
+
+            // ========================================
+            // SUCCESS
+            // ========================================
+
+            message.textContent =
+                "Registration successful!";
+
+
+            // ========================================
+            // GO TO GOAL SETUP
+            // ========================================
+
+            setTimeout(
+                function () {
+
+                    window.location.href =
+                        "goal-setup.html";
+
+                },
+                1000
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Registration Error:",
+                error
+            );
+
+
+            message.textContent =
+                "Unable to connect to the server.";
+
+        }
+
     }
-});
+);
