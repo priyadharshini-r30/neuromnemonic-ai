@@ -1,32 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NeuroMnemonic AI - Daily Study Planner</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/study-planner.css">
+    <title>
+        NeuroMnemonic AI - Daily Study Planner
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/study-planner.css"
+    >
+
 </head>
 
 <body>
 
     <div class="container">
 
-        <h1>📅 Daily Study Planner</h1>
+        <h1>
+            📅 Daily Study Planner
+        </h1>
 
         <p class="subtitle">
             Plan your study schedule and track your daily progress.
         </p>
 
-        <!-- Create Study Plan -->
+
+        <!-- ========================================
+             CREATE STUDY PLAN
+        ========================================= -->
+
         <div class="planner-card">
 
-            <h2>📝 Create Study Plan</h2>
+            <h2>
+                📝 Create Study Plan
+            </h2>
 
             <form id="studyPlanForm">
 
-                <label for="subject">Subject</label>
+                <label for="subject">
+                    Subject
+                </label>
+
                 <input
                     type="text"
                     id="subject"
@@ -34,7 +57,11 @@
                     required
                 >
 
-                <label for="topic">Topic</label>
+
+                <label for="topic">
+                    Topic
+                </label>
+
                 <input
                     type="text"
                     id="topic"
@@ -42,14 +69,22 @@
                     required
                 >
 
-                <label for="date">Study Date</label>
+
+                <label for="date">
+                    Study Date
+                </label>
+
                 <input
                     type="date"
                     id="date"
                     required
                 >
 
-                <label for="duration">Duration (minutes)</label>
+
+                <label for="duration">
+                    Duration (minutes)
+                </label>
+
                 <input
                     type="number"
                     id="duration"
@@ -58,32 +93,66 @@
                     required
                 >
 
+
                 <button type="submit">
                     ➕ Add Study Plan
                 </button>
 
             </form>
 
+
             <p id="message"></p>
 
         </div>
 
-        <!-- Study Plans -->
+
+        <!-- ========================================
+             STUDY PLANS
+        ========================================= -->
+
         <div class="plans-card">
 
-            <h2>📚 My Study Plans</h2>
+            <h2>
+                📚 My Study Plans
+            </h2>
 
             <div id="studyPlans">
+
                 <p class="empty-message">
                     No study plans yet.
                 </p>
+
             </div>
 
         </div>
 
+
+        <!-- ========================================
+             BACK TO DASHBOARD
+        ========================================= -->
+
+        <div class="dashboard-button-container">
+
+            <button
+                type="button"
+                class="dashboard-btn"
+                onclick="window.location.href='dashboard.html'"
+            >
+                🏠 Back to Dashboard
+            </button>
+
+        </div>
+
+
     </div>
+
+
+    <!-- ========================================
+         JAVASCRIPT
+    ========================================= -->
 
     <script src="js/study-planner.js"></script>
 
 </body>
+
 </html>

@@ -1,42 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Tutor - NeuroMnemonic AI</title>
-    <link rel="stylesheet" href="css/ai-tutor.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        AI Chat Tutor - NeuroMnemonic AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/ai-tutor.css"
+    >
+
 </head>
+
 
 <body>
 
+
     <div class="chat-container">
 
+
+        <!-- ==================================
+             HEADER
+        =================================== -->
+
         <div class="chat-header">
-            <h1>🤖 NeuroMnemonic AI</h1>
-            <p>AI Chat Tutor</p>
+
+            <h1>
+                🤖 NeuroMnemonic AI
+            </h1>
+
+            <p>
+                AI Chat Tutor
+            </p>
+
         </div>
 
-        <div id="chatBox" class="chat-box">
-            <div class="message ai-message">
-                <strong>AI Tutor:</strong>
-                <p>Hi! 👋 I'm your AI Tutor. Ask me anything you want to learn!</p>
-            </div>
+
+        <!-- ==================================
+             CURRENT TOPIC
+        =================================== -->
+
+        <div
+            class="current-topic"
+            id="currentTopicBox"
+        >
+
+            <span class="topic-label">
+                📚 Currently Learning
+            </span>
+
+            <h2 id="currentTopic">
+                Loading topic...
+            </h2>
+
+            <p id="currentTopicDescription">
+                Preparing your personalized lesson...
+            </p>
+
         </div>
+
+
+        <!-- ==================================
+             CHAT BOX
+        =================================== -->
+
+        <div
+            id="chatBox"
+            class="chat-box"
+        >
+
+            <div class="message ai-message">
+
+                <strong>
+                    AI Tutor:
+                </strong>
+
+                <p>
+                    Hi! 👋 I'm your AI Tutor.
+                    I'll help you understand your current roadmap topic.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================
+             INPUT AREA
+        ================================== -->
 
         <div class="input-area">
+
             <input
                 type="text"
                 id="questionInput"
-                placeholder="Ask your question..."
+                placeholder="Ask your question about this topic..."
                 autocomplete="off"
             >
 
-            <button id="sendButton">Send</button>
+            <button
+                id="sendButton"
+                type="button"
+            >
+                Send
+            </button>
+
         </div>
+
+
+        <!-- ==================================
+             STUDY ACTIONS
+        ================================== -->
+
+        <div
+            id="studyActions"
+            class="study-actions"
+        >
+
+            <h3>
+                What would you like to do next?
+            </h3>
+
+
+            <div class="action-buttons">
+
+                <button
+                    type="button"
+                    id="mnemonicButton"
+                    class="action-btn mnemonic-btn"
+                >
+                    🧠 Mnemonic / Story
+                </button>
+
+
+                <button
+                    type="button"
+                    id="quizButton"
+                    class="action-btn quiz-btn"
+                >
+                    🎯 Take Quiz
+                </button>
+
+
+                <button
+                    type="button"
+                    id="completeButton"
+                    class="action-btn complete-btn"
+                >
+                    ✅ Complete Study
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================
+             BACK TO DASHBOARD
+        ================================== -->
+
+        <div class="dashboard-button-container">
+
+            <button
+                type="button"
+                id="backDashboardBtn"
+                class="dashboard-btn"
+            >
+                🏠 Back to Dashboard
+            </button>
+
+        </div>
+
 
     </div>
 
+
+    <!-- ==================================
+         JAVASCRIPT
+    ================================== -->
+
     <script src="js/ai-tutor.js"></script>
 
+
 </body>
+
 </html>

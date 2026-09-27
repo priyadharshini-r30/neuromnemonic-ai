@@ -1,278 +1,401 @@
-const generateBtn = document.getElementById("generateBtn");
-const topicInput = document.getElementById("topic");
-const languageSelect = document.getElementById("language");
-const typeSelect = document.getElementById("type");
-const resultDiv = document.getElementById("result");
-const loadingDiv = document.getElementById("loading");
-const quizBtn = document.getElementById("quizBtn");
+const generateBtn =
+    document.getElementById(
+        "generateBtn"
+    );
 
-// Store generated mnemonic/story
+
+const topicInput =
+    document.getElementById(
+        "topic"
+    );
+
+
+const languageSelect =
+    document.getElementById(
+        "language"
+    );
+
+
+const typeSelect =
+    document.getElementById(
+        "type"
+    );
+
+
+const resultDiv =
+    document.getElementById(
+        "result"
+    );
+
+
+const loadingDiv =
+    document.getElementById(
+        "loading"
+    );
+
+
+const quizBtn =
+    document.getElementById(
+        "quizBtn"
+    );
+
+
 let generatedContent = "";
 
 
-// ===============================
-// Generate Mnemonic / Story
-// ===============================
-generateBtn.addEventListener("click", async () => {
+// ========================================
+// LOAD CURRENT AI TUTOR TOPIC
+// ========================================
 
-    const topic = topicInput.value.trim();
-    const language = languageSelect.value;
-    const type = typeSelect.value;
+const mnemonicTopic =
+    localStorage.getItem(
+        "mnemonicTopic"
+    );
 
-    // Check topic
-    if (!topic) {
-        alert("Please enter a topic!");
-        return;
+
+const mnemonicLanguage =
+    localStorage.getItem(
+        "mnemonicLanguage"
+    );
+
+
+if (mnemonicTopic) {
+
+    topicInput.value =
+        mnemonicTopic;
+}
+
+
+if (mnemonicLanguage) {
+
+    if (
+        [
+            "English",
+            "Tamil",
+            "Bilingual"
+        ].includes(
+            mnemonicLanguage
+        )
+    ) {
+
+        languageSelect.value =
+            mnemonicLanguage;
     }
-
-    // Hide quiz button until new content is generated
-    quizBtn.style.display = "none";
-
-    // Clear old quiz data
-    sessionStorage.removeItem("generatedQuiz");
-    sessionStorage.removeItem("previousQuestions");
-    sessionStorage.removeItem("generatedContent");
-
-    // Show loading
-    loadingDiv.style.display = "block";
-    resultDiv.textContent = "";
-
-    try {
-
-        let endpoint;
-
-        // Select API based on generation type
-        if (type === "mnemonic") {
-
-            endpoint =
-                "http://localhost:5000/api/mnemonic/mnemonic";
-
-        } else {
-
-            endpoint =
-                "http://localhost:5000/api/mnemonic/story";
-        }
+}
 
 
-        // Send request to backend
-        const response = await fetch(endpoint, {
+// ========================================
+// GENERATE
+// ========================================
 
-            method: "POST",
+generateBtn.addEventListener(
+    "click",
+    async function () {
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                topic: topic,
-                language: language
-            })
-        });
+        const topic =
+            topicInput.value.trim();
 
 
-        const data = await response.json();
+        const language =
+            languageSelect.value;
 
 
-        // Handle backend error
-        if (!response.ok) {
-
-            throw new Error(
-                data.message || "Generation failed"
-            );
-        }
+        const type =
+            typeSelect.value;
 
 
-        // ===============================
-        // Store Generated Content
-        // ===============================
-        if (type === "mnemonic") {
+        if (!topic) {
 
-            generatedContent = data.mnemonic;
-
-            resultDiv.textContent =
-                generatedContent;
-
-        } else {
-
-            generatedContent = data.story;
-
-            resultDiv.textContent =
-                generatedContent;
-        }
-
-
-        // ===============================
-        // Save Content for Quiz
-        // ===============================
-        if (generatedContent) {
-
-            sessionStorage.setItem(
-                "generatedContent",
-                generatedContent
+            alert(
+                "Please enter a topic!"
             );
 
-            quizBtn.style.display = "block";
+            return;
         }
 
 
-    } catch (error) {
+        quizBtn.style.display =
+            "none";
 
-        console.error(
-            "Generation Error:",
-            error
+
+        sessionStorage.removeItem(
+            "generatedQuiz"
         );
 
-        generatedContent = "";
+
+        sessionStorage.removeItem(
+            "previousQuestions"
+        );
+
+
+        sessionStorage.removeItem(
+            "generatedContent"
+        );
+
+
+        loadingDiv.style.display =
+            "block";
+
 
         resultDiv.textContent =
-            "❌ Failed to generate. Please make sure the backend server and Ollama are running.";
-
-    } finally {
-
-        // Hide loading
-        loadingDiv.style.display = "none";
-    }
-});
+            "";
 
 
-// ===============================
-// Generate Quiz
-// ===============================
-quizBtn.addEventListener("click", async () => {
+        try {
 
-    if (!generatedContent) {
-
-        alert(
-            "Please generate a mnemonic or story first!"
-        );
-
-        return;
-    }
+            let endpoint;
 
 
-    try {
+            if (
+                type === "mnemonic"
+            ) {
 
-        // Disable button
-        quizBtn.disabled = true;
+                endpoint =
+                    "http://localhost:5000/api/mnemonic/mnemonic";
 
-        quizBtn.textContent =
-            "Generating Quiz... ⏳";
+            } else {
 
-
-        // Get previous questions
-        const previousQuestions =
-            JSON.parse(
-                sessionStorage.getItem(
-                    "previousQuestions"
-                ) || "[]"
-            );
-
-
-        // ===============================
-        // Send Content to Quiz API
-        // ===============================
-        const response = await fetch(
-            "http://localhost:5000/api/quiz/generate",
-            {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    content: generatedContent,
-
-                    previousQuestions:
-                        previousQuestions
-                })
+                endpoint =
+                    "http://localhost:5000/api/mnemonic/story";
             }
-        );
 
 
-        const data =
-            await response.json();
+            const response =
+                await fetch(
+                    endpoint,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                topic:
+                                    topic,
+
+                                language:
+                                    language
+
+                            })
+
+                    }
+                );
 
 
-        // Handle backend error
-        if (!response.ok) {
+            const data =
+                await response.json();
 
-            throw new Error(
-                data.message ||
-                "Quiz generation failed"
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Generation failed"
+                );
+            }
+
+
+            // ========================================
+            // STORE RESULT
+            // ========================================
+
+            if (
+                type === "mnemonic"
+            ) {
+
+                generatedContent =
+                    data.mnemonic;
+
+            } else {
+
+                generatedContent =
+                    data.story;
+            }
+
+
+            resultDiv.textContent =
+                generatedContent;
+
+
+            // ========================================
+            // SAVE FOR QUIZ
+            // ========================================
+
+            if (generatedContent) {
+
+                sessionStorage.setItem(
+                    "generatedContent",
+                    generatedContent
+                );
+
+
+                quizBtn.style.display =
+                    "block";
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Generation Error:",
+                error
             );
+
+
+            generatedContent =
+                "";
+
+
+            resultDiv.textContent =
+                "❌ Failed to generate. Please make sure the backend server and Ollama are running.";
+
+        } finally {
+
+            loadingDiv.style.display =
+                "none";
+        }
+
+    }
+);
+
+
+// ========================================
+// QUIZ
+// ========================================
+
+quizBtn.addEventListener(
+    "click",
+    async function () {
+
+        if (!generatedContent) {
+
+            alert(
+                "Please generate a mnemonic or story first!"
+            );
+
+            return;
         }
 
 
-        // ===============================
-        // Save Quiz
-        // ===============================
-        sessionStorage.setItem(
-            "generatedQuiz",
-            JSON.stringify(data.quiz)
-        );
+        try {
+
+            quizBtn.disabled =
+                true;
 
 
-        // ===============================
-        // Store Questions
-        // ===============================
-        const newQuestions =
-            data.quiz.questions.map(
-                question =>
-                    question.question
+            quizBtn.textContent =
+                "Generating Quiz... ⏳";
+
+
+            const previousQuestions =
+                JSON.parse(
+                    sessionStorage.getItem(
+                        "previousQuestions"
+                    ) || "[]"
+                );
+
+
+            const response =
+                await fetch(
+                    "http://localhost:5000/api/quiz/generate",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                content:
+                                    generatedContent,
+
+                                previousQuestions:
+                                    previousQuestions
+
+                            })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Quiz generation failed"
+                );
+            }
+
+
+            sessionStorage.setItem(
+                "generatedQuiz",
+                JSON.stringify(
+                    data.quiz
+                )
             );
 
 
-        sessionStorage.setItem(
-            "previousQuestions",
-            JSON.stringify([
-                ...previousQuestions,
-                ...newQuestions
-            ])
-        );
+            const newQuestions =
+                data.quiz.questions.map(
+                    question =>
+                        question.question
+                );
 
 
-        console.log(
-            "Quiz saved:",
-            data.quiz
-        );
+            sessionStorage.setItem(
+                "previousQuestions",
+                JSON.stringify(
+                    [
+                        ...previousQuestions,
+                        ...newQuestions
+                    ]
+                )
+            );
 
 
-        console.log(
-            "Previous questions:",
-            [
-                ...previousQuestions,
-                ...newQuestions
-            ]
-        );
+            window.location.href =
+                "quiz.html";
 
 
-        // ===============================
-        // Open Quiz Page
-        // ===============================
-        window.location.href =
-            "quiz.html";
+        } catch (error) {
+
+            console.error(
+                "Quiz Error:",
+                error
+            );
 
 
-    } catch (error) {
+            alert(
+                "❌ Failed to generate quiz. Please make sure the backend server and Ollama are running."
+            );
 
-        console.error(
-            "Quiz Error:",
-            error
-        );
 
-        alert(
-            "❌ Failed to generate quiz. Please make sure the backend server and Ollama are running."
-        );
+        } finally {
 
-    } finally {
+            quizBtn.disabled =
+                false;
 
-        // Enable button
-        quizBtn.disabled = false;
 
-        quizBtn.textContent =
-            "🎯 Take Quiz";
+            quizBtn.textContent =
+                "🎯 Take Quiz";
+        }
+
     }
-});
+);

@@ -1,43 +1,65 @@
+// ========================================
+// NEUROMNEMONIC AI - QUIZ JS
+// ========================================
+
+const API_URL =
+    "http://localhost:5000";
+
 const quizContent =
     document.getElementById("quizContent");
 
 const quizData =
     sessionStorage.getItem("generatedQuiz");
 
-console.log(
-    "Quiz data:",
-    quizData
-);
+console.log("Quiz data:", quizData);
 
 let quiz;
 
 try {
+
     quiz =
         JSON.parse(quizData);
+
 } catch (error) {
+
     console.error(
         "Quiz parsing error:",
         error
     );
+
     quiz = null;
 }
+
+
+
+// ========================================
+// CHECK QUIZ
+// ========================================
 
 if (
     !quiz ||
     !quiz.questions ||
     quiz.questions.length === 0
 ) {
+
     quizContent.innerHTML = `
         <div class="error-message">
+
             ❌ No quiz found.
+
             <br><br>
-            Please go back and generate
-            a quiz first.
+
+            Please go back and generate a quiz first.
+
         </div>
     `;
+
 } else {
+
     displayQuiz(quiz);
+
 }
+
 
 
 // ========================================
@@ -51,8 +73,8 @@ function displayQuiz(quiz) {
     const form =
         document.createElement("form");
 
-    form.id =
-        "quizForm";
+    form.id = "quizForm";
+
 
     quiz.questions.forEach(
         (item, index) => {
@@ -63,6 +85,7 @@ function displayQuiz(quiz) {
             questionBox.className =
                 "question-box";
 
+
             questionBox.innerHTML = `
                 <h3>
                     ${index + 1}.
@@ -71,6 +94,7 @@ function displayQuiz(quiz) {
                     )}
                 </h3>
             `;
+
 
             item.options.forEach(
                 (option, optionIndex) => {
@@ -83,6 +107,7 @@ function displayQuiz(quiz) {
                     optionLabel.className =
                         "option";
 
+
                     optionLabel.innerHTML = `
                         <input
                             type="radio"
@@ -91,24 +116,31 @@ function displayQuiz(quiz) {
                         >
 
                         <span>
-                            ${escapeHTML(
-                                option
-                            )}
+                            ${escapeHTML(option)}
                         </span>
                     `;
+
 
                     questionBox.appendChild(
                         optionLabel
                     );
+
                 }
             );
+
 
             form.appendChild(
                 questionBox
             );
+
         }
     );
 
+
+
+    // ========================================
+    // SUBMIT BUTTON
+    // ========================================
 
     const submitButton =
         document.createElement("button");
@@ -122,10 +154,16 @@ function displayQuiz(quiz) {
     submitButton.textContent =
         "✅ Submit Quiz";
 
+
     form.appendChild(
         submitButton
     );
 
+
+
+    // ========================================
+    // RESULT DIV
+    // ========================================
 
     const resultDiv =
         document.createElement("div");
@@ -133,14 +171,21 @@ function displayQuiz(quiz) {
     resultDiv.id =
         "quizResult";
 
+
     form.appendChild(
         resultDiv
     );
+
 
     quizContent.appendChild(
         form
     );
 
+
+
+    // ========================================
+    // SUBMIT EVENT
+    // ========================================
 
     form.addEventListener(
         "submit",
@@ -152,7 +197,9 @@ function displayQuiz(quiz) {
 
         }
     );
+
 }
+
 
 
 // ========================================
@@ -168,12 +215,19 @@ async function checkAnswers(quiz) {
 
     let resultHTML = `
         <div class="result-summary">
+
             <h2>
                 🎉 Quiz Completed!
             </h2>
+
         </div>
     `;
 
+
+
+    // ========================================
+    // CALCULATE SCORE
+    // ========================================
 
     quiz.questions.forEach(
         (item, index) => {
@@ -188,6 +242,7 @@ async function checkAnswers(quiz) {
 
                 answered++;
 
+
                 const userAnswer =
                     Number(
                         selected.value
@@ -198,13 +253,16 @@ async function checkAnswers(quiz) {
                     userAnswer ===
                     item.answer
                 ) {
+
                     score++;
+
                 }
 
             }
 
         }
     );
+
 
 
     const totalQuestions =
@@ -216,6 +274,11 @@ async function checkAnswers(quiz) {
             (score / totalQuestions) * 100
         );
 
+
+
+    // ========================================
+    // SCORE
+    // ========================================
 
     resultHTML += `
         <div class="score">
@@ -241,6 +304,7 @@ async function checkAnswers(quiz) {
 
         </div>
     `;
+
 
 
     // ========================================
@@ -273,8 +337,7 @@ async function checkAnswers(quiz) {
                 <div class="answer-review">
 
                     <h3>
-                        Question
-                        ${index + 1}
+                        Question ${index + 1}
                     </h3>
 
                     <p>
@@ -290,12 +353,12 @@ async function checkAnswers(quiz) {
 
                         ${
                             userAnswer >= 0
-                            ? escapeHTML(
-                                item.options[
-                                    userAnswer
-                                ]
-                            )
-                            : "Not answered"
+                                ? escapeHTML(
+                                    item.options[
+                                        userAnswer
+                                    ]
+                                )
+                                : "Not answered"
                         }
                     </p>
 
@@ -311,18 +374,18 @@ async function checkAnswers(quiz) {
                         )}
                     </p>
 
-                    <p
-                        class="${
-                            isCorrect
-                                ? "correct"
-                                : "incorrect"
-                        }"
-                    >
+                    <p class="${
+                        isCorrect
+                            ? "correct"
+                            : "incorrect"
+                    }">
+
                         ${
                             isCorrect
                                 ? "✅ Correct"
                                 : "❌ Incorrect"
                         }
+
                     </p>
 
                 </div>
@@ -330,6 +393,7 @@ async function checkAnswers(quiz) {
 
         }
     );
+
 
 
     // ========================================
@@ -341,14 +405,17 @@ async function checkAnswers(quiz) {
             id="revisionMessage"
             class="revision-message"
         >
-            ⏳ Creating your
-            automatic revision schedule...
+
+            ⏳ Creating your automatic
+            revision schedule...
+
         </div>
     `;
 
 
+
     // ========================================
-    // PROGRESS SAVE MESSAGE
+    // PROGRESS MESSAGE
     // ========================================
 
     resultHTML += `
@@ -356,9 +423,31 @@ async function checkAnswers(quiz) {
             id="progressMessage"
             class="progress-message"
         >
+
             ⏳ Saving your quiz progress...
+
         </div>
     `;
+
+
+
+    // ========================================
+    // NEXT TOPIC AREA
+    // ========================================
+
+    resultHTML += `
+        <div
+            id="nextTopicArea"
+            class="next-topic-area"
+        >
+
+            <p>
+                ⏳ Updating your learning roadmap...
+            </p>
+
+        </div>
+    `;
+
 
 
     // ========================================
@@ -372,11 +461,14 @@ async function checkAnswers(quiz) {
                 type="button"
                 id="anotherQuizBtn"
             >
+
                 🔄 Try Another Quiz
+
             </button>
 
         </div>
     `;
+
 
 
     const resultDiv =
@@ -389,7 +481,10 @@ async function checkAnswers(quiz) {
         resultHTML;
 
 
-    // Disable answers
+
+    // ========================================
+    // DISABLE ANSWERS
+    // ========================================
 
     document
         .querySelectorAll(
@@ -397,8 +492,10 @@ async function checkAnswers(quiz) {
         )
         .forEach(
             input => {
+
                 input.disabled =
                     true;
+
             }
         );
 
@@ -407,7 +504,9 @@ async function checkAnswers(quiz) {
         .getElementById(
             "submitQuiz"
         )
-        .disabled = true;
+        .disabled =
+            true;
+
 
 
     // ========================================
@@ -421,8 +520,9 @@ async function checkAnswers(quiz) {
     );
 
 
+
     // ========================================
-    // CREATE AUTOMATIC REVISION
+    // CREATE REVISION
     // ========================================
 
     await createAutomaticRevision(
@@ -432,19 +532,777 @@ async function checkAnswers(quiz) {
     );
 
 
+
+    // ========================================
+    // COMPLETE CURRENT ROADMAP TOPIC
+    // ========================================
+
+    await completeCurrentTopic();
+
+
+
     // ========================================
     // ANOTHER QUIZ
     // ========================================
 
-    document
-        .getElementById(
+    const anotherQuizBtn =
+        document.getElementById(
             "anotherQuizBtn"
-        )
-        .addEventListener(
+        );
+
+
+    if (anotherQuizBtn) {
+
+        anotherQuizBtn.addEventListener(
             "click",
             generateAnotherQuiz
         );
+
+    }
+
 }
+
+
+
+// ========================================
+// COMPLETE CURRENT ROADMAP TOPIC
+// ========================================
+
+async function completeCurrentTopic() {
+
+    const nextTopicArea =
+        document.getElementById(
+            "nextTopicArea"
+        );
+
+
+    const token =
+        localStorage.getItem(
+            "token"
+        );
+
+
+    if (!token) {
+
+        nextTopicArea.innerHTML = `
+            <p>
+                ❌ Please login again to update
+                your roadmap.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+
+    try {
+
+        // ========================================
+        // GET ALL ROADMAPS
+        // ========================================
+
+        const response =
+            await fetch(
+                API_URL +
+                "/api/roadmaps",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " +
+                            token
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Failed to load roadmap"
+            );
+
+        }
+
+
+        const roadmaps =
+            data.roadmaps || [];
+
+
+        if (
+            !Array.isArray(roadmaps) ||
+            roadmaps.length === 0
+        ) {
+
+            showNoRoadmapMessage();
+
+            return;
+
+        }
+
+
+
+        // ========================================
+        // GET CURRENT TOPIC
+        // ========================================
+
+        const currentTopic =
+            getCurrentTopic();
+
+
+        console.log(
+            "Current learning topic:",
+            currentTopic
+        );
+
+
+
+        // ========================================
+        // FIND ACTIVE ROADMAP
+        // ========================================
+
+        const roadmap =
+            findActiveRoadmap(
+                roadmaps,
+                currentTopic
+            );
+
+
+        if (!roadmap) {
+
+            console.warn(
+                "Active roadmap not found"
+            );
+
+            showNoRoadmapMessage();
+
+            return;
+
+        }
+
+
+
+        // ========================================
+        // FIND CURRENT DAY
+        // ========================================
+
+        let currentIndex =
+            findCurrentTopicIndex(
+                roadmap,
+                currentTopic
+            );
+
+
+
+        // ========================================
+        // FALLBACK
+        // ========================================
+
+        if (currentIndex === -1) {
+
+            currentIndex =
+                findFirstIncompleteIndex(
+                    roadmap
+                );
+
+        }
+
+
+        if (currentIndex === -1) {
+
+            showRoadmapCompleted();
+
+            return;
+
+        }
+
+
+
+        // ========================================
+        // MARK CURRENT TOPIC COMPLETED
+        // ========================================
+
+        roadmap.roadmap[
+            currentIndex
+        ].completed = true;
+
+
+
+        // ========================================
+        // SAVE COMPLETION TO SERVER
+        // ========================================
+
+        await updateRoadmapCompletion(
+            roadmap._id,
+            currentIndex,
+            token
+        );
+
+
+
+        // ========================================
+        // FIND NEXT TOPIC
+        // ========================================
+
+        const nextIndex =
+            findNextIncompleteIndex(
+                roadmap,
+                currentIndex
+            );
+
+
+
+        // ========================================
+        // NO NEXT TOPIC
+        // ========================================
+
+        if (nextIndex === -1) {
+
+            showRoadmapCompleted();
+
+            return;
+
+        }
+
+
+
+        const nextTopic =
+            roadmap.roadmap[
+                nextIndex
+            ];
+
+
+
+        // ========================================
+        // SAVE NEXT TOPIC
+        // ========================================
+
+        localStorage.setItem(
+            "currentLearningDay",
+            String(
+                nextTopic.day
+            )
+        );
+
+
+        localStorage.setItem(
+            "currentLearningTopic",
+            nextTopic.topic
+        );
+
+
+        localStorage.setItem(
+            "currentLearningDescription",
+            nextTopic.description || ""
+        );
+
+
+        sessionStorage.setItem(
+            "currentTopic",
+            nextTopic.topic
+        );
+
+
+        sessionStorage.removeItem(
+            "generatedContent"
+        );
+
+
+        sessionStorage.removeItem(
+            "generatedQuiz"
+        );
+
+
+
+        // ========================================
+        // SHOW NEXT TOPIC BUTTON
+        // ========================================
+
+        nextTopicArea.innerHTML = `
+
+            <div class="next-topic-card">
+
+                <h2>
+                    📚 Topic Completed!
+                </h2>
+
+                <p>
+                    Great work! You completed:
+                </p>
+
+                <strong>
+                    ${escapeHTML(
+                        roadmap.roadmap[
+                            currentIndex
+                        ].topic
+                    )}
+                </strong>
+
+                <p>
+                    Next topic:
+                </p>
+
+                <h3>
+                    ${escapeHTML(
+                        nextTopic.topic
+                    )}
+                </h3>
+
+                <button
+                    type="button"
+                    id="nextTopicBtn"
+                >
+                    🏠 Go to Dashboard
+                </button>
+
+            </div>
+
+        `;
+
+
+
+        // ========================================
+        // NEXT TOPIC CLICK
+        // ========================================
+
+        document
+            .getElementById(
+                "nextTopicBtn"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    // IMPORTANT:
+                    // Go to Dashboard instead
+                    // of opening AI Tutor directly.
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }
+            );
+
+
+
+    } catch (error) {
+
+        console.error(
+            "Roadmap completion error:",
+            error
+        );
+
+
+        nextTopicArea.innerHTML = `
+
+            <div>
+
+                <p>
+                    ⚠️ Quiz completed successfully,
+                    but the roadmap could not be updated.
+                </p>
+
+                <button
+                    type="button"
+                    id="retryRoadmapBtn"
+                >
+                    🔄 Continue
+                </button>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById(
+                "retryRoadmapBtn"
+            )
+            .addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }
+            );
+
+    }
+
+}
+
+
+
+// ========================================
+// GET CURRENT TOPIC
+// ========================================
+
+function getCurrentTopic() {
+
+    return (
+
+        localStorage.getItem(
+            "currentLearningTopic"
+        ) ||
+
+        sessionStorage.getItem(
+            "currentTopic"
+        ) ||
+
+        quiz?.topic ||
+
+        quiz?.subject ||
+
+        ""
+
+    ).trim();
+
+}
+
+
+
+// ========================================
+// FIND ACTIVE ROADMAP
+// ========================================
+
+function findActiveRoadmap(
+    roadmaps,
+    currentTopic
+) {
+
+    // First try to find roadmap
+    // containing current topic
+
+    for (
+        const roadmap of roadmaps
+    ) {
+
+        if (
+            !Array.isArray(
+                roadmap.roadmap
+            )
+        ) {
+
+            continue;
+
+        }
+
+
+        const found =
+            roadmap.roadmap.some(
+                item =>
+                    normalizeText(
+                        item.topic
+                    ) ===
+                    normalizeText(
+                        currentTopic
+                    )
+            );
+
+
+        if (found) {
+
+            return roadmap;
+
+        }
+
+    }
+
+
+
+    // Fallback:
+    // latest roadmap
+
+    return roadmaps[0] || null;
+
+}
+
+
+
+// ========================================
+// FIND CURRENT TOPIC INDEX
+// ========================================
+
+function findCurrentTopicIndex(
+    roadmap,
+    currentTopic
+) {
+
+    if (
+        !Array.isArray(
+            roadmap.roadmap
+        )
+    ) {
+
+        return -1;
+
+    }
+
+
+    return roadmap.roadmap.findIndex(
+        item =>
+            normalizeText(
+                item.topic
+            ) ===
+            normalizeText(
+                currentTopic
+            )
+    );
+
+}
+
+
+
+// ========================================
+// FIND FIRST INCOMPLETE
+// ========================================
+
+function findFirstIncompleteIndex(
+    roadmap
+) {
+
+    return roadmap.roadmap.findIndex(
+        item =>
+            item.completed !== true
+    );
+
+}
+
+
+
+// ========================================
+// FIND NEXT INCOMPLETE
+// ========================================
+
+function findNextIncompleteIndex(
+    roadmap,
+    currentIndex
+) {
+
+    for (
+        let i = currentIndex + 1;
+        i < roadmap.roadmap.length;
+        i++
+    ) {
+
+        if (
+            roadmap.roadmap[i].completed !== true
+        ) {
+
+            return i;
+
+        }
+
+    }
+
+
+    return -1;
+
+}
+
+
+
+// ========================================
+// UPDATE ROADMAP COMPLETION
+// ========================================
+
+async function updateRoadmapCompletion(
+    roadmapId,
+    topicIndex,
+    token
+) {
+
+    const response =
+        await fetch(
+            API_URL +
+            "/api/roadmaps/" +
+            roadmapId +
+            "/complete",
+            {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        "Bearer " +
+                        token
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        topicIndex:
+                            topicIndex
+
+                    })
+
+            }
+        );
+
+
+    const data =
+        await response.json();
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.message ||
+            "Failed to update roadmap"
+        );
+
+    }
+
+
+    console.log(
+        "Roadmap completion saved:",
+        data
+    );
+
+}
+
+
+
+// ========================================
+// ROADMAP COMPLETED
+// ========================================
+
+function showRoadmapCompleted() {
+
+    const nextTopicArea =
+        document.getElementById(
+            "nextTopicArea"
+        );
+
+
+    nextTopicArea.innerHTML = `
+
+        <div class="roadmap-completed-card">
+
+            <h2>
+                🎉 Roadmap Completed!
+            </h2>
+
+            <p>
+                You have completed all the
+                topics in this learning roadmap.
+            </p>
+
+            <p>
+                Excellent work! Keep revising
+                and practicing.
+            </p>
+
+            <button
+                type="button"
+                id="dashboardBtn"
+            >
+                🏠 Go to Dashboard
+            </button>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "dashboardBtn"
+        )
+        .addEventListener(
+            "click",
+            function () {
+
+                window.location.href =
+                    "dashboard.html";
+
+            }
+        );
+
+}
+
+
+
+// ========================================
+// NO ROADMAP MESSAGE
+// ========================================
+
+function showNoRoadmapMessage() {
+
+    const nextTopicArea =
+        document.getElementById(
+            "nextTopicArea"
+        );
+
+
+    nextTopicArea.innerHTML = `
+
+        <div>
+
+            <p>
+                ⚠️ Roadmap information was not found.
+            </p>
+
+            <button
+                type="button"
+                id="backTutorBtn"
+            >
+                ← Back to AI Tutor
+            </button>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "backTutorBtn"
+        )
+        .addEventListener(
+            "click",
+            function () {
+
+                window.location.href =
+                    "ai-tutor.html";
+
+            }
+        );
+
+}
+
+
+
+// ========================================
+// NORMALIZE TEXT
+// ========================================
+
+function normalizeText(text) {
+
+    return String(text || "")
+        .trim()
+        .toLowerCase()
+        .replace(
+            /\s+/g,
+            " "
+        );
+
+}
+
 
 
 // ========================================
@@ -481,6 +1339,7 @@ async function saveQuizAttempt(
     }
 
 
+
     const topic =
         quiz.topic ||
         quiz.subject ||
@@ -489,6 +1348,9 @@ async function saveQuizAttempt(
         ) ||
         sessionStorage.getItem(
             "topic"
+        ) ||
+        localStorage.getItem(
+            "currentLearningTopic"
         ) ||
         "Current Learning Topic";
 
@@ -501,33 +1363,41 @@ async function saveQuizAttempt(
         "General";
 
 
+
     try {
 
         const response =
             await fetch(
-                "http://localhost:5000/api/quiz-attempts",
+                API_URL +
+                "/api/quiz-attempts",
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json",
 
                         "Authorization":
-                            `Bearer ${token}`
+                            "Bearer " +
+                            token
+
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        subject,
+                            subject,
 
-                        topic,
+                            topic,
 
-                        score,
+                            score,
 
-                        totalQuestions
+                            totalQuestions
 
-                    })
+                        })
+
                 }
             );
 
@@ -547,6 +1417,7 @@ async function saveQuizAttempt(
 
 
         progressMessage.innerHTML = `
+
             <div>
 
                 📈
@@ -560,7 +1431,9 @@ async function saveQuizAttempt(
                 to your progress tracking.
 
             </div>
+
         `;
+
 
         progressMessage.style.color =
             "#4caf50";
@@ -572,6 +1445,7 @@ async function saveQuizAttempt(
         );
 
 
+
     } catch (error) {
 
         console.error(
@@ -581,15 +1455,20 @@ async function saveQuizAttempt(
 
 
         progressMessage.innerHTML = `
+
             ❌ Quiz completed,
             but progress could not be saved.
+
         `;
+
 
         progressMessage.style.color =
             "red";
 
     }
+
 }
+
 
 
 // ========================================
@@ -626,6 +1505,7 @@ async function createAutomaticRevision(
     }
 
 
+
     const topic =
         quiz.topic ||
         quiz.subject ||
@@ -634,6 +1514,9 @@ async function createAutomaticRevision(
         ) ||
         sessionStorage.getItem(
             "topic"
+        ) ||
+        localStorage.getItem(
+            "currentLearningTopic"
         ) ||
         "Current Learning Topic";
 
@@ -646,33 +1529,41 @@ async function createAutomaticRevision(
         "General";
 
 
+
     try {
 
         const response =
             await fetch(
-                "http://localhost:5000/api/revisions",
+                API_URL +
+                "/api/revisions",
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json",
 
                         "Authorization":
-                            `Bearer ${token}`
+                            "Bearer " +
+                            token
+
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        subject,
+                            subject,
 
-                        topic,
+                            topic,
 
-                        score,
+                            score,
 
-                        totalQuestions
+                            totalQuestions
 
-                    })
+                        })
+
                 }
             );
 
@@ -696,6 +1587,7 @@ async function createAutomaticRevision(
 
 
         revisionMessage.innerHTML = `
+
             <div>
 
                 🧠
@@ -727,11 +1619,13 @@ async function createAutomaticRevision(
                 ${revision.revisionDate}
 
             </div>
+
         `;
 
 
         revisionMessage.style.color =
             "#4caf50";
+
 
 
     } catch (error) {
@@ -743,16 +1637,21 @@ async function createAutomaticRevision(
 
 
         revisionMessage.innerHTML = `
+
             ❌ Quiz completed,
             but automatic revision
             could not be scheduled.
+
         `;
+
 
         revisionMessage.style.color =
             "red";
 
     }
+
 }
+
 
 
 // ========================================
@@ -773,6 +1672,7 @@ async function generateAnotherQuiz() {
 
     button.textContent =
         "Generating New Quiz... ⏳";
+
 
 
     try {
@@ -799,6 +1699,7 @@ async function generateAnotherQuiz() {
         }
 
 
+
         const previousQuestions =
             JSON.parse(
                 sessionStorage.getItem(
@@ -807,26 +1708,33 @@ async function generateAnotherQuiz() {
             );
 
 
+
         const response =
             await fetch(
-                "http://localhost:5000/api/quiz/generate",
+                API_URL +
+                "/api/quiz/generate",
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        content:
-                            generatedContent,
+                            content:
+                                generatedContent,
 
-                        previousQuestions:
-                            previousQuestions
+                            previousQuestions:
+                                previousQuestions
 
-                    })
+                        })
+
                 }
             );
 
@@ -872,6 +1780,7 @@ async function generateAnotherQuiz() {
         window.location.reload();
 
 
+
     } catch (error) {
 
         console.error(
@@ -893,7 +1802,9 @@ async function generateAnotherQuiz() {
             "🔄 Try Another Quiz";
 
     }
+
 }
+
 
 
 // ========================================
@@ -913,4 +1824,5 @@ function escapeHTML(text) {
 
 
     return div.innerHTML;
+
 }

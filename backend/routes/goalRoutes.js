@@ -1,7 +1,7 @@
 const express = require("express");
 const Goal = require("../models/Goal");
 const ExamSchedule = require("../models/ExamSchedule");
-const User = require("../models/User");
+const User = require("../models/user");
 const protect = require("../middleware/authMiddleware");
 
 const router = express.Router();

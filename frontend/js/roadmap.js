@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:5000";
 
+
 // ========================================
 // GET HTML ELEMENTS
 // ========================================
@@ -33,22 +34,24 @@ const backDashboardBtn =
 
 
 // ========================================
-// GET LOGIN TOKEN
+// TOKEN
 // ========================================
 
 function getToken() {
+
     return localStorage.getItem("token");
+
 }
 
 
-// ========================================
-// CHECK LOGIN
-// ========================================
-
 const token = getToken();
 
+
 if (!token) {
-    window.location.href = "login.html";
+
+    window.location.href =
+        "login.html";
+
 }
 
 
@@ -60,7 +63,14 @@ let savedGoal = null;
 
 
 // ========================================
-// LOAD SAVED GOAL
+// CURRENT SAVED ROADMAP
+// ========================================
+
+let currentRoadmap = null;
+
+
+// ========================================
+// LOAD GOAL
 // ========================================
 
 async function loadGoal() {
@@ -71,12 +81,16 @@ async function loadGoal() {
             await fetch(
                 API_URL + "/api/goals",
                 {
+
                     method: "GET",
 
                     headers: {
+
                         "Authorization":
                             "Bearer " + token
+
                     }
+
                 }
             );
 
@@ -93,22 +107,14 @@ async function loadGoal() {
             );
 
             return;
+
         }
 
 
         savedGoal = data;
 
 
-        // ========================================
-        // CREATE GOAL SUMMARY
-        // ========================================
-
         createGoalSummary(data);
-
-
-        // ========================================
-        // FILL ROADMAP INPUTS
-        // ========================================
 
         fillRoadmapInputs(data);
 
@@ -119,7 +125,9 @@ async function loadGoal() {
             "Goal Load Error:",
             error
         );
+
     }
+
 }
 
 
@@ -129,236 +137,138 @@ async function loadGoal() {
 
 function createGoalSummary(goal) {
 
-    const welcomeSection =
-        document.querySelector(
-            ".welcome-section"
-        );
-
-
-    if (!welcomeSection) {
-        return;
-    }
-
-
-    // Remove old summary
-    const oldSummary =
+    const summary =
         document.getElementById(
             "goalSummary"
         );
 
 
-    if (oldSummary) {
-        oldSummary.remove();
+    if (!summary) {
+        return;
     }
 
 
-    const summary =
-        document.createElement("div");
+    const summaryGoal =
+        document.getElementById(
+            "summaryGoal"
+        );
 
 
-    summary.id =
-        "goalSummary";
+    const summaryTopic =
+        document.getElementById(
+            "summaryTopic"
+        );
 
 
-    summary.style.marginTop =
-        "20px";
+    const summaryLevel =
+        document.getElementById(
+            "summaryLevel"
+        );
 
 
-    summary.style.padding =
-        "18px";
+    const summaryStudyHours =
+        document.getElementById(
+            "summaryStudyHours"
+        );
 
-
-    summary.style.border =
-        "1px solid #e5e7eb";
-
-
-    summary.style.borderRadius =
-        "12px";
-
-
-    summary.style.background =
-        "#ffffff";
-
-
-    // ========================================
-    // TITLE
-    // ========================================
-
-    const title =
-        document.createElement("h3");
-
-
-    title.textContent =
-        "🎯 Your Selected Goals";
-
-
-    title.style.marginBottom =
-        "12px";
-
-
-    title.style.color =
-        "#111827";
-
-
-    // ========================================
-    // DETAILS
-    // ========================================
-
-    const details =
-        document.createElement("div");
-
-
-    details.style.lineHeight =
-        "1.8";
-
-
-    details.style.color =
-        "#4b5563";
-
-
-    // ========================================
-    // NORMALIZE GOAL TYPE
-    // ========================================
 
     let goalTypes = [];
 
 
     if (Array.isArray(goal.goalType)) {
 
-        goalTypes =
-            goal.goalType;
+        goalTypes = goal.goalType;
 
     } else if (goal.goalType) {
 
-        // Supports old saved data
-        goalTypes =
-            [goal.goalType];
+        goalTypes = [goal.goalType];
+
     }
 
 
-    // ========================================
-    // ACADEMIC DETAILS
-    // ========================================
+    if (summaryGoal) {
 
-    let academicHTML = "";
+        summaryGoal.textContent =
+            goalTypes.length
+                ? goalTypes.join(" + ")
+                : "Not specified";
+
+    }
+
+
+    let subjects = [];
+
+
+    if (Array.isArray(goal.subjects)) {
+
+        subjects = goal.subjects;
+
+    }
+
+
+    let topicText = "";
+
+
+    if (subjects.length) {
+
+        topicText =
+            subjects.join(", ");
+
+    }
 
 
     if (
-        goalTypes.includes("Academic")
+        goal.examName ||
+        goal.examGroup
     ) {
 
-        academicHTML = `
-            <div style="margin-bottom: 14px;">
-                <strong>🎓 Academic / College</strong><br>
+        if (topicText) {
 
-                Course:
-                ${escapeHTML(
-                    goal.course ||
-                    "Not specified"
-                )}
-                <br>
+            topicText += " | ";
 
-                Semester:
-                ${escapeHTML(
-                    goal.semester ||
-                    "Not specified"
-                )}
-                <br>
+        }
 
-                Subjects:
-                ${escapeHTML(
-                    goal.subjects &&
-                    goal.subjects.length
-                        ? goal.subjects.join(", ")
-                        : "Not specified"
-                )}
-            </div>
-        `;
+
+        topicText +=
+            goal.examName || "";
+
+
+        if (goal.examGroup) {
+
+            topicText +=
+                " - " +
+                goal.examGroup;
+
+        }
+
     }
 
 
-    // ========================================
-    // COMPETITIVE DETAILS
-    // ========================================
+    if (summaryTopic) {
 
-    let competitiveHTML = "";
+        summaryTopic.textContent =
+            topicText ||
+            "Not specified";
 
-
-    if (
-        goalTypes.includes(
-            "Competitive Exam"
-        )
-    ) {
-
-        competitiveHTML = `
-            <div style="margin-bottom: 14px;">
-                <strong>🏆 Competitive Exam</strong><br>
-
-                Exam:
-                ${escapeHTML(
-                    goal.examName ||
-                    "Not specified"
-                )}
-                <br>
-
-                Group / Level:
-                ${escapeHTML(
-                    goal.examGroup ||
-                    "Not specified"
-                )}
-                <br>
-
-                Preparation Level:
-                ${escapeHTML(
-                    goal.preparationLevel ||
-                    "Not specified"
-                )}
-                <br>
-
-                Target Attempt:
-                ${escapeHTML(
-                    goal.targetAttempt ||
-                    "Not specified"
-                )}
-            </div>
-        `;
     }
 
 
-    // ========================================
-    // BOTH GOALS
-    // ========================================
+    if (summaryLevel) {
 
-    details.innerHTML =
-        academicHTML +
-        competitiveHTML +
-        `
-            <div>
-                <strong>⏰ Daily Study Time:</strong>
-                ${escapeHTML(
-                    String(
-                        goal.dailyStudyHours ||
-                        0
-                    )
-                )}
-                hours
-            </div>
-        `;
+        summaryLevel.textContent =
+            goal.preparationLevel ||
+            "Beginner";
+
+    }
 
 
-    summary.appendChild(
-        title
-    );
+    if (summaryStudyHours) {
 
+        summaryStudyHours.textContent =
+            `${goal.dailyStudyHours || 0} hours`;
 
-    summary.appendChild(
-        details
-    );
+    }
 
-
-    welcomeSection.appendChild(
-        summary
-    );
 }
 
 
@@ -368,35 +278,26 @@ function createGoalSummary(goal) {
 
 function fillRoadmapInputs(goal) {
 
-    // ========================================
-    // NORMALIZE GOAL TYPE
-    // ========================================
-
     let goalTypes = [];
 
 
     if (Array.isArray(goal.goalType)) {
 
-        goalTypes =
-            goal.goalType;
+        goalTypes = goal.goalType;
 
     } else if (goal.goalType) {
 
-        goalTypes =
-            [goal.goalType];
+        goalTypes = [goal.goalType];
+
     }
 
 
     const hasAcademic =
-        goalTypes.includes(
-            "Academic"
-        );
+        goalTypes.includes("Academic");
 
 
     const hasCompetitive =
-        goalTypes.includes(
-            "Competitive Exam"
-        );
+        goalTypes.includes("Competitive Exam");
 
 
     // ========================================
@@ -409,14 +310,13 @@ function fillRoadmapInputs(goal) {
     ) {
 
         if (
-            Array.isArray(
-                goal.subjects
-            ) &&
+            Array.isArray(goal.subjects) &&
             goal.subjects.length > 0
         ) {
 
             topicInput.value =
                 goal.subjects.join(", ");
+
         }
 
 
@@ -428,15 +328,8 @@ function fillRoadmapInputs(goal) {
             "Beginner";
 
 
-        if (
-            !durationInput.value
-        ) {
-
-            durationInput.value =
-                "7";
-        }
-
         return;
+
     }
 
 
@@ -456,6 +349,7 @@ function fillRoadmapInputs(goal) {
 
             topic +=
                 goal.examName;
+
         }
 
 
@@ -465,11 +359,13 @@ function fillRoadmapInputs(goal) {
 
                 topic +=
                     " - ";
+
             }
 
 
             topic +=
                 goal.examGroup;
+
         }
 
 
@@ -477,38 +373,22 @@ function fillRoadmapInputs(goal) {
             topic;
 
 
-        if (
-            goal.preparationLevel
-        ) {
-
-            levelSelect.value =
-                goal.preparationLevel;
-        } else {
-
-            levelSelect.value =
-                "Beginner";
-        }
+        levelSelect.value =
+            goal.preparationLevel ||
+            "Beginner";
 
 
         languageSelect.value =
             "English";
 
 
-        if (
-            !durationInput.value
-        ) {
-
-            durationInput.value =
-                "7";
-        }
-
-
         return;
+
     }
 
 
     // ========================================
-    // BOTH GOALS
+    // ACADEMIC + COMPETITIVE
     // ========================================
 
     if (
@@ -519,32 +399,28 @@ function fillRoadmapInputs(goal) {
         let combinedTopic = "";
 
 
-        // Academic subjects
         if (
-            Array.isArray(
-                goal.subjects
-            ) &&
-            goal.subjects.length > 0
+            Array.isArray(goal.subjects) &&
+            goal.subjects.length
         ) {
 
-            combinedTopic +=
+            combinedTopic =
                 "Academic Subjects: " +
                 goal.subjects.join(", ");
+
         }
 
 
-        // Competitive exam
         if (
             goal.examName ||
             goal.examGroup
         ) {
 
-            if (
-                combinedTopic
-            ) {
+            if (combinedTopic) {
 
                 combinedTopic +=
                     " | ";
+
             }
 
 
@@ -552,23 +428,22 @@ function fillRoadmapInputs(goal) {
                 "Competitive Exam: ";
 
 
-            if (
-                goal.examName
-            ) {
+            if (goal.examName) {
 
                 combinedTopic +=
                     goal.examName;
+
             }
 
 
-            if (
-                goal.examGroup
-            ) {
+            if (goal.examGroup) {
 
                 combinedTopic +=
                     " - " +
                     goal.examGroup;
+
             }
+
         }
 
 
@@ -576,63 +451,16 @@ function fillRoadmapInputs(goal) {
             combinedTopic;
 
 
-        // Use competitive preparation level
-        if (
-            goal.preparationLevel
-        ) {
-
-            levelSelect.value =
-                goal.preparationLevel;
-
-        } else {
-
-            levelSelect.value =
-                "Beginner";
-        }
+        levelSelect.value =
+            goal.preparationLevel ||
+            "Beginner";
 
 
         languageSelect.value =
             "English";
 
-
-        if (
-            !durationInput.value
-        ) {
-
-            durationInput.value =
-                "7";
-        }
     }
-}
 
-
-// ========================================
-// ESCAPE HTML
-// ========================================
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
 }
 
 
@@ -654,6 +482,7 @@ function showLoading() {
 
     generateRoadmapBtn.disabled =
         true;
+
 }
 
 
@@ -670,6 +499,7 @@ function hideLoading() {
 
     generateRoadmapBtn.disabled =
         false;
+
 }
 
 
@@ -678,17 +508,56 @@ function hideLoading() {
 // ========================================
 
 function displayRoadmap(
-    roadmapData
+    roadmapData,
+    roadmapId
 ) {
 
-    resultContent.innerHTML =
-        "";
+    resultContent.innerHTML = "";
 
+
+    if (
+        !Array.isArray(roadmapData) ||
+        roadmapData.length === 0
+    ) {
+
+        resultContent.innerHTML = `
+            <div class="error-message">
+                <h3>❌ No roadmap found</h3>
+                <p>Please generate a new roadmap.</p>
+            </div>
+        `;
+
+
+        resultSection.classList.remove(
+            "hidden"
+        );
+
+
+        return;
+
+    }
+
+
+    // ========================================
+    // SAVE CURRENT ROADMAP
+    // ========================================
+
+    currentRoadmap =
+        roadmapData;
+
+
+    localStorage.setItem(
+        "currentRoadmapId",
+        roadmapId
+    );
+
+
+    // ========================================
+    // LEARNING JOURNEY
+    // ========================================
 
     const journey =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     journey.className =
@@ -700,9 +569,7 @@ function displayRoadmap(
     // ========================================
 
     const journeyHeader =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     journeyHeader.className =
@@ -710,9 +577,7 @@ function displayRoadmap(
 
 
     const journeyIcon =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     journeyIcon.className =
@@ -724,15 +589,11 @@ function displayRoadmap(
 
 
     const journeyText =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     const journeyTitle =
-        document.createElement(
-            "h2"
-        );
+        document.createElement("h2");
 
 
     journeyTitle.textContent =
@@ -740,9 +601,7 @@ function displayRoadmap(
 
 
     const journeySubtitle =
-        document.createElement(
-            "p"
-        );
+        document.createElement("p");
 
 
     journeySubtitle.textContent =
@@ -776,33 +635,22 @@ function displayRoadmap(
 
 
     // ========================================
-    // EACH DAY
+    // DAYS
     // ========================================
 
     roadmapData.forEach(
-        function (
-            day,
-            index
-        ) {
+        function (day, index) {
 
             const dayWrapper =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             dayWrapper.className =
                 "journey-day";
 
 
-            // ========================================
-            // DAY NUMBER
-            // ========================================
-
             const dayNumber =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             dayNumber.className =
@@ -810,36 +658,20 @@ function displayRoadmap(
 
 
             dayNumber.textContent =
-                String(
-                    day.day
-                ).padStart(
-                    2,
-                    "0"
-                );
+                String(day.day)
+                    .padStart(2, "0");
 
-
-            // ========================================
-            // CARD
-            // ========================================
 
             const card =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             card.className =
                 "journey-card";
 
 
-            // ========================================
-            // CARD TOP
-            // ========================================
-
             const cardTop =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             cardTop.className =
@@ -847,9 +679,7 @@ function displayRoadmap(
 
 
             const dayLabel =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
 
             dayLabel.className =
@@ -858,18 +688,12 @@ function displayRoadmap(
 
             dayLabel.textContent =
                 "DAY " +
-                String(
-                    day.day
-                ).padStart(
-                    2,
-                    "0"
-                );
+                String(day.day)
+                    .padStart(2, "0");
 
 
             const status =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
 
             status.className =
@@ -894,28 +718,16 @@ function displayRoadmap(
             );
 
 
-            // ========================================
-            // TOPIC
-            // ========================================
-
             const topic =
-                document.createElement(
-                    "h3"
-                );
+                document.createElement("h3");
 
 
             topic.textContent =
                 day.topic;
 
 
-            // ========================================
-            // DESCRIPTION
-            // ========================================
-
             const description =
-                document.createElement(
-                    "p"
-                );
+                document.createElement("p");
 
 
             description.textContent =
@@ -923,14 +735,8 @@ function displayRoadmap(
                 "Study this topic and practice the important concepts.";
 
 
-            // ========================================
-            // FOOTER
-            // ========================================
-
             const footer =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             footer.className =
@@ -938,9 +744,7 @@ function displayRoadmap(
 
 
             const footerText =
-                document.createElement(
-                    "span"
-                );
+                document.createElement("span");
 
 
             footerText.textContent =
@@ -955,8 +759,52 @@ function displayRoadmap(
 
 
             // ========================================
-            // BUILD CARD
+            // LEARN BUTTON
             // ========================================
+
+            const learnButton =
+                document.createElement("button");
+
+
+            learnButton.type =
+                "button";
+
+
+            learnButton.textContent =
+                day.completed
+                    ? "✓ Completed"
+                    : "📖 Learn";
+
+
+            learnButton.disabled =
+                Boolean(day.completed);
+
+
+            learnButton.style.marginLeft =
+                "10px";
+
+
+            if (!day.completed) {
+
+                learnButton.addEventListener(
+                    "click",
+                    function () {
+
+                        openLearningDay(
+                            roadmapId,
+                            day
+                        );
+
+                    }
+                );
+
+            }
+
+
+            footer.appendChild(
+                learnButton
+            );
+
 
             card.appendChild(
                 cardTop
@@ -978,10 +826,6 @@ function displayRoadmap(
             );
 
 
-            // ========================================
-            // BUILD DAY
-            // ========================================
-
             dayWrapper.appendChild(
                 dayNumber
             );
@@ -997,19 +841,13 @@ function displayRoadmap(
             );
 
 
-            // ========================================
-            // CONNECTOR
-            // ========================================
-
             if (
                 index <
                 roadmapData.length - 1
             ) {
 
                 const line =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 line.className =
@@ -1019,7 +857,9 @@ function displayRoadmap(
                 journey.appendChild(
                     line
                 );
+
             }
+
         }
     );
 
@@ -1030,13 +870,22 @@ function displayRoadmap(
 
 
     // ========================================
-    // START LEARNING BUTTON
+    // FIND FIRST INCOMPLETE
+    // ========================================
+
+    const firstIncomplete =
+        roadmapData.find(
+            day =>
+                !day.completed
+        );
+
+
+    // ========================================
+    // START LEARNING
     // ========================================
 
     const startLearningArea =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     startLearningArea.style.textAlign =
@@ -1048,9 +897,7 @@ function displayRoadmap(
 
 
     const startLearningBtn =
-        document.createElement(
-            "button"
-        );
+        document.createElement("button");
 
 
     startLearningBtn.type =
@@ -1058,7 +905,9 @@ function displayRoadmap(
 
 
     startLearningBtn.textContent =
-        "🚀 Start Learning";
+        firstIncomplete
+            ? "🚀 Continue Learning"
+            : "🎉 Roadmap Completed";
 
 
     startLearningBtn.style.border =
@@ -1082,7 +931,9 @@ function displayRoadmap(
 
 
     startLearningBtn.style.cursor =
-        "pointer";
+        firstIncomplete
+            ? "pointer"
+            : "default";
 
 
     startLearningBtn.style.fontSize =
@@ -1093,20 +944,26 @@ function displayRoadmap(
         "600";
 
 
-    startLearningBtn.addEventListener(
-        "click",
-        function () {
+    if (firstIncomplete) {
 
-            localStorage.setItem(
-                "currentLearningTopic",
-                topicInput.value.trim()
-            );
+        startLearningBtn.addEventListener(
+            "click",
+            function () {
 
+                openLearningDay(
+                    roadmapId,
+                    firstIncomplete
+                );
 
-            window.location.href =
-                "ai-tutor.html";
-        }
-    );
+            }
+        );
+
+    } else {
+
+        startLearningBtn.disabled =
+            true;
+
+    }
 
 
     startLearningArea.appendChild(
@@ -1127,16 +984,179 @@ function displayRoadmap(
         "hidden"
     );
 
-
-    resultSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
 }
 
 
 // ========================================
-// GENERATE ROADMAP
+// OPEN LEARNING DAY
+// ========================================
+
+function openLearningDay(
+    roadmapId,
+    day
+) {
+
+    localStorage.setItem(
+        "currentRoadmapId",
+        roadmapId
+    );
+
+
+    localStorage.setItem(
+        "currentLearningDay",
+        String(day.day)
+    );
+
+
+    localStorage.setItem(
+        "currentLearningTopic",
+        day.topic
+    );
+
+
+    localStorage.setItem(
+        "currentLearningDescription",
+        day.description || ""
+    );
+
+
+    localStorage.setItem(
+        "currentLearningLanguage",
+        languageSelect.value
+    );
+
+
+    localStorage.setItem(
+        "currentLearningLevel",
+        levelSelect.value
+    );
+
+
+    window.location.href =
+        "ai-tutor.html";
+
+}
+
+
+// ========================================
+// LOAD EXISTING ROADMAP
+// ========================================
+
+async function loadExistingRoadmap() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/api/roadmaps",
+                {
+
+                    method: "GET",
+
+                    headers: {
+
+                        "Authorization":
+                            "Bearer " + token
+
+                    }
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            console.warn(
+                "Roadmap fetch failed:",
+                data.message
+            );
+
+            return false;
+
+        }
+
+
+        if (
+            !data.roadmaps ||
+            !Array.isArray(data.roadmaps) ||
+            data.roadmaps.length === 0
+        ) {
+
+            return false;
+
+        }
+
+
+        // ========================================
+        // GET LATEST SAVED ROADMAP
+        // ========================================
+
+        const latestRoadmap =
+            data.roadmaps[0];
+
+
+        if (
+            !latestRoadmap ||
+            !Array.isArray(
+                latestRoadmap.roadmap
+            )
+        ) {
+
+            return false;
+
+        }
+
+
+        currentRoadmap =
+            latestRoadmap.roadmap;
+
+
+        localStorage.setItem(
+            "currentRoadmapId",
+            latestRoadmap._id
+        );
+
+
+        localStorage.setItem(
+            "currentRoadmapTopic",
+            latestRoadmap.topic || ""
+        );
+
+
+        // ========================================
+        // DISPLAY SAVED ROADMAP
+        // ========================================
+
+        displayRoadmap(
+            latestRoadmap.roadmap,
+            latestRoadmap._id
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "Existing Roadmap Load Error:",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+// ========================================
+// GENERATE NEW ROADMAP
 // ========================================
 
 async function generateRoadmap() {
@@ -1160,10 +1180,6 @@ async function generateRoadmap() {
         );
 
 
-    // ========================================
-    // VALIDATE TOPIC
-    // ========================================
-
     if (!topic) {
 
         alert(
@@ -1175,20 +1191,18 @@ async function generateRoadmap() {
 
 
         return;
+
     }
 
 
-    // ========================================
-    // VALIDATE DAYS
-    // ========================================
-
     if (
         isNaN(duration) ||
-        duration < 1
+        duration < 1 ||
+        duration > 40
     ) {
 
         alert(
-            "Please enter your available study days."
+            "Please enter study duration between 1 and 40 days."
         );
 
 
@@ -1196,12 +1210,9 @@ async function generateRoadmap() {
 
 
         return;
+
     }
 
-
-    // ========================================
-    // CHECK LOGIN
-    // ========================================
 
     const currentToken =
         getToken();
@@ -1209,47 +1220,25 @@ async function generateRoadmap() {
 
     if (!currentToken) {
 
-        alert(
-            "Please login first."
-        );
-
-
         window.location.href =
             "login.html";
 
 
         return;
+
     }
 
-
-    // ========================================
-    // SAVE CURRENT TOPIC
-    // ========================================
-
-    localStorage.setItem(
-        "currentLearningTopic",
-        topic
-    );
-
-
-    // ========================================
-    // SHOW LOADING
-    // ========================================
 
     showLoading();
 
 
     try {
 
-        // ========================================
-        // SEND REQUEST
-        // ========================================
-
         const response =
             await fetch(
-                API_URL +
-                "/api/roadmaps",
+                API_URL + "/api/roadmaps",
                 {
+
                     method: "POST",
 
                     headers: {
@@ -1260,6 +1249,7 @@ async function generateRoadmap() {
                         "Authorization":
                             "Bearer " +
                             currentToken
+
                     },
 
                     body:
@@ -1276,40 +1266,29 @@ async function generateRoadmap() {
 
                             duration:
                                 duration
+
                         })
+
                 }
             );
 
-
-        // ========================================
-        // READ RESPONSE
-        // ========================================
 
         const data =
             await response.json();
 
 
-        // ========================================
-        // ERROR CHECK
-        // ========================================
-
         if (!response.ok) {
 
             throw new Error(
                 data.message ||
-                data.error ||
                 "Failed to generate roadmap"
             );
+
         }
 
 
-        // ========================================
-        // CHECK ROADMAP
-        // ========================================
-
         if (
             !data.roadmap ||
-            !data.roadmap.roadmap ||
             !Array.isArray(
                 data.roadmap.roadmap
             )
@@ -1318,15 +1297,48 @@ async function generateRoadmap() {
             throw new Error(
                 "Invalid roadmap response"
             );
+
         }
 
 
+        const roadmapId =
+            data.roadmap._id;
+
+
+        localStorage.setItem(
+            "currentRoadmapId",
+            roadmapId
+        );
+
+
+        localStorage.setItem(
+            "currentRoadmapTopic",
+            topic
+        );
+
+
         // ========================================
-        // DISPLAY ROADMAP
+        // CLEAR OLD LEARNING DATA
         // ========================================
 
+        localStorage.removeItem(
+            "currentLearningDay"
+        );
+
+
+        localStorage.removeItem(
+            "currentLearningTopic"
+        );
+
+
+        localStorage.removeItem(
+            "currentLearningDescription"
+        );
+
+
         displayRoadmap(
-            data.roadmap.roadmap
+            data.roadmap.roadmap,
+            roadmapId
         );
 
 
@@ -1338,53 +1350,19 @@ async function generateRoadmap() {
         );
 
 
-        resultContent.innerHTML =
-            "";
+        resultContent.innerHTML = `
+            <div class="error-message">
 
+                <h3>
+                    ❌ Something went wrong
+                </h3>
 
-        const errorDiv =
-            document.createElement(
-                "div"
-            );
+                <p>
+                    ${error.message}
+                </p>
 
-
-        errorDiv.className =
-            "error-message";
-
-
-        const errorHeading =
-            document.createElement(
-                "h3"
-            );
-
-
-        errorHeading.textContent =
-            "❌ Something went wrong";
-
-
-        const errorText =
-            document.createElement(
-                "p"
-            );
-
-
-        errorText.textContent =
-            error.message;
-
-
-        errorDiv.appendChild(
-            errorHeading
-        );
-
-
-        errorDiv.appendChild(
-            errorText
-        );
-
-
-        resultContent.appendChild(
-            errorDiv
-        );
+            </div>
+        `;
 
 
         resultSection.classList.remove(
@@ -1395,7 +1373,9 @@ async function generateRoadmap() {
     } finally {
 
         hideLoading();
+
     }
+
 }
 
 
@@ -1403,24 +1383,21 @@ async function generateRoadmap() {
 // GENERATE BUTTON
 // ========================================
 
-if (
-    generateRoadmapBtn
-) {
+if (generateRoadmapBtn) {
 
     generateRoadmapBtn.addEventListener(
         "click",
         generateRoadmap
     );
+
 }
 
 
 // ========================================
-// BACK TO DASHBOARD
+// BACK DASHBOARD
 // ========================================
 
-if (
-    backDashboardBtn
-) {
+if (backDashboardBtn) {
 
     backDashboardBtn.addEventListener(
         "click",
@@ -1428,13 +1405,49 @@ if (
 
             window.location.href =
                 "dashboard.html";
+
         }
     );
+
 }
 
 
 // ========================================
-// LOAD GOAL WHEN PAGE OPENS
+// PAGE INITIALIZATION
 // ========================================
 
-loadGoal();
+async function initializeRoadmapPage() {
+
+    // First load the user's goal
+
+    await loadGoal();
+
+
+    // Then check MongoDB for existing roadmap
+
+    const roadmapExists =
+        await loadExistingRoadmap();
+
+
+    if (roadmapExists) {
+
+        console.log(
+            "Existing roadmap loaded. AI generation skipped."
+        );
+
+    } else {
+
+        console.log(
+            "No saved roadmap found. User can generate a new roadmap."
+        );
+
+    }
+
+}
+
+
+// ========================================
+// START
+// ========================================
+
+initializeRoadmapPage();

@@ -10,9 +10,10 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Personalized Roadmap | NeuroMnemonic AI</title>
+    <title>
+        Personalized Roadmap | NeuroMnemonic AI
+    </title>
 
-    <!-- Roadmap page CSS -->
     <link
         rel="stylesheet"
         href="css/roadmap.css"
@@ -24,9 +25,9 @@
 
     <div class="roadmap-container">
 
-        <!-- =========================
+        <!-- ========================================
              PAGE HEADER
-        ========================== -->
+        ========================================= -->
 
         <div class="welcome-section">
 
@@ -42,9 +43,9 @@
         </div>
 
 
-        <!-- =========================
-             SELECTED GOAL SUMMARY
-        ========================== -->
+        <!-- ========================================
+             GOAL SUMMARY
+        ========================================= -->
 
         <div
             class="goal-summary"
@@ -86,9 +87,9 @@
         </div>
 
 
-        <!-- =========================
-             ROADMAP CREATION FORM
-        ========================== -->
+        <!-- ========================================
+             ROADMAP FORM
+        ========================================= -->
 
         <div class="roadmap-form">
 
@@ -96,8 +97,6 @@
                 Create Your Roadmap
             </h2>
 
-
-            <!-- Topic -->
 
             <div class="form-group">
 
@@ -113,8 +112,6 @@
 
             </div>
 
-
-            <!-- Language -->
 
             <div class="form-group">
 
@@ -141,8 +138,6 @@
             </div>
 
 
-            <!-- Learning Level -->
-
             <div class="form-group">
 
                 <label for="level">
@@ -168,8 +163,6 @@
             </div>
 
 
-            <!-- Duration -->
-
             <div class="form-group">
 
                 <label for="duration">
@@ -187,45 +180,40 @@
             </div>
 
 
-            <!-- Generate Button -->
-
             <button
                 type="button"
                 id="generateRoadmapBtn"
                 class="generate-btn"
             >
-                ✨ Generate Personalized Roadmap
+                ✨ Generate New Roadmap
             </button>
 
 
-            <!-- Loading -->
-
-            <div id="loading">
-
+            <div
+                id="loading"
+                class="hidden"
+            >
                 🧠 Creating your personalized roadmap...
-
             </div>
 
         </div>
 
 
-        <!-- =========================
-             GENERATED ROADMAP
-        ========================== -->
+        <!-- ========================================
+             SAVED ROADMAP
+        ========================================= -->
 
-        <div id="resultSection">
+        <div
+            id="resultSection"
+            class="hidden"
+        >
 
             <h2>
                 📚 Your Learning Roadmap
             </h2>
 
-
-            <!-- JS will insert roadmap cards here -->
-
             <div id="resultContent"></div>
 
-
-            <!-- Action Buttons -->
 
             <div class="action-buttons">
 
@@ -236,23 +224,12 @@
                     ← Back to Dashboard
                 </button>
 
-
-                <button
-                    type="button"
-                    class="start-learning-btn"
-                    onclick="startLearning()"
-                >
-                    Start Learning →
-                </button>
-
             </div>
 
         </div>
 
     </div>
 
-
-    <!-- Roadmap JavaScript -->
 
     <script src="js/roadmap.js"></script>
 

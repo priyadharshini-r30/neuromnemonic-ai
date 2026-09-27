@@ -1,5 +1,5 @@
 const express = require("express");
-const User = require("../models/User");
+const User = require("../models/user");
 const protect = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -17,15 +17,33 @@ router.get("/", protect, async (req, res) => {
             req.user._id
         ).select("-password");
 
+
         if (!user) {
 
             return res.status(404).json({
+                success: false,
                 message: "User not found"
             });
 
         }
 
-        res.status(200).json(user);
+
+        return res.status(200).json({
+
+            success: true,
+
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                dateOfBirth: user.dateOfBirth,
+                educationQualification:
+                    user.educationQualification,
+                onboardingCompleted:
+                    user.onboardingCompleted
+            }
+
+        });
 
     } catch (error) {
 
@@ -34,12 +52,20 @@ router.get("/", protect, async (req, res) => {
             error
         );
 
-        res.status(500).json({
+        return res.status(500).json({
+
+            success: false,
+
             message: "Server error",
+
             error: error.message
+
         });
+
     }
+
 });
+
 
 
 // ========================================
@@ -57,14 +83,23 @@ router.put("/", protect, async (req, res) => {
         } = req.body;
 
 
+        // ========================================
+        // FIND USER
+        // ========================================
+
         const user = await User.findById(
             req.user._id
         );
 
+
         if (!user) {
 
             return res.status(404).json({
+
+                success: false,
+
                 message: "User not found"
+
             });
 
         }
@@ -74,10 +109,31 @@ router.put("/", protect, async (req, res) => {
         // UPDATE NAME
         // ========================================
 
-        if (name !== undefined) {
+        if (
+            name !== undefined &&
+            name !== null
+        ) {
+
+            const trimmedName =
+                String(name).trim();
+
+
+            if (trimmedName.length === 0) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Name cannot be empty"
+
+                });
+
+            }
+
 
             user.name =
-                name.trim();
+                trimmedName;
 
         }
 
@@ -86,7 +142,10 @@ router.put("/", protect, async (req, res) => {
         // UPDATE DATE OF BIRTH
         // ========================================
 
-        if (dateOfBirth !== undefined) {
+        if (
+            dateOfBirth !== undefined &&
+            dateOfBirth !== null
+        ) {
 
             user.dateOfBirth =
                 dateOfBirth;
@@ -95,37 +154,60 @@ router.put("/", protect, async (req, res) => {
 
 
         // ========================================
-        // UPDATE EDUCATION
+        // UPDATE EDUCATION QUALIFICATION
         // ========================================
 
         if (
-            educationQualification !== undefined
+            educationQualification !== undefined &&
+            educationQualification !== null
         ) {
 
             user.educationQualification =
-                educationQualification.trim();
+                String(
+                    educationQualification
+                ).trim();
 
         }
 
 
+        // ========================================
+        // SAVE USER
+        // ========================================
+
         await user.save();
 
 
-        res.status(200).json({
+        // ========================================
+        // RESPONSE
+        // ========================================
+
+        return res.status(200).json({
+
+            success: true,
 
             message:
                 "Profile updated successfully",
 
             user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
+
+                id:
+                    user._id,
+
+                name:
+                    user.name,
+
+                email:
+                    user.email,
+
                 dateOfBirth:
                     user.dateOfBirth,
+
                 educationQualification:
                     user.educationQualification,
+
                 onboardingCompleted:
                     user.onboardingCompleted
+
             }
 
         });
@@ -137,12 +219,27 @@ router.put("/", protect, async (req, res) => {
             error
         );
 
-        res.status(500).json({
-            message: "Server error",
-            error: error.message
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                "Server error",
+
+            error:
+                error.message
+
         });
+
     }
+
 });
 
+
+
+// ========================================
+// EXPORT ROUTER
+// ========================================
 
 module.exports = router;
