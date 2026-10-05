@@ -1,28 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NeuroMnemonic AI - Mnemonic & Story Generator</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/mnemonic.css">
+    <title>
+        NeuroMnemonic AI - Mnemonic & Story Generator
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/mnemonic.css"
+    >
+
 </head>
+
 
 <body>
 
+
     <div class="container">
 
-        <h1>🧠 NeuroMnemonic AI</h1>
+
+        <!-- ========================================
+             HEADER
+        ========================================= -->
+
+        <h1>
+            🧠 NeuroMnemonic AI
+        </h1>
+
 
         <p class="subtitle">
             Mnemonic & Story Generator
         </p>
 
+
+
+        <!-- ========================================
+             GENERATOR
+        ========================================= -->
+
         <div class="generator-card">
 
+
             <!-- Topic -->
-            <label for="topic">Enter Topic</label>
+
+            <label for="topic">
+                Enter Topic
+            </label>
+
 
             <input
                 type="text"
@@ -31,58 +64,143 @@
             >
 
 
+
             <!-- Language -->
-            <label for="language">Preferred Language</label>
+
+            <label for="language">
+                Preferred Language
+            </label>
+
 
             <select id="language">
-                <option value="English">English</option>
-                <option value="Tamil">Tamil</option>
+
+                <option value="English">
+                    English
+                </option>
+
+                <option value="Tamil">
+                    Tamil
+                </option>
+
+                <option value="Bilingual">
+                    Bilingual
+                </option>
+
             </select>
+
 
 
             <!-- Generation Type -->
-            <label for="type">Generation Type</label>
+
+            <label for="type">
+                Generation Type
+            </label>
+
 
             <select id="type">
-                <option value="mnemonic">🧠 Mnemonic</option>
-                <option value="story">📖 Story</option>
+
+                <option value="mnemonic">
+                    🧠 Mnemonic
+                </option>
+
+                <option value="story">
+                    📖 Story
+                </option>
+
             </select>
 
 
+
             <!-- Generate Button -->
-            <button id="generateBtn">
+
+            <button
+                type="button"
+                id="generateBtn"
+            >
                 ✨ Generate
             </button>
+
 
         </div>
 
 
-        <!-- Loading -->
-        <div id="loading" class="loading">
+
+        <!-- ========================================
+             LOADING
+        ========================================= -->
+
+        <div
+            id="loading"
+            class="loading"
+        >
             Generating... Please wait ⏳
         </div>
 
 
-        <!-- Result -->
+
+        <!-- ========================================
+             RESULT
+        ========================================= -->
+
         <div class="result-card">
 
-            <h2>📚 Generated Result</h2>
+
+            <h2>
+                📚 Generated Result
+            </h2>
+
 
             <div id="result">
+
                 Your mnemonic or story will appear here.
+
             </div>
 
+
+
             <!-- Quiz Button -->
-            <button id="quizBtn" style="display: none;">
+
+            <button
+                type="button"
+                id="quizBtn"
+                style="display: none;"
+            >
                 🎯 Take Quiz
+            </button>
+
+
+        </div>
+
+
+
+        <!-- ========================================
+             BACK TO DASHBOARD
+        ========================================= -->
+
+        <div class="back-dashboard-container">
+
+            <button
+                type="button"
+                class="back-dashboard-btn"
+                onclick="goDashboard()"
+            >
+                ← Back to Dashboard
             </button>
 
         </div>
 
+
     </div>
 
 
+
+    <!-- ========================================
+         JAVASCRIPT
+    ========================================= -->
+
     <script src="js/mnemonic.js"></script>
 
+
 </body>
+
 </html>

@@ -1,243 +1,341 @@
+/* ========================================
+   NEUROMNEMONIC AI - REGISTER PAGE
+   ======================================== */
+
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #111827;
 
-    background: #d1d5db;
-    color: #333333;
+    min-height: 100vh;
 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 
-    padding: 40px 20px;
+    padding: 35px 20px;
 }
 
-/* Main Container */
+
+/* ========================================
+   REGISTER CONTAINER
+   ======================================== */
 
 .register-container {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 480px;
+
+    background: #ffffff;
+
+    padding: 38px 34px 35px;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.08);
+
+    border: 1px solid #e5e7eb;
 }
 
-/* Register Card */
 
-.register-card {
-    width: 100%;
+/* ========================================
+   HEADER
+   ======================================== */
 
-    background: #bfc3c8;
-
-    border: 1px solid #a7abb0;
-    border-radius: 18px;
-
-    padding: 45px 50px;
-
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
-}
-
-/* Heading */
-
-.register-card h1 {
+.register-header {
     text-align: center;
 
-    font-size: 32px;
-    font-weight: 700;
+    margin-bottom: 28px;
+}
 
-    color: #252525;
+
+/* Brain / Logo */
+
+.register-header .logo,
+.register-header .brain,
+.register-container .logo {
+    display: block;
+
+    text-align: center;
+
+    font-size: 30px;
 
     margin-bottom: 10px;
 }
 
-/* Subtitle */
 
-.subtitle {
+/* Main Heading */
+
+.register-header h1,
+.register-container h1 {
     text-align: center;
 
-    font-size: 17px;
-    color: #555555;
+    font-size: 32px;
 
-    margin-bottom: 35px;
+    line-height: 1.15;
 
-    line-height: 1.5;
+    color: #4f6df5;
+
+    font-weight: 700;
+
+    margin-bottom: 10px;
 }
 
-/* Form Group */
+
+/* Subtitle */
+
+.register-header p,
+.register-container > p {
+    text-align: center;
+
+    font-size: 16px;
+
+    color: #374151;
+
+    line-height: 1.5;
+
+    margin-bottom: 22px;
+}
+
+
+/* ========================================
+   FORM
+   ======================================== */
+
+#registerForm {
+    width: 100%;
+}
+
+
+/* ========================================
+   FORM GROUP
+   ======================================== */
 
 .form-group {
     width: 100%;
-    margin-bottom: 22px;
+
+    margin-bottom: 18px;
 }
+
 
 /* Labels */
 
 .form-group label {
     display: block;
 
-    width: 100%;
+    font-size: 15px;
 
-    font-size: 16px;
     font-weight: 600;
 
-    color: #303030;
+    color: #111827;
 
-    margin-bottom: 8px;
+    margin-bottom: 7px;
 }
 
-/* Inputs */
+
+/* ========================================
+   INPUTS
+   ======================================== */
 
 .form-group input,
-.form-group select {
-    display: block;
-
+.form-group select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
     width: 100%;
-    min-height: 52px;
 
-    padding: 12px 15px;
+    height: 50px;
 
-    border: 1px solid #999999;
-    border-radius: 9px;
+    padding: 0 14px;
 
-    background: #d9dcdf;
-    color: #333333;
+    border: 1px solid #d1d5db;
 
-    font-family: Arial, sans-serif;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
     font-size: 16px;
 
     outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-/* Select */
 
-.form-group select {
-    cursor: pointer;
+/* Placeholder */
+
+.form-group input::placeholder,
+input::placeholder {
+    color: #9ca3af;
 }
+
 
 /* Focus */
 
 .form-group input:focus,
-.form-group select:focus {
-    border-color: #666666;
+.form-group select:focus,
+input:focus,
+select:focus {
+    border-color: #4f6df5;
 
-    box-shadow: 0 0 0 3px rgba(80, 80, 80, 0.12);
+    box-shadow:
+        0 0 0 3px rgba(79, 109, 245, 0.10);
 }
 
-/* Help Text */
 
-.form-group small {
+/* Disabled */
+
+input:disabled {
+    background: #f3f4f6;
+
+    color: #6b7280;
+
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   SMALL HELP TEXT
+   ======================================== */
+
+.form-group small,
+.help-text {
     display: block;
 
-    margin-top: 7px;
+    margin-top: 6px;
 
     font-size: 13px;
 
-    color: #666666;
+    color: #64748b;
 
     line-height: 1.4;
 }
 
-/* Create Account Button */
 
+/* ========================================
+   REGISTER BUTTON
+   ======================================== */
+
+button[type="submit"],
 .register-btn {
     width: 100%;
 
-    min-height: 54px;
-
-    margin-top: 10px;
-
-    padding: 0 28px;
+    height: 50px;
 
     border: none;
-    border-radius: 10px;
 
-    background: #55585c;
+    border-radius: 7px;
+
+    background: #4f6df5;
+
     color: #ffffff;
 
-    font-family: Arial, sans-serif;
-
     font-size: 16px;
+
     font-weight: 600;
 
     cursor: pointer;
 
-    transition: 0.2s ease;
+    margin-top: 8px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
 }
 
+
+button[type="submit"]:hover,
 .register-btn:hover {
-    background: #45484c;
+    background: #3f5de0;
 }
 
-/* Login Text */
 
-.login-text {
+button[type="submit"]:active,
+.register-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* ========================================
+   MESSAGE
+   ======================================== */
+
+#message {
     text-align: center;
 
-    margin-top: 25px;
+    margin-top: 14px;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   LOGIN LINK
+   ======================================== */
+
+.login-link {
+    text-align: center;
+
+    margin-top: 20px;
 
     font-size: 15px;
 
-    color: #555555;
+    color: #374151;
 }
 
-.login-text a {
-    color: #444444;
+
+.login-link a {
+    color: #4f6df5;
 
     font-weight: 600;
 
     text-decoration: none;
 }
 
-.login-text a:hover {
+
+.login-link a:hover {
     text-decoration: underline;
 }
 
-/* Error Message */
 
-.error-message {
-    margin-top: 15px;
+/* ========================================
+   RESPONSIVE
+   ======================================== */
 
-    text-align: center;
-
-    font-size: 14px;
-
-    color: #555555;
-}
-
-/* Mobile */
-
-@media (max-width: 700px) {
+@media (max-width: 600px) {
 
     body {
-        padding: 20px 12px;
+        padding: 20px 14px;
     }
 
     .register-container {
         max-width: 100%;
+
+        padding: 30px 22px;
     }
 
-    .register-card {
-        padding: 30px 20px;
+    .register-header h1,
+    .register-container h1 {
+        font-size: 28px;
     }
 
-    .register-card h1 {
-        font-size: 27px;
-    }
-
-    .subtitle {
+    .register-header p,
+    .register-container > p {
         font-size: 15px;
     }
 
-    .form-group input,
-    .form-group select {
-        min-height: 50px;
-    }
-
-    .register-btn {
-        min-height: 52px;
-    }
 }

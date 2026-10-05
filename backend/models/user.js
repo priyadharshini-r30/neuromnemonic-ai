@@ -1,47 +1,82 @@
 const mongoose = require("mongoose");
 
+
+// ========================================
+// USER SCHEMA
+// ========================================
+
 const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
+    {
+
+        // ========================================
+        // PERSONAL INFORMATION
+        // ========================================
+
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
+
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true
+        },
+
+
+        password: {
+            type: String,
+            required: true
+        },
+
+
+        dateOfBirth: {
+            type: Date,
+            required: true
+        },
+
+
+        // ========================================
+        // EDUCATION
+        // ========================================
+
+        educationQualification: {
+            type: String,
+            default: "",
+            trim: true
+        },
+
+
+        // ========================================
+        // ONBOARDING
+        // ========================================
+
+        onboardingCompleted: {
+            type: Boolean,
+            default: false
+        }
+
     },
 
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
 
-    password: {
-      type: String,
-      required: true,
-    },
+    {
+        timestamps: true
+    }
 
-    dateOfBirth: {
-      type: Date,
-      required: true,
-    },
-
-    educationQualification: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    onboardingCompleted: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  {
-    timestamps: true,
-  }
 );
 
+
+// ========================================
+// EXPORT MODEL
+// ========================================
+
 module.exports =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema);
+    mongoose.models.User ||
+    mongoose.model(
+        "User",
+        userSchema
+    );

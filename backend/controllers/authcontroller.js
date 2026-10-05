@@ -10,161 +10,179 @@ const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
 
-  try {
+    try {
 
-    const {
-      name,
-      email,
-      password,
-      dateOfBirth
-    } = req.body;
-
-
-    // ========================================
-    // CHECK REQUIRED FIELDS
-    // ========================================
-
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !dateOfBirth
-    ) {
-
-      return res.status(400).json({
-
-        message:
-          "All fields are required"
-
-      });
-
-    }
+        const {
+            name,
+            email,
+            password,
+            dateOfBirth,
+            educationQualification
+        } = req.body;
 
 
-    // ========================================
-    // CHECK EXISTING USER
-    // ========================================
+        // ========================================
+        // CHECK REQUIRED FIELDS
+        // ========================================
 
-    const userExists =
-      await User.findOne({
-        email: email.toLowerCase()
-      });
+        if (
+            !name ||
+            !email ||
+            !password ||
+            !dateOfBirth ||
+            !educationQualification
+        ) {
 
+            return res.status(400).json({
 
-    if (userExists) {
+                message:
+                    "All fields are required"
 
-      return res.status(400).json({
+            });
 
-        message:
-          "User already exists"
-
-      });
-
-    }
-
-
-    // ========================================
-    // HASH PASSWORD
-    // ========================================
-
-    const salt =
-      await bcrypt.genSalt(10);
-
-    const hashedPassword =
-      await bcrypt.hash(
-        password,
-        salt
-      );
-
-
-    // ========================================
-    // CREATE USER
-    // ========================================
-
-    const user =
-      await User.create({
-
-        name,
-
-        email:
-          email.toLowerCase(),
-
-        password:
-          hashedPassword,
-
-        dateOfBirth
-
-      });
-
-
-    // ========================================
-    // GENERATE JWT
-    // ========================================
-
-    const token =
-      jwt.sign(
-
-        {
-          id: user._id
-        },
-
-        process.env.JWT_SECRET,
-
-        {
-          expiresIn: "1d"
         }
 
-      );
+
+        // ========================================
+        // CHECK EXISTING USER
+        // ========================================
+
+        const userExists =
+            await User.findOne({
+
+                email:
+                    email.toLowerCase()
+
+            });
 
 
-    // ========================================
-    // REGISTER RESPONSE
-    // ========================================
+        if (userExists) {
 
-    return res.status(201).json({
+            return res.status(400).json({
 
-      message:
-        "User Registered Successfully",
+                message:
+                    "User already exists"
 
-      token,
+            });
 
-      user: {
-
-        id:
-          user._id,
-
-        name:
-          user.name,
-
-        email:
-          user.email,
-
-        dateOfBirth:
-          user.dateOfBirth,
-
-        onboardingCompleted:
-          user.onboardingCompleted || false
-
-      }
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      "Register Error:",
-      error
-    );
+        }
 
 
-    return res.status(500).json({
+        // ========================================
+        // HASH PASSWORD
+        // ========================================
 
-      message:
-        error.message
+        const salt =
+            await bcrypt.genSalt(10);
 
-    });
+        const hashedPassword =
+            await bcrypt.hash(
+                password,
+                salt
+            );
 
-  }
+
+        // ========================================
+        // CREATE USER
+        // ========================================
+
+        const user =
+            await User.create({
+
+                name:
+                    name.trim(),
+
+                email:
+                    email.toLowerCase().trim(),
+
+                password:
+                    hashedPassword,
+
+                dateOfBirth:
+                    dateOfBirth,
+
+                educationQualification:
+                    educationQualification.trim(),
+
+                onboardingCompleted:
+                    false
+
+            });
+
+
+        // ========================================
+        // GENERATE JWT
+        // ========================================
+
+        const token =
+            jwt.sign(
+
+                {
+                    id:
+                        user._id
+                },
+
+                process.env.JWT_SECRET,
+
+                {
+                    expiresIn:
+                        "1d"
+                }
+
+            );
+
+
+        // ========================================
+        // REGISTER RESPONSE
+        // ========================================
+
+        return res.status(201).json({
+
+            message:
+                "User Registered Successfully",
+
+            token,
+
+            user: {
+
+                id:
+                    user._id,
+
+                name:
+                    user.name,
+
+                email:
+                    user.email,
+
+                dateOfBirth:
+                    user.dateOfBirth,
+
+                educationQualification:
+                    user.educationQualification,
+
+                onboardingCompleted:
+                    user.onboardingCompleted
+
+            }
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Register Error:",
+            error
+        );
+
+
+        return res.status(500).json({
+
+            message:
+                error.message
+
+        });
+
+    }
 
 };
 
@@ -176,218 +194,218 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 
-  try {
-
-    const {
-      email,
-      password
-    } = req.body;
-
-
-    // ========================================
-    // CHECK REQUIRED FIELDS
-    // ========================================
-
-    if (
-      !email ||
-      !password
-    ) {
-
-      return res.status(400).json({
-
-        message:
-          "Email and password are required"
-
-      });
-
-    }
-
-
-    // ========================================
-    // FIND USER
-    // ========================================
-
-    const user =
-      await User.findOne({
-
-        email:
-          email.toLowerCase()
-
-      });
-
-
-    if (!user) {
-
-      return res.status(400).json({
-
-        message:
-          "Invalid email or password"
-
-      });
-
-    }
-
-
-    // ========================================
-    // CHECK PASSWORD
-    // ========================================
-
-    const isMatch =
-      await bcrypt.compare(
-
-        password,
-
-        user.password
-
-      );
-
-
-    if (!isMatch) {
-
-      return res.status(400).json({
-
-        message:
-          "Invalid email or password"
-
-      });
-
-    }
-
-
-    // ========================================
-    // CHECK WHETHER USER ALREADY
-    // HAS A GOAL
-    // ========================================
-
-    let hasGoal = false;
-
-
     try {
 
-      const existingGoal =
-        await Goal.findOne({
+        const {
+            email,
+            password
+        } = req.body;
 
-          user:
-            user._id
+
+        // ========================================
+        // CHECK REQUIRED FIELDS
+        // ========================================
+
+        if (
+            !email ||
+            !password
+        ) {
+
+            return res.status(400).json({
+
+                message:
+                    "Email and password are required"
+
+            });
+
+        }
+
+
+        // ========================================
+        // FIND USER
+        // ========================================
+
+        const user =
+            await User.findOne({
+
+                email:
+                    email.toLowerCase().trim()
+
+            });
+
+
+        if (!user) {
+
+            return res.status(400).json({
+
+                message:
+                    "Invalid email or password"
+
+            });
+
+        }
+
+
+        // ========================================
+        // CHECK PASSWORD
+        // ========================================
+
+        const isMatch =
+            await bcrypt.compare(
+
+                password,
+
+                user.password
+
+            );
+
+
+        if (!isMatch) {
+
+            return res.status(400).json({
+
+                message:
+                    "Invalid email or password"
+
+            });
+
+        }
+
+
+        // ========================================
+        // CHECK WHETHER USER HAS GOAL
+        // ========================================
+
+        let hasGoal = false;
+
+        try {
+
+            const existingGoal =
+                await Goal.findOne({
+
+                    user:
+                        user._id
+
+                });
+
+
+            if (existingGoal) {
+
+                hasGoal = true;
+
+            }
+
+        } catch (goalError) {
+
+            console.error(
+                "Goal Check Error:",
+                goalError
+            );
+
+        }
+
+
+        // ========================================
+        // DETERMINE ONBOARDING STATUS
+        // ========================================
+
+        const onboardingCompleted =
+            Boolean(
+                user.onboardingCompleted ||
+                hasGoal
+            );
+
+
+        // ========================================
+        // UPDATE DATABASE STATUS
+        // ========================================
+
+        if (
+            onboardingCompleted &&
+            !user.onboardingCompleted
+        ) {
+
+            user.onboardingCompleted =
+                true;
+
+            await user.save();
+
+        }
+
+
+        // ========================================
+        // GENERATE JWT
+        // ========================================
+
+        const token =
+            jwt.sign(
+
+                {
+                    id:
+                        user._id
+                },
+
+                process.env.JWT_SECRET,
+
+                {
+                    expiresIn:
+                        "1d"
+                }
+
+            );
+
+
+        // ========================================
+        // LOGIN RESPONSE
+        // ========================================
+
+        return res.status(200).json({
+
+            message:
+                "Login Successful",
+
+            token,
+
+            user: {
+
+                id:
+                    user._id,
+
+                name:
+                    user.name,
+
+                email:
+                    user.email,
+
+                dateOfBirth:
+                    user.dateOfBirth,
+
+                educationQualification:
+                    user.educationQualification,
+
+                onboardingCompleted:
+                    onboardingCompleted
+
+            }
 
         });
 
+    } catch (error) {
 
-      if (existingGoal) {
-
-        hasGoal = true;
-
-      }
-
-    } catch (goalError) {
-
-      console.error(
-        "Goal Check Error:",
-        goalError
-      );
-
-    }
+        console.error(
+            "Login Error:",
+            error
+        );
 
 
-    // ========================================
-    // DETERMINE ONBOARDING STATUS
-    // ========================================
+        return res.status(500).json({
 
-    const onboardingCompleted =
-      Boolean(
-        user.onboardingCompleted ||
-        hasGoal
-      );
+            message:
+                error.message
 
-
-    // ========================================
-    // KEEP USER DATABASE STATUS UPDATED
-    // ========================================
-
-    if (
-      onboardingCompleted &&
-      !user.onboardingCompleted
-    ) {
-
-      user.onboardingCompleted =
-        true;
-
-      await user.save();
+        });
 
     }
-
-
-    // ========================================
-    // GENERATE JWT
-    // ========================================
-
-    const token =
-      jwt.sign(
-
-        {
-          id:
-            user._id
-
-        },
-
-        process.env.JWT_SECRET,
-
-        {
-          expiresIn:
-            "1d"
-        }
-
-      );
-
-
-    // ========================================
-    // LOGIN RESPONSE
-    // ========================================
-
-    return res.status(200).json({
-
-      message:
-        "Login Successful",
-
-      token,
-
-      user: {
-
-        id:
-          user._id,
-
-        name:
-          user.name,
-
-        email:
-          user.email,
-
-        dateOfBirth:
-          user.dateOfBirth,
-
-        onboardingCompleted:
-          onboardingCompleted
-
-      }
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      "Login Error:",
-      error
-    );
-
-
-    return res.status(500).json({
-
-      message:
-        error.message
-
-    });
-
-  }
 
 };
 
@@ -399,8 +417,8 @@ const loginUser = async (req, res) => {
 
 module.exports = {
 
-  registerUser,
+    registerUser,
 
-  loginUser
+    loginUser
 
 };

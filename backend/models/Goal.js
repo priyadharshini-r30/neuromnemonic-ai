@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 
+
+// ========================================
+// GOAL SCHEMA
+// ========================================
+
 const goalSchema = new mongoose.Schema(
+
     {
+
         // ========================================
         // USER
         // ========================================
@@ -12,49 +19,54 @@ const goalSchema = new mongoose.Schema(
             required: true
         },
 
+
         // ========================================
         // GOAL TYPE
-        // Supports one or multiple goals
-        // Example:
-        // ["Academic"]
-        // ["Competitive Exam"]
-        // ["Academic", "Competitive Exam"]
         // ========================================
 
         goalType: {
             type: [String],
-            enum: ["Academic", "Competitive Exam"],
+            enum: [
+                "Academic",
+                "Competitive Exam"
+            ],
             required: true
         },
+
 
         // ========================================
         // ACADEMIC DETAILS
         // ========================================
 
-        academicYear: {
+        educationQualification: {
             type: String,
             default: ""
         },
 
-        course: {
+
+        studentClass: {
             type: String,
             default: ""
         },
 
-        semester: {
+
+        schoolName: {
             type: String,
             default: ""
         },
+
 
         subjects: {
             type: [String],
             default: []
         },
 
-        collegeExamDate: {
+
+        academicExamDate: {
             type: Date,
             default: null
         },
+
 
         // ========================================
         // COMPETITIVE EXAM DETAILS
@@ -65,29 +77,35 @@ const goalSchema = new mongoose.Schema(
             default: ""
         },
 
+
         examGroup: {
             type: String,
             default: ""
         },
 
+
         preparationLevel: {
             type: String,
+
             enum: [
                 "Beginner",
                 "Intermediate",
                 "Advanced",
                 ""
             ],
+
             default: ""
         },
+
 
         targetAttempt: {
             type: String,
             default: ""
         },
 
+
         // ========================================
-        // VERIFIED EXAM SCHEDULE
+        // VERIFIED EXAM DETAILS
         // ========================================
 
         notificationDate: {
@@ -95,20 +113,24 @@ const goalSchema = new mongoose.Schema(
             default: null
         },
 
+
         targetDate: {
             type: Date,
             default: null
         },
+
 
         sourceUrl: {
             type: String,
             default: ""
         },
 
+
         lastVerified: {
             type: Date,
             default: null
         },
+
 
         // ========================================
         // ELIGIBILITY DETAILS
@@ -119,40 +141,48 @@ const goalSchema = new mongoose.Schema(
             default: null
         },
 
+
         maximumAge: {
             type: Number,
             default: null
         },
 
-        educationQualification: {
+
+        requiredEducation: {
             type: String,
             default: ""
         },
 
+
         eligibility: {
             type: String,
+
             enum: [
                 "Eligible",
                 "Not Eligible",
                 "Not Verified",
                 ""
             ],
+
             default: ""
         },
+
 
         eligibilityReason: {
             type: String,
             default: ""
         },
 
+
         // ========================================
-        // AUTOMATIC PREPARATION DAYS
+        // AVAILABLE PREPARATION DAYS
         // ========================================
 
         availableDays: {
             type: Number,
             default: null
         },
+
 
         // ========================================
         // COMMON STUDY DETAILS
@@ -162,11 +192,13 @@ const goalSchema = new mongoose.Schema(
             type: Number,
             required: true
         }
+
     },
 
     {
         timestamps: true
     }
+
 );
 
 

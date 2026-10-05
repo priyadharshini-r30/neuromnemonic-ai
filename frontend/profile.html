@@ -1,122 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile | NeuroMnemonic AI</title>
 
-    <link rel="stylesheet" href="css/profile.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        My Profile | NeuroMnemonic AI
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/profile.css"
+    >
+
 </head>
+
 
 <body>
 
+
     <div class="profile-container">
 
+
+        <!-- ========================================
+             HEADER
+        ========================================= -->
+
         <div class="profile-header">
-            <div class="avatar">👤</div>
-            <div>
-                <h1>My Profile</h1>
-                <p>Manage your learning goals and personal details</p>
+
+            <div class="avatar">
+                👤
             </div>
+
+            <div>
+
+                <h1>
+                    My Profile
+                </h1>
+
+                <p>
+                    Manage your personal details and learning information
+                </p>
+
+            </div>
+
         </div>
+
+
+
+        <!-- ========================================
+             PROFILE FORM
+        ========================================= -->
 
         <form id="profileForm">
 
+
+            <!-- ========================================
+                 PERSONAL INFORMATION
+            ========================================= -->
+
             <div class="form-section">
-                <h2>👤 Personal Information</h2>
+
+                <h2>
+                    👤 Personal Information
+                </h2>
+
 
                 <div class="input-group">
-                    <label>Name</label>
-                    <input type="text" id="name" placeholder="Enter your name">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Your full name"
+                    >
+
                 </div>
 
-                <div class="input-group">
-                    <label>Email</label>
-                    <input type="email" id="email" disabled>
-                </div>
 
                 <div class="input-group">
-                    <label>Role</label>
-                    <input type="text" id="role" disabled>
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        disabled
+                    >
+
+                    <small>
+                        Email cannot be changed here.
+                    </small>
+
                 </div>
 
+
                 <div class="input-group">
-                    <label>Age</label>
-                    <input type="number" id="age" placeholder="Enter your age">
+
+                    <label for="dateOfBirth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="dateOfBirth"
+                    >
+
                 </div>
+
+
+                <div class="input-group">
+
+                    <label for="age">
+                        Age
+                    </label>
+
+                    <input
+                        type="number"
+                        id="age"
+                        disabled
+                    >
+
+                    <small>
+                        Age is calculated automatically from your date of birth.
+                    </small>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="educationQualification">
+                        Education Qualification
+                    </label>
+
+                    <select
+                        id="educationQualification"
+                    >
+
+                        <option value="">
+                            Select your qualification
+                        </option>
+
+                        <option value="10th">
+                            10th
+                        </option>
+
+                        <option value="12th">
+                            12th
+                        </option>
+
+                        <option value="Diploma">
+                            Diploma
+                        </option>
+
+                        <option value="UG Degree">
+                            UG Degree
+                        </option>
+
+                        <option value="PG Degree">
+                            PG Degree
+                        </option>
+
+                    </select>
+
+                </div>
+
             </div>
 
 
+
+            <!-- ========================================
+                 CURRENT LEARNING GOAL
+            ========================================= -->
+
             <div class="form-section">
-                <h2>🎓 Education</h2>
 
-                <div class="input-group">
-                    <label>College</label>
-                    <input type="text" id="college" placeholder="Enter your college">
+                <h2>
+                    🎯 Current Learning Goal
+                </h2>
+
+
+                <!-- ====================================
+                     GOAL TYPE
+                ===================================== -->
+
+                <div class="goal-type-box">
+
+                    <span class="goal-label">
+                        Goal Type
+                    </span>
+
+                    <strong id="goalType">
+                        —
+                    </strong>
+
                 </div>
 
-                <div class="input-group">
-                    <label>Course</label>
-                    <input type="text" id="course" placeholder="Enter your course">
+
+
+                <!-- ====================================
+                     ACADEMIC GOAL
+                ===================================== -->
+
+                <div
+                    class="goal-subsection"
+                    id="academicSection"
+                >
+
+                    <h3>
+                        📚 Academic Details
+                    </h3>
+
+
+                    <div class="goal-grid">
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                Course
+                            </span>
+
+                            <strong id="course">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                Year
+                            </span>
+
+                            <strong id="year">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                Semester
+                            </span>
+
+                            <strong id="semester">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                College
+                            </span>
+
+                            <strong id="college">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="goal-item full-width">
+
+                        <span>
+                            Subjects
+                        </span>
+
+                        <strong id="subjects">
+                            —
+                        </strong>
+
+                    </div>
+
                 </div>
+
+
+
+                <!-- ====================================
+                     COMPETITIVE EXAM GOAL
+                ===================================== -->
+
+                <div
+                    class="goal-subsection"
+                    id="competitiveSection"
+                >
+
+                    <h3>
+                        🏆 Competitive Exam Details
+                    </h3>
+
+
+                    <div class="goal-grid">
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                Competitive Exam
+                            </span>
+
+                            <strong id="targetExam">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                Target Attempt
+                            </span>
+
+                            <strong id="targetAttempt">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="goal-item">
+
+                            <span>
+                                Eligibility
+                            </span>
+
+                            <strong id="eligibility">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ====================================
+                     STUDY PLAN
+                ===================================== -->
+
+                <div class="goal-subsection study-plan-section">
+
+                    <h3>
+                        ⏰ Study Plan
+                    </h3>
+
+
+                    <div class="goal-item full-width">
+
+                        <span>
+                            Daily Study Hours
+                        </span>
+
+                        <strong id="dailyStudyHours">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ====================================
+                     NOTE
+                ===================================== -->
+
+                <p class="goal-note">
+
+                    Goal details are managed through
+                    your Goal Setup.
+
+                </p>
+
             </div>
 
 
-            <div class="form-section">
-                <h2>🎯 Learning Goals</h2>
 
-                <div class="input-group">
-                    <label>Study Goal</label>
-                    <input type="text" id="studyGoal"
-                           placeholder="What is your study goal?">
-                </div>
+            <!-- ========================================
+                 MESSAGE
+            ========================================= -->
 
-                <div class="input-group">
-                    <label>Target Exam</label>
-                    <input type="text" id="targetExam"
-                           placeholder="Example: TNPSC">
-                </div>
-
-                <div class="input-group">
-                    <label>Daily Study Hours</label>
-                    <input type="number" id="dailyStudyHours"
-                           placeholder="Example: 4">
-                </div>
-
-                <div class="input-group">
-                    <label>Subjects</label>
-                    <input type="text" id="subjects"
-                           placeholder="Example: Tamil, English, General Studies">
-                </div>
-            </div>
+            <p
+                id="message"
+                class="message"
+            ></p>
 
 
-            <div class="form-section">
-                <h2>📝 About You</h2>
 
-                <div class="input-group">
-                    <label>Bio</label>
-                    <textarea id="bio"
-                              placeholder="Tell us about your learning journey..."></textarea>
-                </div>
-            </div>
+            <!-- ========================================
+                 SAVE PROFILE
+            ========================================= -->
 
-
-            <button type="submit" id="saveBtn">
-                💾 Save Profile
+            <button
+                type="submit"
+                id="saveBtn"
+            >
+                💾 Save Personal Details
             </button>
 
-            <p id="message"></p>
 
         </form>
 
-        <button class="back-btn" onclick="goDashboard()">
+
+
+        <!-- ========================================
+             BACK BUTTON
+        ========================================= -->
+
+        <button
+            class="back-btn"
+            onclick="goDashboard()"
+        >
             ← Back to Dashboard
         </button>
 
+
     </div>
 
-<script src="./js/profile.js"></script>
+
+
+    <!-- ========================================
+         JAVASCRIPT
+    ========================================= -->
+
+    <script src="./js/profile.js"></script>
+
 
 </body>
+
 </html>

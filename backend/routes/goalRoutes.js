@@ -1,4 +1,5 @@
 const express = require("express");
+
 const Goal = require("../models/Goal");
 const ExamSchedule = require("../models/ExamSchedule");
 const User = require("../models/user");
@@ -17,11 +18,8 @@ function calculateAge(dateOfBirth) {
         return null;
     }
 
-    const dob =
-        new Date(dateOfBirth);
-
-    const today =
-        new Date();
+    const dob = new Date(dateOfBirth);
+    const today = new Date();
 
     if (isNaN(dob.getTime())) {
         return null;
@@ -63,16 +61,17 @@ function checkEducationEligibility(
     }
 
     const user =
-        String(
-            userEducation || ""
-        ).toLowerCase();
+        String(userEducation || "")
+            .toLowerCase()
+            .trim();
 
     const required =
-        String(
-            requiredEducation || ""
-        ).toLowerCase();
+        String(requiredEducation || "")
+            .toLowerCase()
+            .trim();
 
 
+    // Degree requirement
     if (
         required.includes("degree") ||
         required.includes("graduate") ||
@@ -87,10 +86,10 @@ function checkEducationEligibility(
             user.includes("bca") ||
             user.includes("b.com")
         );
-
     }
 
 
+    // 12th requirement
     if (
         required.includes("12")
     ) {
@@ -101,13 +100,14 @@ function checkEducationEligibility(
             user.includes("ug") ||
             user.includes("pg")
         );
-
     }
 
 
+    // 10th requirement
     if (
         required.includes("10")
     ) {
+
         return true;
     }
 
@@ -128,12 +128,12 @@ function calculateAvailableDays(
         return null;
     }
 
-    const today =
-        new Date();
+    const today = new Date();
+    const examDate = new Date(targetDate);
 
-    const examDate =
-        new Date(targetDate);
-
+    if (isNaN(examDate.getTime())) {
+        return null;
+    }
 
     today.setHours(
         0,
@@ -149,11 +149,9 @@ function calculateAvailableDays(
         0
     );
 
-
     const difference =
         examDate.getTime() -
         today.getTime();
-
 
     const days =
         Math.ceil(
@@ -165,7 +163,6 @@ function calculateAvailableDays(
                 24
             )
         );
-
 
     return days > 0 ? days : 0;
 }
@@ -182,23 +179,34 @@ router.post(
 
         try {
 
+            // ========================================
+            // RECEIVE DATA
+            // ========================================
+
             const {
                 goalType,
-                academicYear,
-                course,
-                semester,
+
+                // Academic
+                educationQualification,
+                studentClass,
+                schoolName,
                 subjects,
-                collegeExamDate,
+                academicExamDate,
+
+                // Competitive
                 examName,
                 examGroup,
                 preparationLevel,
                 targetAttempt,
+
+                // Common
                 dailyStudyHours
+
             } = req.body;
 
 
             // ========================================
-            // BASIC VALIDATION
+            // VALIDATE GOAL TYPE
             // ========================================
 
             if (
@@ -213,7 +221,6 @@ router.post(
                         "Please select at least one learning goal."
 
                 });
-
             }
 
 
@@ -238,28 +245,15 @@ router.post(
                         "Invalid goal type."
 
                 });
-
             }
 
 
-            if (
-                !dailyStudyHours
-            ) {
-
-                return res.status(400).json({
-
-                    message:
-                        "Daily study hours are required."
-
-                });
-
-            }
-
+            // ========================================
+            // STUDY HOURS
+            // ========================================
 
             const studyHours =
-                Number(
-                    dailyStudyHours
-                );
+                Number(dailyStudyHours);
 
 
             if (
@@ -274,7 +268,6 @@ router.post(
                         "Daily study hours must be between 1 and 12."
 
                 });
-
             }
 
 
@@ -296,12 +289,11 @@ router.post(
                         "User not found."
 
                 });
-
             }
 
 
             // ========================================
-            // CHECK SELECTED GOALS
+            // CHECK GOAL TYPES
             // ========================================
 
             const hasAcademicGoal =
@@ -317,7 +309,7 @@ router.post(
 
 
             // ========================================
-            // DEFAULT VALUES
+            // DEFAULT VERIFIED DATA
             // ========================================
 
             let notificationDate = null;
@@ -345,23 +337,51 @@ router.post(
             // ACADEMIC GOAL
             // ========================================
 
-            if (
-                hasAcademicGoal
-            ) {
+            if (hasAcademicGoal) {
+
+                // ----------------------------------------
+                // VALIDATE ACADEMIC DETAILS
+                // ----------------------------------------
 
                 if (
-                    !academicYear ||
-                    !course ||
-                    !semester
+                    !educationQualification ||
+                    !educationQualification.trim()
                 ) {
 
                     return res.status(400).json({
 
                         message:
-                            "Please complete all Academic / College details."
+                            "Please select your education qualification."
 
                     });
+                }
 
+
+                if (
+                    !studentClass ||
+                    !studentClass.trim()
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Please select your class."
+
+                    });
+                }
+
+
+                if (
+                    !schoolName ||
+                    !schoolName.trim()
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Please enter your school name."
+
+                    });
                 }
 
 
@@ -373,30 +393,73 @@ router.post(
                     return res.status(400).json({
 
                         message:
-                            "Please enter at least one academic subject."
+                            "Please enter at least one subject."
 
                     });
-
                 }
 
 
+                // ----------------------------------------
+                // CLEAN SUBJECTS
+                // ----------------------------------------
+
+                const cleanedSubjects =
+                    subjects
+                        .map(
+                            subject =>
+                                String(subject)
+                                    .trim()
+                        )
+                        .filter(
+                            subject =>
+                                subject.length > 0
+                        );
+
+
                 if (
-                    !collegeExamDate
+                    cleanedSubjects.length === 0
                 ) {
 
                     return res.status(400).json({
 
                         message:
-                            "College examination date is required."
+                            "Please enter valid subject names."
 
                     });
+                }
 
+
+                if (
+                    cleanedSubjects.length > 20
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "You can enter a maximum of 20 subjects."
+
+                    });
+                }
+
+
+                // ----------------------------------------
+                // ACADEMIC EXAM DATE
+                // ----------------------------------------
+
+                if (!academicExamDate) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Academic examination date is required."
+
+                    });
                 }
 
 
                 const academicDate =
                     new Date(
-                        collegeExamDate
+                        academicExamDate
                     );
 
 
@@ -409,16 +472,15 @@ router.post(
                     return res.status(400).json({
 
                         message:
-                            "Invalid college examination date."
+                            "Invalid academic examination date."
 
                     });
-
                 }
 
 
-                // Academic exam date becomes target
-                // only when there is no verified
-                // competitive exam date.
+                // ----------------------------------------
+                // ACADEMIC DATE AS DEFAULT TARGET
+                // ----------------------------------------
 
                 targetDate =
                     academicDate;
@@ -429,6 +491,12 @@ router.post(
                         targetDate
                     );
 
+
+                // Replace request subjects
+                // with cleaned subjects
+
+                req.body.subjects =
+                    cleanedSubjects;
             }
 
 
@@ -436,43 +504,82 @@ router.post(
             // COMPETITIVE EXAM GOAL
             // ========================================
 
-            if (
-                hasCompetitiveGoal
-            ) {
+            if (hasCompetitiveGoal) {
+
+                // ----------------------------------------
+                // BASIC VALIDATION
+                // ----------------------------------------
 
                 if (
                     !examName ||
+                    !examName.trim()
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Please select an examination."
+
+                    });
+                }
+
+
+                if (
                     !examGroup ||
+                    !examGroup.trim()
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Please enter the exam group or level."
+
+                    });
+                }
+
+
+                if (
+                    !preparationLevel
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Please select your preparation level."
+
+                    });
+                }
+
+
+                if (
                     !targetAttempt
                 ) {
 
                     return res.status(400).json({
 
                         message:
-                            "Exam, group/level and target attempt are required."
+                            "Please enter your target attempt year."
 
                     });
-
                 }
 
 
                 const attemptYear =
-                    Number(
-                        targetAttempt
-                    );
+                    Number(targetAttempt);
 
 
                 if (
-                    isNaN(attemptYear)
+                    isNaN(attemptYear) ||
+                    attemptYear < 2026 ||
+                    attemptYear > 2100
                 ) {
 
                     return res.status(400).json({
 
                         message:
-                            "Invalid target attempt year."
+                            "Please enter a valid target attempt year."
 
                     });
-
                 }
 
 
@@ -499,33 +606,43 @@ router.post(
                 // VERIFIED EXAM FOUND
                 // ========================================
 
-                if (
-                    verifiedExam
-                ) {
+                if (verifiedExam) {
 
                     notificationDate =
-                        verifiedExam.notificationDate;
+                        verifiedExam.notificationDate ||
+                        null;
+
 
                     sourceUrl =
-                        verifiedExam.sourceUrl;
+                        verifiedExam.sourceUrl ||
+                        "";
+
 
                     lastVerified =
-                        verifiedExam.lastVerified;
+                        verifiedExam.lastVerified ||
+                        null;
+
 
                     minimumAge =
-                        verifiedExam.minimumAge;
+                        verifiedExam.minimumAge !== undefined
+                            ? verifiedExam.minimumAge
+                            : null;
+
 
                     maximumAge =
-                        verifiedExam.maximumAge;
+                        verifiedExam.maximumAge !== undefined
+                            ? verifiedExam.maximumAge
+                            : null;
+
 
                     requiredEducation =
                         verifiedExam.educationQualification ||
                         "";
 
 
-                    // ====================================
+                    // ----------------------------------------
                     // EXAM DATE
-                    // ====================================
+                    // ----------------------------------------
 
                     if (
                         verifiedExam.examDate
@@ -534,17 +651,17 @@ router.post(
                         targetDate =
                             verifiedExam.examDate;
 
+
                         availableDays =
                             calculateAvailableDays(
                                 targetDate
                             );
-
                     }
 
 
-                    // ====================================
-                    // ELIGIBILITY
-                    // ====================================
+                    // ----------------------------------------
+                    // AGE ELIGIBILITY
+                    // ----------------------------------------
 
                     const userAge =
                         calculateAge(
@@ -552,24 +669,19 @@ router.post(
                         );
 
 
-                    let ageEligible =
-                        true;
+                    let ageEligible = true;
 
-
-                    let ageReason =
-                        "";
+                    let ageReason = "";
 
 
                     if (
                         userAge === null
                     ) {
 
-                        ageEligible =
-                            false;
+                        ageEligible = false;
 
                         ageReason =
                             "Date of birth is not available.";
-
                     }
 
 
@@ -579,12 +691,10 @@ router.post(
                         userAge < minimumAge
                     ) {
 
-                        ageEligible =
-                            false;
+                        ageEligible = false;
 
                         ageReason =
                             "You do not meet the minimum age requirement.";
-
                     }
 
 
@@ -594,14 +704,16 @@ router.post(
                         userAge > maximumAge
                     ) {
 
-                        ageEligible =
-                            false;
+                        ageEligible = false;
 
                         ageReason =
                             "You exceed the maximum age limit.";
-
                     }
 
+
+                    // ----------------------------------------
+                    // EDUCATION ELIGIBILITY
+                    // ----------------------------------------
 
                     const educationEligible =
                         checkEducationEligibility(
@@ -610,12 +722,17 @@ router.post(
                         );
 
 
+                    // ----------------------------------------
+                    // FINAL ELIGIBILITY
+                    // ----------------------------------------
+
                     if (
                         !educationEligible
                     ) {
 
                         eligibility =
                             "Not Eligible";
+
 
                         eligibilityReason =
                             "Your education qualification does not meet the verified requirement.";
@@ -629,6 +746,7 @@ router.post(
                         eligibility =
                             "Not Eligible";
 
+
                         eligibilityReason =
                             ageReason;
 
@@ -639,9 +757,9 @@ router.post(
                         eligibility =
                             "Eligible";
 
+
                         eligibilityReason =
                             "You meet the verified age and education requirements.";
-
                     }
 
                 }
@@ -650,14 +768,13 @@ router.post(
                 // ========================================
                 // NO VERIFIED EXAM DATA
                 // ========================================
-                // Example:
-                // TNPSC Group 1 - 2028
-                //
-                // Goal MUST still be saved.
-                // Roadmap MUST still be available.
-                // ========================================
 
                 else {
+
+                    /*
+                     * Future exam years such as 2028,
+                     * 2029, etc. can still be saved.
+                     */
 
                     eligibility =
                         "Not Verified";
@@ -690,29 +807,30 @@ router.post(
 
                     availableDays =
                         null;
-
                 }
-
             }
 
 
             // ========================================
-            // ACADEMIC + COMPETITIVE
+            // BOTH GOALS
             // ========================================
-            // If both are selected and competitive
-            // has no verified exam date, use the
-            // academic exam date as target date.
-            // ========================================
+
+            /*
+             * If both Academic and Competitive are selected
+             * and the competitive exam does not have a
+             * verified target date, use the academic exam date.
+             */
 
             if (
                 hasAcademicGoal &&
                 hasCompetitiveGoal &&
-                !targetDate
+                !targetDate &&
+                academicExamDate
             ) {
 
                 targetDate =
                     new Date(
-                        collegeExamDate
+                        academicExamDate
                     );
 
 
@@ -720,12 +838,32 @@ router.post(
                     calculateAvailableDays(
                         targetDate
                     );
-
             }
 
 
             // ========================================
-            // SAVE GOAL
+            // PREPARE CLEAN SUBJECTS
+            // ========================================
+
+            const finalSubjects =
+                hasAcademicGoal &&
+                Array.isArray(subjects)
+
+                    ? subjects
+                        .map(
+                            subject =>
+                                String(subject).trim()
+                        )
+                        .filter(
+                            subject =>
+                                subject.length > 0
+                        )
+
+                    : [];
+
+
+            // ========================================
+            // CREATE / UPDATE GOAL
             // ========================================
 
             const goal =
@@ -742,47 +880,48 @@ router.post(
                             req.user._id,
 
 
+                        // ====================================
+                        // GOAL TYPE
+                        // ====================================
+
                         goalType:
                             goalType,
 
 
                         // ====================================
-                        // ACADEMIC
+                        // ACADEMIC DETAILS
                         // ====================================
 
-                        academicYear:
+                        educationQualification:
                             hasAcademicGoal
-                                ? academicYear
+                                ? educationQualification.trim()
                                 : "",
 
 
-                        course:
+                        studentClass:
                             hasAcademicGoal
-                                ? course
+                                ? studentClass.trim()
                                 : "",
 
 
-                        semester:
+                        schoolName:
                             hasAcademicGoal
-                                ? semester
+                                ? schoolName.trim()
                                 : "",
 
 
                         subjects:
-                            hasAcademicGoal &&
-                            Array.isArray(subjects)
-                                ? subjects
-                                : [],
+                            finalSubjects,
 
 
-                        collegeExamDate:
+                        academicExamDate:
                             hasAcademicGoal
-                                ? collegeExamDate
+                                ? academicExamDate
                                 : null,
 
 
                         // ====================================
-                        // COMPETITIVE
+                        // COMPETITIVE DETAILS
                         // ====================================
 
                         examName:
@@ -799,15 +938,13 @@ router.post(
 
                         preparationLevel:
                             hasCompetitiveGoal
-                                ? preparationLevel || ""
+                                ? preparationLevel
                                 : "",
 
 
                         targetAttempt:
                             hasCompetitiveGoal
-                                ? String(
-                                    targetAttempt
-                                )
+                                ? String(targetAttempt)
                                 : "",
 
 
@@ -839,7 +976,7 @@ router.post(
                             maximumAge,
 
 
-                        educationQualification:
+                        requiredEducation:
                             requiredEducation,
 
 
@@ -869,12 +1006,11 @@ router.post(
                         upsert: true,
                         runValidators: true
                     }
-
                 );
 
 
             // ========================================
-            // SUCCESS RESPONSE
+            // SUCCESS
             // ========================================
 
             return res.status(200).json({
@@ -901,15 +1037,13 @@ router.post(
             return res.status(500).json({
 
                 message:
-                    "Server error.",
+                    "Server error while saving goal.",
 
                 error:
                     error.message
 
             });
-
         }
-
     }
 );
 
@@ -942,7 +1076,6 @@ router.get(
                         "Goal not found."
 
                 });
-
             }
 
 
@@ -964,15 +1097,13 @@ router.get(
             return res.status(500).json({
 
                 message:
-                    "Server error.",
+                    "Server error while loading goal.",
 
                 error:
                     error.message
 
             });
-
         }
-
     }
 );
 

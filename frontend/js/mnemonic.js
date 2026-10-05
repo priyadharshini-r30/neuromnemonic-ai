@@ -1,3 +1,7 @@
+// ========================================
+// ELEMENTS
+// ========================================
+
 const generateBtn =
     document.getElementById(
         "generateBtn"
@@ -63,6 +67,7 @@ if (mnemonicTopic) {
 
     topicInput.value =
         mnemonicTopic;
+
 }
 
 
@@ -80,7 +85,9 @@ if (mnemonicLanguage) {
 
         languageSelect.value =
             mnemonicLanguage;
+
     }
+
 }
 
 
@@ -104,6 +111,10 @@ generateBtn.addEventListener(
             typeSelect.value;
 
 
+        // ====================================
+        // VALIDATION
+        // ====================================
+
         if (!topic) {
 
             alert(
@@ -111,8 +122,13 @@ generateBtn.addEventListener(
             );
 
             return;
+
         }
 
+
+        // ====================================
+        // RESET QUIZ DATA
+        // ====================================
 
         quizBtn.style.display =
             "none";
@@ -133,6 +149,10 @@ generateBtn.addEventListener(
         );
 
 
+        // ====================================
+        // SHOW LOADING
+        // ====================================
+
         loadingDiv.style.display =
             "block";
 
@@ -146,6 +166,10 @@ generateBtn.addEventListener(
             let endpoint;
 
 
+            // ====================================
+            // SELECT API
+            // ====================================
+
             if (
                 type === "mnemonic"
             ) {
@@ -153,12 +177,19 @@ generateBtn.addEventListener(
                 endpoint =
                     "http://localhost:5000/api/mnemonic/mnemonic";
 
-            } else {
+            }
+
+            else {
 
                 endpoint =
                     "http://localhost:5000/api/mnemonic/story";
+
             }
 
+
+            // ====================================
+            // API REQUEST
+            // ====================================
 
             const response =
                 await fetch(
@@ -193,18 +224,23 @@ generateBtn.addEventListener(
                 await response.json();
 
 
+            // ====================================
+            // ERROR CHECK
+            // ====================================
+
             if (!response.ok) {
 
                 throw new Error(
                     data.message ||
                     "Generation failed"
                 );
+
             }
 
 
-            // ========================================
+            // ====================================
             // STORE RESULT
-            // ========================================
+            // ====================================
 
             if (
                 type === "mnemonic"
@@ -213,20 +249,27 @@ generateBtn.addEventListener(
                 generatedContent =
                     data.mnemonic;
 
-            } else {
+            }
+
+            else {
 
                 generatedContent =
                     data.story;
+
             }
 
+
+            // ====================================
+            // DISPLAY RESULT
+            // ====================================
 
             resultDiv.textContent =
                 generatedContent;
 
 
-            // ========================================
+            // ====================================
             // SAVE FOR QUIZ
-            // ========================================
+            // ====================================
 
             if (generatedContent) {
 
@@ -238,10 +281,13 @@ generateBtn.addEventListener(
 
                 quizBtn.style.display =
                     "block";
+
             }
 
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
                 "Generation Error:",
@@ -256,10 +302,13 @@ generateBtn.addEventListener(
             resultDiv.textContent =
                 "❌ Failed to generate. Please make sure the backend server and Ollama are running.";
 
-        } finally {
+        }
+
+        finally {
 
             loadingDiv.style.display =
                 "none";
+
         }
 
     }
@@ -274,6 +323,10 @@ quizBtn.addEventListener(
     "click",
     async function () {
 
+        // ====================================
+        // VALIDATION
+        // ====================================
+
         if (!generatedContent) {
 
             alert(
@@ -281,6 +334,7 @@ quizBtn.addEventListener(
             );
 
             return;
+
         }
 
 
@@ -294,6 +348,10 @@ quizBtn.addEventListener(
                 "Generating Quiz... ⏳";
 
 
+            // ====================================
+            // PREVIOUS QUESTIONS
+            // ====================================
+
             const previousQuestions =
                 JSON.parse(
                     sessionStorage.getItem(
@@ -301,6 +359,10 @@ quizBtn.addEventListener(
                     ) || "[]"
                 );
 
+
+            // ====================================
+            // QUIZ API
+            // ====================================
 
             const response =
                 await fetch(
@@ -335,14 +397,23 @@ quizBtn.addEventListener(
                 await response.json();
 
 
+            // ====================================
+            // ERROR CHECK
+            // ====================================
+
             if (!response.ok) {
 
                 throw new Error(
                     data.message ||
                     "Quiz generation failed"
                 );
+
             }
 
+
+            // ====================================
+            // SAVE QUIZ
+            // ====================================
 
             sessionStorage.setItem(
                 "generatedQuiz",
@@ -351,6 +422,10 @@ quizBtn.addEventListener(
                 )
             );
 
+
+            // ====================================
+            // SAVE QUESTIONS
+            // ====================================
 
             const newQuestions =
                 data.quiz.questions.map(
@@ -370,11 +445,17 @@ quizBtn.addEventListener(
             );
 
 
+            // ====================================
+            // GO TO QUIZ
+            // ====================================
+
             window.location.href =
                 "quiz.html";
 
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
                 "Quiz Error:",
@@ -386,8 +467,9 @@ quizBtn.addEventListener(
                 "❌ Failed to generate quiz. Please make sure the backend server and Ollama are running."
             );
 
+        }
 
-        } finally {
+        finally {
 
             quizBtn.disabled =
                 false;
@@ -395,7 +477,20 @@ quizBtn.addEventListener(
 
             quizBtn.textContent =
                 "🎯 Take Quiz";
+
         }
 
     }
 );
+
+
+// ========================================
+// BACK TO DASHBOARD
+// ========================================
+
+function goDashboard() {
+
+    window.location.href =
+        "dashboard.html";
+
+}

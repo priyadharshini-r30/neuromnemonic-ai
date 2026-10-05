@@ -1,0 +1,169 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    color: #172033;
+}
+
+/* Main Container */
+
+.container {
+    width: 90%;
+    max-width: 950px;
+    margin: 30px auto;
+    background: #ffffff;
+    border: 1px solid #d9ddea;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Page Heading */
+
+h1 {
+    margin: 0;
+    padding: 25px 20px 8px;
+    text-align: center;
+    background: #5046e5;
+    color: white;
+    font-size: 30px;
+}
+
+.subtitle {
+    margin: 0;
+    padding: 0 20px 25px;
+    text-align: center;
+    background: #5046e5;
+    color: white;
+    font-size: 16px;
+}
+
+/* Cards */
+
+.card {
+    background: #ffffff;
+    padding: 25px;
+    margin: 20px;
+    border: 1px solid #dce2f0;
+    border-radius: 12px;
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #172033;
+    font-size: 23px;
+}
+
+/* Labels */
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 7px;
+    color: #172033;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* Input Fields */
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cfd6e6;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #172033;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #5046e5;
+    box-shadow: 0 0 0 2px rgba(80, 70, 229, 0.12);
+}
+
+/* Add Button */
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 12px;
+}
+
+.add-btn {
+    width: 100%;
+    background: #5046e5;
+    color: white;
+    font-weight: bold;
+}
+
+.add-btn:hover {
+    background: #4338ca;
+}
+
+/* Revision Items */
+
+.revision-item {
+    background: #eef2ff;
+    padding: 18px;
+    border-radius: 10px;
+    margin-top: 15px;
+    border: 1px solid #d9def7;
+}
+
+/* Complete Button */
+
+.complete-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.completed {
+    opacity: 0.7;
+}
+
+/* Message */
+
+.message {
+    margin-top: 15px;
+}
+
+/* Empty Message */
+
+.empty {
+    color: #777f91;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 95%;
+        margin: 15px auto;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .card {
+        margin: 12px;
+        padding: 18px;
+    }
+
+    .card h2 {
+        font-size: 20px;
+    }
+}

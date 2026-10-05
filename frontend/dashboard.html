@@ -2,22 +2,39 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NeuroMnemonic AI | Dashboard</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/dashboard.css">
+    <title>
+        NeuroMnemonic AI | Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/dashboard.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- NAVBAR -->
+
+    <!-- =========================================
+         NAVBAR
+    ========================================== -->
+
     <nav class="navbar">
 
         <div class="logo">
             🧠 NeuroMnemonic AI
         </div>
+
 
         <div class="nav-buttons">
 
@@ -27,6 +44,7 @@
             >
                 👤 My Profile
             </button>
+
 
             <button
                 class="logout-btn"
@@ -40,7 +58,11 @@
     </nav>
 
 
-    <!-- WELCOME SECTION -->
+
+    <!-- =========================================
+         WELCOME SECTION
+    ========================================== -->
+
     <section class="hero">
 
         <h1 id="welcomeMessage">
@@ -55,147 +77,198 @@
     </section>
 
 
-    <!-- CURRENT GOAL -->
-    <section class="hero">
 
-        <div class="card">
+    <!-- =========================================
+         DASHBOARD MODULES
+    ========================================== -->
 
-            <div class="icon">🎯</div>
+    <section class="dashboard-section">
 
-            <h2>Current Goal</h2>
+        <div class="section-title">
 
-            <p id="goalDetails">
-                Loading your goal...
+            <h2>
+                Your Learning Tools
+            </h2>
+
+            <p>
+                Use these tools to improve your learning,
+                memory and preparation.
             </p>
+
+        </div>
+
+
+        <div class="dashboard-grid">
+
+
+            <!-- =================================
+                 ROADMAP
+            ================================== -->
+
+            <div class="card">
+
+                <div class="icon">
+                    🗺️
+                </div>
+
+                <h2>
+                    Personalized Roadmap
+                </h2>
+
+                <p>
+                    Follow a personalized learning roadmap
+                    based on your selected goals and topics.
+                </p>
+
+                <button
+                    class="start-btn"
+                    onclick="goToRoadmap()"
+                >
+                    Explore Roadmap
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================
+                 AI TUTOR
+            ================================== -->
+
+            <div class="card">
+
+                <div class="icon">
+                    🤖
+                </div>
+
+                <h2>
+                    AI Learning Assistant
+                </h2>
+
+                <p>
+                    Ask questions and receive simple
+                    AI-powered explanations for your studies.
+                </p>
+
+                <button
+                    class="start-btn"
+                    onclick="goToAITutor()"
+                >
+                    Start Learning
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================
+                 MNEMONIC
+            ================================== -->
+
+            <div class="card">
+
+                <div class="icon">
+                    🧠
+                </div>
+
+                <h2>
+                    Mnemonic & Story Learning
+                </h2>
+
+                <p>
+                    Learn difficult concepts using
+                    simple mnemonics, memorable stories
+                    and quizzes.
+                </p>
+
+                <button
+                    class="start-btn"
+                    onclick="goToMnemonic()"
+                >
+                    Learn & Remember
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================
+                 DAILY PLANNER
+            ================================== -->
+
+            <div class="card">
+
+                <div class="icon">
+                    📅
+                </div>
+
+                <h2>
+                    Daily Study Planner
+                </h2>
+
+                <p>
+                    Organize your daily study schedule
+                    and build a consistent learning routine.
+                </p>
+
+                <button
+                    class="start-btn"
+                    onclick="goToPlanner()"
+                >
+                    Plan Today
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================
+                 PROGRESS
+            ================================== -->
+
+            <div class="card">
+
+                <div class="icon">
+                    📊
+                </div>
+
+                <h2>
+                    Learning Progress
+                </h2>
+
+                <p>
+                    Track your learning activities,
+                    quizzes, revisions and
+                    overall preparation progress.
+                </p>
+
+                <button
+                    class="start-btn"
+                    onclick="goToProgress()"
+                >
+                    View Progress
+                </button>
+
+            </div>
+
 
         </div>
 
     </section>
 
 
-    <!-- DASHBOARD MODULES -->
-    <section class="dashboard-grid">
 
+    <!-- =========================================
+         AI CHAT TUTOR
+    ========================================== -->
 
-        <!-- ROADMAP -->
-        <div class="card">
-
-            <div class="icon">🗺️</div>
-
-            <h2>Personalized Roadmap</h2>
-
-            <p>
-                Follow a personalized learning roadmap
-                based on your goals and learning level.
-            </p>
-
-            <button
-                class="start-btn"
-                onclick="goToRoadmap()"
-            >
-                Explore
-            </button>
-
-        </div>
-
-
-        <!-- AI TUTOR -->
-        <div class="card">
-
-            <div class="icon">🤖</div>
-
-            <h2>AI Learning Assistant</h2>
-
-            <p>
-                Ask questions and receive simple
-                AI-powered explanations for your studies.
-            </p>
-
-            <button
-                class="start-btn"
-                onclick="goToAITutor()"
-            >
-                Start Learning
-            </button>
-
-        </div>
-
-
-        <!-- MNEMONIC -->
-        <div class="card">
-
-            <div class="icon">🧠</div>
-
-            <h2>Mnemonic & Story Learning</h2>
-
-            <p>
-                Learn difficult concepts using mnemonics,
-                memorable stories and quizzes.
-            </p>
-
-            <button
-                class="start-btn"
-                onclick="goToMnemonic()"
-            >
-                Start Learning
-            </button>
-
-        </div>
-
-
-        <!-- DAILY PLANNER -->
-        <div class="card">
-
-            <div class="icon">📅</div>
-
-            <h2>Daily Study Planner</h2>
-
-            <p>
-                Organize your daily study schedule
-                and build a consistent learning routine.
-            </p>
-
-            <button
-                class="start-btn"
-                onclick="goToPlanner()"
-            >
-                Plan Today
-            </button>
-
-        </div>
-
-
-        <!-- PROGRESS -->
-        <div class="card">
-
-            <div class="icon">📊</div>
-
-            <h2>Progress Tracking</h2>
-
-            <p>
-                Track your quiz performance,
-                study plans, revisions and
-                overall learning progress.
-            </p>
-
-            <button
-                class="start-btn"
-                onclick="goToProgress()"
-            >
-                View Progress
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- AI CHAT TUTOR -->
     <section class="ai-section">
 
         <div class="ai-card">
 
-            <h2>🤖 AI Chat Tutor</h2>
+            <h2>
+                🤖 AI Chat Tutor
+            </h2>
 
             <p>
                 Ask NeuroMnemonic AI any study-related question.
@@ -206,7 +279,9 @@
 
                 <div class="ai-message">
 
-                    <strong>AI:</strong>
+                    <strong>
+                        AI:
+                    </strong>
 
                     Hello! I'm your AI Learning Assistant.
                     Ask me anything about your studies.
@@ -225,6 +300,7 @@
                     onkeydown="if(event.key === 'Enter') askAI()"
                 >
 
+
                 <button
                     class="ask-btn"
                     onclick="askAI()"
@@ -239,7 +315,11 @@
     </section>
 
 
-    <!-- FOOTER -->
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+
     <footer class="footer">
 
         © 2026 NeuroMnemonic AI • Learn Smarter 🧠
@@ -247,20 +327,30 @@
     </footer>
 
 
-    <!-- AI CHAT JAVASCRIPT -->
+
+    <!-- =========================================
+         AI CHAT JAVASCRIPT
+    ========================================== -->
+
     <script src="js/aiChat.js"></script>
+    <script src="js/dashboard-goal.js"></script>
 
 
-    <!-- DASHBOARD JAVASCRIPT -->
+
+    <!-- =========================================
+         DASHBOARD JAVASCRIPT
+    ========================================== -->
+
     <script>
+
+
+        // =========================================
+        // AUTHENTICATION
+        // =========================================
 
         const token =
             localStorage.getItem("token");
 
-
-        // -----------------------------------
-        // Authentication Check
-        // -----------------------------------
 
         if (!token) {
 
@@ -270,9 +360,10 @@
         }
 
 
-        // -----------------------------------
-        // Navigation
-        // -----------------------------------
+
+        // =========================================
+        // NAVIGATION
+        // =========================================
 
         function goToProfile() {
 
@@ -322,13 +413,20 @@
         }
 
 
-        // -----------------------------------
-        // Logout
-        // -----------------------------------
+
+        // =========================================
+        // LOGOUT
+        // =========================================
 
         function logout() {
 
             localStorage.removeItem("token");
+
+            localStorage.removeItem("user");
+
+            localStorage.removeItem(
+                "selectedGoalType"
+            );
 
             window.location.href =
                 "login.html";
@@ -336,29 +434,24 @@
         }
 
 
-        // -----------------------------------
-        // Load Current Goal
-        // -----------------------------------
 
-        async function loadGoal() {
+        // =========================================
+        // LOAD USER PROFILE
+        // =========================================
 
-            const goalDetails =
-                document.getElementById(
-                    "goalDetails"
-                );
-
+        async function loadUserProfile() {
 
             try {
 
                 const response =
                     await fetch(
-                        "http://localhost:5000/api/goals",
+                        "http://localhost:5000/api/profile",
                         {
                             method: "GET",
 
                             headers: {
                                 "Authorization":
-                                    `Bearer ${token}`
+                                    "Bearer " + token
                             }
                         }
                     );
@@ -370,115 +463,57 @@
 
                 if (!response.ok) {
 
-                    goalDetails.textContent =
-                        "No goal has been set yet.";
+                    console.error(
+                        "Profile loading failed:",
+                        data.message
+                    );
 
                     return;
 
                 }
 
 
-                let goalText = "";
+                const user =
+                    data.user || data;
 
-
-                // -----------------------------------
-                // Academic Goal
-                // -----------------------------------
 
                 if (
-                    data.goalType ===
-                    "Academic"
+                    user &&
+                    user.name
                 ) {
 
-                    goalText =
-                        `🎓 Academic / College
-                        | Course: ${
-                            data.course ||
-                            "Not specified"
-                        }
-                        | Semester: ${
-                            data.semester ||
-                            "Not specified"
-                        }
-                        | Subjects: ${
-                            data.subjects &&
-                            data.subjects.length > 0
-                                ? data.subjects.join(", ")
-                                : "Not specified"
-                        }
-                        | Daily Study: ${
-                            data.dailyStudyHours ||
-                            0
-                        } hours`;
+                    document.getElementById(
+                        "welcomeMessage"
+                    ).textContent =
+                        "Welcome, " +
+                        user.name +
+                        "! 🚀";
 
                 }
 
-
-                // -----------------------------------
-                // Competitive Exam Goal
-                // -----------------------------------
-
-                if (
-                    data.goalType ===
-                    "Competitive Exam"
-                ) {
-
-                    goalText =
-                        `🏆 ${
-                            data.examName ||
-                            "Competitive Exam"
-                        }
-                        | ${
-                            data.examGroup ||
-                            "Level not specified"
-                        }
-                        | Preparation: ${
-                            data.preparationLevel ||
-                            "Not specified"
-                        }
-                        | Target Attempt: ${
-                            data.targetAttempt ||
-                            "Not specified"
-                        }
-                        | Daily Study: ${
-                            data.dailyStudyHours ||
-                            0
-                        } hours`;
-
-                }
-
-
-                // -----------------------------------
-                // Display Goal
-                // -----------------------------------
-
-                goalDetails.textContent =
-                    goalText || 
-                    "No goal has been set yet.";
 
             } catch (error) {
 
                 console.error(
-                    "Goal Load Error:",
+                    "Profile Error:",
                     error
                 );
-
-
-                goalDetails.textContent =
-                    "Unable to load your goal.";
 
             }
 
         }
 
 
-        // -----------------------------------
-        // Load Dashboard
-        // -----------------------------------
 
-        loadGoal();
+        // =========================================
+        // INITIAL LOAD
+        // =========================================
+
+        loadUserProfile();
+
 
     </script>
+
 
 </body>
 

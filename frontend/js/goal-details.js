@@ -1,25 +1,35 @@
 const API_URL = "http://localhost:5000";
 
+
 // ==========================================
 // AUTHENTICATION
 // ==========================================
 
-const token = localStorage.getItem("token");
+const token =
+    localStorage.getItem("token");
+
 
 if (!token) {
-    window.location.href = "login.html";
+
+    window.location.href =
+        "login.html";
 }
 
 
 // ==========================================
-// GET SELECTED GOAL
+// GET SELECTED GOAL TYPE
 // ==========================================
 
 const selectedGoalType =
-    localStorage.getItem("selectedGoalType");
+    localStorage.getItem(
+        "selectedGoalType"
+    );
+
 
 if (!selectedGoalType) {
-    window.location.href = "goal-setup.html";
+
+    window.location.href =
+        "goal-setup.html";
 }
 
 
@@ -28,91 +38,249 @@ if (!selectedGoalType) {
 // ==========================================
 
 const academicSection =
-    document.getElementById("academicSection");
+    document.getElementById(
+        "academicSection"
+    );
 
 const competitiveSection =
-    document.getElementById("competitiveSection");
+    document.getElementById(
+        "competitiveSection"
+    );
 
 const goalSubtitle =
-    document.getElementById("goalSubtitle");
+    document.getElementById(
+        "goalSubtitle"
+    );
 
 const goalForm =
-    document.getElementById("goalForm");
+    document.getElementById(
+        "goalForm"
+    );
 
 const message =
-    document.getElementById("message");
-
-const subjectCount =
-    document.getElementById("subjectCount");
+    document.getElementById(
+        "message"
+    );
 
 const subjectInputs =
-    document.getElementById("subjectInputs");
+    document.getElementById(
+        "subjectInputs"
+    );
 
 const examName =
-    document.getElementById("examName");
+    document.getElementById(
+        "examName"
+    );
 
 const examGroup =
-    document.getElementById("examGroup");
+    document.getElementById(
+        "examGroup"
+    );
 
 const targetAttempt =
-    document.getElementById("targetAttempt");
+    document.getElementById(
+        "targetAttempt"
+    );
 
 const examScheduleSection =
-    document.getElementById("examScheduleSection");
+    document.getElementById(
+        "examScheduleSection"
+    );
 
 const notificationDate =
-    document.getElementById("notificationDate");
+    document.getElementById(
+        "notificationDate"
+    );
 
 const examDate =
-    document.getElementById("examDate");
+    document.getElementById(
+        "examDate"
+    );
 
 const availableDays =
-    document.getElementById("availableDays");
+    document.getElementById(
+        "availableDays"
+    );
 
 const minimumAge =
-    document.getElementById("minimumAge");
+    document.getElementById(
+        "minimumAge"
+    );
 
 const maximumAge =
-    document.getElementById("maximumAge");
+    document.getElementById(
+        "maximumAge"
+    );
 
 const requiredEducation =
-    document.getElementById("requiredEducation");
+    document.getElementById(
+        "requiredEducation"
+    );
 
 const eligibilityStatus =
-    document.getElementById("eligibilityStatus");
+    document.getElementById(
+        "eligibilityStatus"
+    );
 
 const sourceLink =
-    document.getElementById("sourceLink");
+    document.getElementById(
+        "sourceLink"
+    );
 
 const verifiedDate =
-    document.getElementById("verifiedDate");
+    document.getElementById(
+        "verifiedDate"
+    );
 
 const scheduleMessage =
-    document.getElementById("scheduleMessage");
+    document.getElementById(
+        "scheduleMessage"
+    );
 
 
 // ==========================================
 // VARIABLES
 // ==========================================
 
-let verifiedExamSchedule = null;
-
 let userProfile = null;
 
-let subjects = [];
+let verifiedExamSchedule = null;
 
 
 // ==========================================
-// DETERMINE SELECTED GOALS
+// SELECTED GOALS
 // ==========================================
 
 const academicSelected =
     selectedGoalType === "Academic" ||
     selectedGoalType === "Both";
 
+
 const competitiveSelected =
     selectedGoalType === "Competitive Exam" ||
     selectedGoalType === "Both";
+
+
+// ==========================================
+// OFFICIAL EXAM SOURCE
+// ==========================================
+
+function getOfficialExamSource(examName) {
+
+    const exam =
+        String(examName || "")
+            .trim()
+            .toLowerCase();
+
+
+    // --------------------------------------
+    // TNPSC
+    // --------------------------------------
+
+    if (exam === "tnpsc") {
+
+        return "https://www.tnpsc.gov.in/";
+    }
+
+
+    // --------------------------------------
+    // UPSC
+    // --------------------------------------
+
+    if (exam === "upsc") {
+
+        return "https://upsc.gov.in/";
+    }
+
+
+    // --------------------------------------
+    // SSC
+    // --------------------------------------
+
+    if (exam === "ssc") {
+
+        return "https://ssc.gov.in/";
+    }
+
+
+    // --------------------------------------
+    // BANKING
+    // --------------------------------------
+
+    if (exam === "banking") {
+
+        return "https://www.ibps.in/";
+    }
+
+
+    // --------------------------------------
+    // RAILWAY
+    // --------------------------------------
+
+    if (exam === "railway") {
+
+        return "https://indianrailways.gov.in/";
+    }
+
+
+    return "";
+}
+
+
+// ==========================================
+// SET OFFICIAL SOURCE LINK
+// ==========================================
+
+function setOfficialSource(
+    examName,
+    databaseSource
+) {
+
+    const source =
+        databaseSource ||
+        getOfficialExamSource(
+            examName
+        );
+
+
+    if (
+        source &&
+        source !== "#"
+    ) {
+
+        sourceLink.href =
+            source;
+
+        sourceLink.textContent =
+            "Official Source ↗";
+
+        sourceLink.target =
+            "_blank";
+
+        sourceLink.rel =
+            "noopener noreferrer";
+
+        sourceLink.style.pointerEvents =
+            "auto";
+
+    }
+
+    else {
+
+        sourceLink.href =
+            "#";
+
+        sourceLink.textContent =
+            "Official Source unavailable";
+
+        sourceLink.removeAttribute(
+            "target"
+        );
+
+        sourceLink.style.pointerEvents =
+            "none";
+    }
+}
 
 
 // ==========================================
@@ -121,46 +289,237 @@ const competitiveSelected =
 
 function setupPage() {
 
-    // Academic section
+
+    // --------------------------------------
+    // ACADEMIC
+    // --------------------------------------
 
     if (academicSelected) {
 
-        academicSection.classList.remove("hidden");
+        academicSection.classList.remove(
+            "hidden"
+        );
 
-    } else {
+    }
 
-        academicSection.classList.add("hidden");
+    else {
+
+        academicSection.classList.add(
+            "hidden"
+        );
     }
 
 
-    // Competitive section
+    // --------------------------------------
+    // COMPETITIVE
+    // --------------------------------------
 
     if (competitiveSelected) {
 
-        competitiveSection.classList.remove("hidden");
+        competitiveSection.classList.remove(
+            "hidden"
+        );
 
-    } else {
+    }
 
-        competitiveSection.classList.add("hidden");
+    else {
+
+        competitiveSection.classList.add(
+            "hidden"
+        );
     }
 
 
-    // Subtitle
+    // --------------------------------------
+    // SUBTITLE
+    // --------------------------------------
 
-    if (selectedGoalType === "Academic") {
+    if (
+        selectedGoalType === "Academic"
+    ) {
 
         goalSubtitle.textContent =
             "Enter your academic learning details.";
 
-    } else if (selectedGoalType === "Competitive Exam") {
+    }
+
+    else if (
+        selectedGoalType === "Competitive Exam"
+    ) {
 
         goalSubtitle.textContent =
             "Enter your competitive examination details.";
 
-    } else {
+    }
+
+    else {
 
         goalSubtitle.textContent =
             "Enter your academic and competitive examination details.";
+    }
+
+
+    // --------------------------------------
+    // CREATE ACADEMIC FIELDS
+    // --------------------------------------
+
+    createAcademicFields();
+}
+
+
+// ==========================================
+// CREATE ACADEMIC FIELDS
+// ==========================================
+
+function createAcademicFields() {
+
+    const academicFields =
+        document.getElementById(
+            "academicFields"
+        );
+
+
+    if (!academicFields) {
+
+        return;
+    }
+
+
+    if (!academicSelected) {
+
+        academicFields.innerHTML =
+            "";
+
+        return;
+    }
+
+
+    academicFields.innerHTML = `
+
+        <div class="form-group">
+
+            <label for="educationQualification">
+                Education Qualification
+            </label>
+
+            <input
+                type="text"
+                id="educationQualification"
+                readonly
+            >
+
+            <small class="helper-text">
+                This qualification was provided during registration.
+            </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="studentClass">
+                Class
+            </label>
+
+            <select id="studentClass">
+
+                <option value="">
+                    Select class
+                </option>
+
+                <option value="10th">
+                    10th
+                </option>
+
+                <option value="11th">
+                    11th
+                </option>
+
+                <option value="12th">
+                    12th
+                </option>
+
+                <option value="UG">
+                    Undergraduate
+                </option>
+
+                <option value="PG">
+                    Postgraduate
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="schoolName">
+                School / College Name
+            </label>
+
+            <input
+                type="text"
+                id="schoolName"
+                placeholder="Enter your school or college name"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="subjectCount">
+                How many subjects do you have?
+            </label>
+
+            <input
+                type="number"
+                id="subjectCount"
+                min="1"
+                max="20"
+                placeholder="Example: 5"
+            >
+
+            <small class="helper-text">
+                Enter the number of subjects you are studying.
+            </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="academicExamDate">
+                Academic Exam Date
+            </label>
+
+            <input
+                type="date"
+                id="academicExamDate"
+            >
+
+        </div>
+
+    `;
+
+
+    // --------------------------------------
+    // SUBJECT COUNT EVENT
+    // --------------------------------------
+
+    const countField =
+        document.getElementById(
+            "subjectCount"
+        );
+
+
+    if (countField) {
+
+        countField.addEventListener(
+            "input",
+            generateSubjectInputs
+        );
     }
 }
 
@@ -177,7 +536,11 @@ async function loadUserProfile() {
             await fetch(
                 API_URL + "/api/profile",
                 {
+
+                    method: "GET",
+
                     headers: {
+
                         "Authorization":
                             "Bearer " + token
                     }
@@ -200,13 +563,100 @@ async function loadUserProfile() {
         }
 
 
-        userProfile = data;
+        userProfile =
+            data.user || data;
+
 
         console.log(
-            "User profile loaded successfully."
+            "User Profile:",
+            userProfile
         );
 
-    } catch (error) {
+
+        // --------------------------------------
+        // EDUCATION
+        // --------------------------------------
+
+        const educationField =
+            document.getElementById(
+                "educationQualification"
+            );
+
+
+        if (
+            educationField &&
+            userProfile.educationQualification
+        ) {
+
+            educationField.value =
+                userProfile.educationQualification;
+        }
+
+
+        // --------------------------------------
+        // CLASS
+        // --------------------------------------
+
+        const classField =
+            document.getElementById(
+                "studentClass"
+            );
+
+
+        if (
+            classField &&
+            userProfile.educationQualification
+        ) {
+
+            const education =
+                String(
+                    userProfile.educationQualification
+                ).toLowerCase();
+
+
+            if (
+                education.includes("10th")
+            ) {
+
+                classField.value =
+                    "10th";
+
+            }
+
+            else if (
+                education.includes("12th")
+            ) {
+
+                classField.value =
+                    "12th";
+
+            }
+
+            else if (
+                education.includes("ug") ||
+                education.includes("degree") ||
+                education.includes("b.sc") ||
+                education.includes("bca") ||
+                education.includes("b.com")
+            ) {
+
+                classField.value =
+                    "UG";
+
+            }
+
+            else if (
+                education.includes("pg")
+            ) {
+
+                classField.value =
+                    "PG";
+            }
+        }
+
+    }
+
+    catch (error) {
 
         console.error(
             "Profile Load Error:",
@@ -222,22 +672,40 @@ async function loadUserProfile() {
 
 function generateSubjectInputs() {
 
-    const count =
-        Number(subjectCount.value);
+    const subjectCount =
+        document.getElementById(
+            "subjectCount"
+        );
 
 
-    subjectInputs.innerHTML = "";
-
-    subjects = [];
-
-
-    if (!count || count < 1) {
+    if (!subjectCount) {
 
         return;
     }
 
 
-    if (count > 20) {
+    const count =
+        Number(
+            subjectCount.value
+        );
+
+
+    subjectInputs.innerHTML =
+        "";
+
+
+    if (
+        !count ||
+        count < 1
+    ) {
+
+        return;
+    }
+
+
+    if (
+        count > 20
+    ) {
 
         message.textContent =
             "You can enter a maximum of 20 subjects.";
@@ -246,7 +714,8 @@ function generateSubjectInputs() {
     }
 
 
-    message.textContent = "";
+    message.textContent =
+        "";
 
 
     for (
@@ -256,7 +725,9 @@ function generateSubjectInputs() {
     ) {
 
         const wrapper =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         wrapper.className =
@@ -264,6 +735,7 @@ function generateSubjectInputs() {
 
 
         wrapper.innerHTML = `
+
             <label for="subject${i}">
                 Subject ${i}
             </label>
@@ -274,26 +746,19 @@ function generateSubjectInputs() {
                 class="subject-name"
                 placeholder="Enter subject ${i}"
             >
+
         `;
 
 
-        subjectInputs.appendChild(wrapper);
+        subjectInputs.appendChild(
+            wrapper
+        );
     }
 }
 
 
 // ==========================================
-// SUBJECT COUNT EVENT
-// ==========================================
-
-subjectCount.addEventListener(
-    "input",
-    generateSubjectInputs
-);
-
-
-// ==========================================
-// LOAD EXAM SCHEDULE
+// LOAD VERIFIED EXAM SCHEDULE
 // ==========================================
 
 async function loadExamSchedule() {
@@ -307,8 +772,10 @@ async function loadExamSchedule() {
     const selectedExam =
         examName.value.trim();
 
+
     const selectedGroup =
         examGroup.value.trim();
+
 
     const selectedYear =
         targetAttempt.value.trim();
@@ -369,38 +836,50 @@ async function loadExamSchedule() {
 
         if (!response.ok) {
 
-            verifiedExamSchedule = null;
+            verifiedExamSchedule =
+                null;
 
 
             notificationDate.textContent =
                 "Not announced";
 
+
             examDate.textContent =
                 "Not announced";
+
 
             availableDays.textContent =
                 "Not announced";
 
+
             minimumAge.textContent =
                 "Not verified";
+
 
             maximumAge.textContent =
                 "Not verified";
 
+
             requiredEducation.textContent =
                 "Not verified";
+
 
             eligibilityStatus.textContent =
                 "Not Verified";
 
 
-            sourceLink.href = "#";
+            // IMPORTANT:
+            // Even when database data is unavailable,
+            // show the correct official exam website.
 
-            sourceLink.textContent =
-                "Official Source";
+            setOfficialSource(
+                selectedExam,
+                ""
+            );
 
 
-            verifiedDate.textContent = "";
+            verifiedDate.textContent =
+                "";
 
 
             scheduleMessage.textContent =
@@ -420,7 +899,8 @@ async function loadExamSchedule() {
         // VERIFIED DATA FOUND
         // ======================================
 
-        verifiedExamSchedule = data;
+        verifiedExamSchedule =
+            data;
 
 
         notificationDate.textContent =
@@ -438,21 +918,27 @@ async function loadExamSchedule() {
         availableDays.textContent =
             data.availableDays !== null &&
             data.availableDays !== undefined
+
                 ? data.availableDays + " days"
+
                 : "Not announced";
 
 
         minimumAge.textContent =
             data.minimumAge !== null &&
             data.minimumAge !== undefined
+
                 ? data.minimumAge + " years"
+
                 : "Not specified";
 
 
         maximumAge.textContent =
             data.maximumAge !== null &&
             data.maximumAge !== undefined
+
                 ? data.maximumAge + " years"
+
                 : "No maximum specified";
 
 
@@ -461,25 +947,24 @@ async function loadExamSchedule() {
             "Not specified";
 
 
-        calculateEligibility(data);
+        calculateEligibility(
+            data
+        );
 
 
-        if (data.sourceUrl) {
+        // ======================================
+        // OFFICIAL SOURCE
+        // ======================================
 
-            sourceLink.href =
-                data.sourceUrl;
+        setOfficialSource(
+            selectedExam,
+            data.sourceUrl
+        );
 
-            sourceLink.textContent =
-                "Official Source";
 
-        } else {
-
-            sourceLink.href = "#";
-
-            sourceLink.textContent =
-                "Source unavailable";
-        }
-
+        // ======================================
+        // LAST VERIFIED
+        // ======================================
 
         if (data.lastVerified) {
 
@@ -489,9 +974,12 @@ async function loadExamSchedule() {
                     data.lastVerified
                 );
 
-        } else {
+        }
 
-            verifiedDate.textContent = "";
+        else {
+
+            verifiedDate.textContent =
+                "";
         }
 
 
@@ -506,8 +994,9 @@ async function loadExamSchedule() {
 
         return true;
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "Exam Schedule Error:",
@@ -515,29 +1004,50 @@ async function loadExamSchedule() {
         );
 
 
-        verifiedExamSchedule = null;
+        verifiedExamSchedule =
+            null;
 
 
         notificationDate.textContent =
             "Not available";
 
+
         examDate.textContent =
             "Not available";
+
 
         availableDays.textContent =
             "Not available";
 
+
         minimumAge.textContent =
             "Not verified";
+
 
         maximumAge.textContent =
             "Not verified";
 
+
         requiredEducation.textContent =
             "Not verified";
 
+
         eligibilityStatus.textContent =
             "Not Verified";
+
+
+        // --------------------------------------
+        // FALLBACK OFFICIAL SOURCE
+        // --------------------------------------
+
+        setOfficialSource(
+            selectedExam,
+            ""
+        );
+
+
+        verifiedDate.textContent =
+            "";
 
 
         scheduleMessage.textContent =
@@ -575,7 +1085,8 @@ function calculateEligibility(exam) {
         );
 
 
-    let ageEligible = true;
+    let ageEligible =
+        true;
 
 
     if (
@@ -588,7 +1099,8 @@ function calculateEligibility(exam) {
             age < exam.minimumAge
         ) {
 
-            ageEligible = false;
+            ageEligible =
+                false;
         }
     }
 
@@ -603,7 +1115,8 @@ function calculateEligibility(exam) {
             age > exam.maximumAge
         ) {
 
-            ageEligible = false;
+            ageEligible =
+                false;
         }
     }
 
@@ -623,7 +1136,9 @@ function calculateEligibility(exam) {
         eligibilityStatus.textContent =
             "✓ Eligible";
 
-    } else {
+    }
+
+    else {
 
         eligibilityStatus.textContent =
             "✗ Not Eligible";
@@ -645,6 +1160,7 @@ function calculateAge(dateOfBirth) {
 
     const dob =
         new Date(dateOfBirth);
+
 
     const today =
         new Date();
@@ -798,7 +1314,8 @@ function formatDate(dateValue) {
 
 function resetExamSchedule() {
 
-    verifiedExamSchedule = null;
+    verifiedExamSchedule =
+        null;
 
 
     examScheduleSection.classList.add(
@@ -806,30 +1323,57 @@ function resetExamSchedule() {
     );
 
 
-    notificationDate.textContent = "—";
-
-    examDate.textContent = "—";
-
-    availableDays.textContent = "—";
-
-    minimumAge.textContent = "—";
-
-    maximumAge.textContent = "—";
-
-    requiredEducation.textContent = "—";
-
-    eligibilityStatus.textContent = "—";
+    notificationDate.textContent =
+        "—";
 
 
-    sourceLink.href = "#";
+    examDate.textContent =
+        "—";
+
+
+    availableDays.textContent =
+        "—";
+
+
+    minimumAge.textContent =
+        "—";
+
+
+    maximumAge.textContent =
+        "—";
+
+
+    requiredEducation.textContent =
+        "—";
+
+
+    eligibilityStatus.textContent =
+        "—";
+
+
+    sourceLink.href =
+        "#";
+
 
     sourceLink.textContent =
         "Official Source";
 
 
-    verifiedDate.textContent = "";
+    sourceLink.removeAttribute(
+        "target"
+    );
 
-    scheduleMessage.textContent = "";
+
+    sourceLink.style.pointerEvents =
+        "auto";
+
+
+    verifiedDate.textContent =
+        "";
+
+
+    scheduleMessage.textContent =
+        "";
 }
 
 
@@ -837,22 +1381,31 @@ function resetExamSchedule() {
 // EXAM EVENTS
 // ==========================================
 
-examName.addEventListener(
-    "change",
-    loadExamSchedule
-);
+if (examName) {
+
+    examName.addEventListener(
+        "change",
+        loadExamSchedule
+    );
+}
 
 
-examGroup.addEventListener(
-    "input",
-    loadExamSchedule
-);
+if (examGroup) {
+
+    examGroup.addEventListener(
+        "input",
+        loadExamSchedule
+    );
+}
 
 
-targetAttempt.addEventListener(
-    "input",
-    loadExamSchedule
-);
+if (targetAttempt) {
+
+    targetAttempt.addEventListener(
+        "input",
+        loadExamSchedule
+    );
+}
 
 
 // ==========================================
@@ -870,10 +1423,12 @@ function collectSubjects() {
     return Array.from(
         subjectElements
     )
+
         .map(
             subject =>
                 subject.value.trim()
         )
+
         .filter(
             subject =>
                 subject !== ""
@@ -896,9 +1451,9 @@ goalForm.addEventListener(
             "Checking your goal details...";
 
 
-        // ==================================
+        // ======================================
         // DAILY STUDY HOURS
-        // ==================================
+        // ======================================
 
         const dailyStudyHours =
             Number(
@@ -921,88 +1476,192 @@ goalForm.addEventListener(
         }
 
 
-        // ==================================
-        // ACADEMIC DATA
-        // ==================================
+        // ======================================
+        // ACADEMIC VARIABLES
+        // ======================================
 
-        let academicYear = "";
+        let educationQualification =
+            "";
 
-        let course = "";
+        let studentClass =
+            "";
 
-        let semester = "";
+        let schoolName =
+            "";
 
-        let collegeExamDate = "";
+        let academicExamDate =
+            "";
 
-        subjects = [];
+        let academicSubjects =
+            [];
 
+
+        // ======================================
+        // COLLECT ACADEMIC DATA
+        // ======================================
 
         if (academicSelected) {
 
-            academicYear =
+            const educationField =
                 document.getElementById(
-                    "academicYear"
-                ).value;
-
-
-            course =
-                document.getElementById(
-                    "course"
-                ).value.trim();
-
-
-            semester =
-                document.getElementById(
-                    "semester"
-                ).value;
-
-
-            const subjectCountValue =
-                Number(
-                    subjectCount.value
+                    "educationQualification"
                 );
 
 
-            subjects =
+            const classField =
+                document.getElementById(
+                    "studentClass"
+                );
+
+
+            const schoolField =
+                document.getElementById(
+                    "schoolName"
+                );
+
+
+            const examDateField =
+                document.getElementById(
+                    "academicExamDate"
+                );
+
+
+            educationQualification =
+                educationField
+                    ? educationField.value.trim()
+                    : "";
+
+
+            studentClass =
+                classField
+                    ? classField.value.trim()
+                    : "";
+
+
+            schoolName =
+                schoolField
+                    ? schoolField.value.trim()
+                    : "";
+
+
+            academicExamDate =
+                examDateField
+                    ? examDateField.value
+                    : "";
+
+
+            academicSubjects =
                 collectSubjects();
 
 
-            collegeExamDate =
+            // ----------------------------------
+            // VALIDATION
+            // ----------------------------------
+
+            const subjectCountField =
                 document.getElementById(
-                    "collegeExamDate"
-                ).value;
+                    "subjectCount"
+                );
+
+
+            const subjectCount =
+                subjectCountField
+                    ? Number(
+                        subjectCountField.value
+                    )
+                    : 0;
 
 
             if (
-                !academicYear ||
-                !course ||
-                !semester ||
-                !subjectCountValue ||
-                subjectCountValue < 1 ||
-                subjectCountValue > 20 ||
-                subjects.length !== subjectCountValue ||
-                !collegeExamDate
+                !educationQualification
             ) {
 
                 message.textContent =
-                    "Please complete all Academic / College details.";
+                    "Education qualification is required.";
+
+                return;
+            }
+
+
+            if (
+                !studentClass
+            ) {
+
+                message.textContent =
+                    "Please select your class.";
+
+                return;
+            }
+
+
+            if (
+                !schoolName
+            ) {
+
+                message.textContent =
+                    "Please enter your school or college name.";
+
+                return;
+            }
+
+
+            if (
+                !subjectCount ||
+                subjectCount < 1 ||
+                subjectCount > 20
+            ) {
+
+                message.textContent =
+                    "Please enter the number of subjects between 1 and 20.";
+
+                return;
+            }
+
+
+            if (
+                academicSubjects.length !==
+                subjectCount
+            ) {
+
+                message.textContent =
+                    "Please enter all subject names.";
+
+                return;
+            }
+
+
+            if (
+                !academicExamDate
+            ) {
+
+                message.textContent =
+                    "Please select your academic examination date.";
 
                 return;
             }
         }
 
 
-        // ==================================
-        // COMPETITIVE DATA
-        // ==================================
+        // ======================================
+        // COMPETITIVE VARIABLES
+        // ======================================
 
-        let selectedExam = "";
+        let selectedExam =
+            "";
 
-        let selectedGroup = "";
+        let selectedGroup =
+            "";
 
-        let preparationLevel = "";
+        let preparationLevel =
+            "";
 
-        let selectedYear = "";
+        let selectedYear =
+            "";
 
+
+        // ======================================
+        // COLLECT COMPETITIVE DATA
+        // ======================================
 
         if (competitiveSelected) {
 
@@ -1014,58 +1673,97 @@ goalForm.addEventListener(
                 examGroup.value.trim();
 
 
-            preparationLevel =
+            const preparationField =
                 document.getElementById(
                     "preparationLevel"
-                ).value;
+                );
+
+
+            preparationLevel =
+                preparationField
+                    ? preparationField.value
+                    : "";
 
 
             selectedYear =
                 targetAttempt.value.trim();
 
 
+            // ----------------------------------
+            // VALIDATION
+            // ----------------------------------
+
             if (
-                !selectedExam ||
-                !selectedGroup ||
-                !selectedYear ||
-                !preparationLevel
+                !selectedExam
             ) {
 
                 message.textContent =
-                    "Please complete all Competitive Exam details.";
+                    "Please select an examination.";
 
                 return;
             }
 
 
-            const verified =
-                await loadExamSchedule();
+            if (
+                !selectedGroup
+            ) {
 
+                message.textContent =
+                    "Please enter the exam group or level.";
 
-            if (!verified) {
-
-                console.log(
-                    "Verified exam schedule unavailable. Continuing with goal save."
-                );
+                return;
             }
+
+
+            if (
+                !preparationLevel
+            ) {
+
+                message.textContent =
+                    "Please select your preparation level.";
+
+                return;
+            }
+
+
+            if (
+                !selectedYear
+            ) {
+
+                message.textContent =
+                    "Please enter your target attempt year.";
+
+                return;
+            }
+
+
+            // ----------------------------------
+            // CHECK VERIFIED DATA
+            // ----------------------------------
+
+            await loadExamSchedule();
         }
 
 
-        // ==================================
+        // ======================================
         // GOAL TYPE
-        // ==================================
+        // ======================================
 
         let goalType = [];
 
 
-        if (selectedGoalType === "Both") {
+        if (
+            selectedGoalType === "Both"
+        ) {
 
             goalType = [
                 "Academic",
                 "Competitive Exam"
             ];
 
-        } else {
+        }
+
+        else {
 
             goalType = [
                 selectedGoalType
@@ -1073,58 +1771,81 @@ goalForm.addEventListener(
         }
 
 
-        // ==================================
+        // ======================================
         // FINAL GOAL DATA
-        // ==================================
+        // ======================================
 
         const goalData = {
 
-            goalType: goalType,
+            goalType:
+                goalType,
 
-            academicYear:
+
+            // ----------------------------------
+            // ACADEMIC
+            // ----------------------------------
+
+            educationQualification:
                 academicSelected
-                    ? academicYear
+                    ? educationQualification
                     : "",
 
-            course:
+
+            studentClass:
                 academicSelected
-                    ? course
+                    ? studentClass
                     : "",
 
-            semester:
+
+            schoolName:
                 academicSelected
-                    ? semester
+                    ? schoolName
                     : "",
+
 
             subjects:
                 academicSelected
-                    ? subjects
+                    ? academicSubjects
                     : [],
 
-            collegeExamDate:
+
+            academicExamDate:
                 academicSelected
-                    ? collegeExamDate
+                    ? academicExamDate
                     : null,
+
+
+            // ----------------------------------
+            // COMPETITIVE
+            // ----------------------------------
 
             examName:
                 competitiveSelected
                     ? selectedExam
                     : "",
 
+
             examGroup:
                 competitiveSelected
                     ? selectedGroup
                     : "",
+
 
             preparationLevel:
                 competitiveSelected
                     ? preparationLevel
                     : "",
 
+
             targetAttempt:
                 competitiveSelected
                     ? selectedYear
                     : "",
+
+
+            // ----------------------------------
+            // COMMON
+            // ----------------------------------
 
             dailyStudyHours:
                 dailyStudyHours
@@ -1137,9 +1858,9 @@ goalForm.addEventListener(
         );
 
 
-        // ==================================
+        // ======================================
         // SAVE TO BACKEND
-        // ==================================
+        // ======================================
 
         try {
 
@@ -1152,6 +1873,7 @@ goalForm.addEventListener(
                     API_URL +
                     "/api/goals",
                     {
+
                         method: "POST",
 
                         headers: {
@@ -1175,22 +1897,34 @@ goalForm.addEventListener(
                 await response.json();
 
 
+            console.log(
+                "Goal Save Response:",
+                data
+            );
+
+
+            // ==================================
+            // SAVE FAILED
+            // ==================================
+
             if (!response.ok) {
 
                 message.textContent =
                     data.message ||
-                    "Failed to save goals.";
-
+                    "Failed to save your goal.";
 
                 console.error(
                     "Goal Save Error:",
                     data
                 );
 
-
                 return;
             }
 
+
+            // ==================================
+            // SAVE SUCCESS
+            // ==================================
 
             message.textContent =
                 "Goal saved successfully!";
@@ -1212,21 +1946,23 @@ goalForm.addEventListener(
 
 
             // ==================================
-            // GO TO ROADMAP
+            // GO TO DASHBOARD
             // ==================================
 
             setTimeout(
                 function () {
 
                     window.location.href =
-                        "roadmap.html";
+                        "dashboard.html";
 
                 },
-                1000
+                800
             );
 
+        }
 
-        } catch (error) {
+
+        catch (error) {
 
             console.error(
                 "Goal Save Error:",
@@ -1235,14 +1971,15 @@ goalForm.addEventListener(
 
 
             message.textContent =
-                "Unable to connect to the server.";
+                "Unable to connect to the server. Please make sure the backend is running.";
         }
+
     }
 );
 
 
 // ==========================================
-// BACK TO GOAL SETUP
+// BACK BUTTON
 // ==========================================
 
 function goBack() {
