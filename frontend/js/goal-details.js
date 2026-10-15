@@ -1,6 +1,7 @@
 const API_URL = "http://localhost:5000";
 
 
+
 // ==========================================
 // AUTHENTICATION
 // ==========================================
@@ -9,11 +10,13 @@ const token =
     localStorage.getItem("token");
 
 
+
 if (!token) {
 
     window.location.href =
         "login.html";
 }
+
 
 
 // ==========================================
@@ -26,11 +29,13 @@ const selectedGoalType =
     );
 
 
+
 if (!selectedGoalType) {
 
     window.location.href =
         "goal-setup.html";
 }
+
 
 
 // ==========================================
@@ -138,6 +143,7 @@ const scheduleMessage =
     );
 
 
+
 // ==========================================
 // VARIABLES
 // ==========================================
@@ -145,6 +151,7 @@ const scheduleMessage =
 let userProfile = null;
 
 let verifiedExamSchedule = null;
+
 
 
 // ==========================================
@@ -156,9 +163,11 @@ const academicSelected =
     selectedGoalType === "Both";
 
 
+
 const competitiveSelected =
     selectedGoalType === "Competitive Exam" ||
     selectedGoalType === "Both";
+
 
 
 // ==========================================
@@ -173,6 +182,7 @@ function getOfficialExamSource(examName) {
             .toLowerCase();
 
 
+
     // --------------------------------------
     // TNPSC
     // --------------------------------------
@@ -181,6 +191,7 @@ function getOfficialExamSource(examName) {
 
         return "https://www.tnpsc.gov.in/";
     }
+
 
 
     // --------------------------------------
@@ -193,6 +204,7 @@ function getOfficialExamSource(examName) {
     }
 
 
+
     // --------------------------------------
     // SSC
     // --------------------------------------
@@ -201,6 +213,7 @@ function getOfficialExamSource(examName) {
 
         return "https://ssc.gov.in/";
     }
+
 
 
     // --------------------------------------
@@ -213,6 +226,7 @@ function getOfficialExamSource(examName) {
     }
 
 
+
     // --------------------------------------
     // RAILWAY
     // --------------------------------------
@@ -223,8 +237,10 @@ function getOfficialExamSource(examName) {
     }
 
 
+
     return "";
 }
+
 
 
 // ==========================================
@@ -241,6 +257,7 @@ function setOfficialSource(
         getOfficialExamSource(
             examName
         );
+
 
 
     if (
@@ -283,11 +300,13 @@ function setOfficialSource(
 }
 
 
+
 // ==========================================
 // SETUP PAGE
 // ==========================================
 
 function setupPage() {
+
 
 
     // --------------------------------------
@@ -310,6 +329,7 @@ function setupPage() {
     }
 
 
+
     // --------------------------------------
     // COMPETITIVE
     // --------------------------------------
@@ -328,6 +348,7 @@ function setupPage() {
             "hidden"
         );
     }
+
 
 
     // --------------------------------------
@@ -359,12 +380,14 @@ function setupPage() {
     }
 
 
+
     // --------------------------------------
     // CREATE ACADEMIC FIELDS
     // --------------------------------------
 
     createAcademicFields();
 }
+
 
 
 // ==========================================
@@ -379,10 +402,12 @@ function createAcademicFields() {
         );
 
 
+
     if (!academicFields) {
 
         return;
     }
+
 
 
     if (!academicSelected) {
@@ -392,6 +417,7 @@ function createAcademicFields() {
 
         return;
     }
+
 
 
     academicFields.innerHTML = `
@@ -413,6 +439,7 @@ function createAcademicFields() {
             </small>
 
         </div>
+
 
 
         <div class="form-group">
@@ -452,6 +479,7 @@ function createAcademicFields() {
         </div>
 
 
+
         <div class="form-group">
 
             <label for="schoolName">
@@ -465,6 +493,7 @@ function createAcademicFields() {
             >
 
         </div>
+
 
 
         <div class="form-group">
@@ -488,6 +517,7 @@ function createAcademicFields() {
         </div>
 
 
+
         <div class="form-group">
 
             <label for="academicExamDate">
@@ -497,11 +527,71 @@ function createAcademicFields() {
             <input
                 type="date"
                 id="academicExamDate"
+                required
             >
+
+            <small class="helper-text">
+                Select today or a future examination date.
+            </small>
 
         </div>
 
     `;
+
+
+
+    // --------------------------------------
+    // PREVENT PAST ACADEMIC EXAM DATE
+    // --------------------------------------
+
+    const academicExamDateField =
+        document.getElementById(
+            "academicExamDate"
+        );
+
+
+
+    if (academicExamDateField) {
+
+        const today =
+            new Date();
+
+
+
+        const year =
+            today.getFullYear();
+
+
+
+        const month =
+            String(
+                today.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+
+        const day =
+            String(
+                today.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+
+        const todayString =
+            `${year}-${month}-${day}`;
+
+
+
+        academicExamDateField.min =
+            todayString;
+    }
+
 
 
     // --------------------------------------
@@ -514,6 +604,7 @@ function createAcademicFields() {
         );
 
 
+
     if (countField) {
 
         countField.addEventListener(
@@ -522,6 +613,7 @@ function createAcademicFields() {
         );
     }
 }
+
 
 
 // ==========================================
@@ -548,8 +640,10 @@ async function loadUserProfile() {
             );
 
 
+
         const data =
             await response.json();
+
 
 
         if (!response.ok) {
@@ -563,14 +657,17 @@ async function loadUserProfile() {
         }
 
 
+
         userProfile =
             data.user || data;
+
 
 
         console.log(
             "User Profile:",
             userProfile
         );
+
 
 
         // --------------------------------------
@@ -583,6 +680,7 @@ async function loadUserProfile() {
             );
 
 
+
         if (
             educationField &&
             userProfile.educationQualification
@@ -591,6 +689,7 @@ async function loadUserProfile() {
             educationField.value =
                 userProfile.educationQualification;
         }
+
 
 
         // --------------------------------------
@@ -603,6 +702,7 @@ async function loadUserProfile() {
             );
 
 
+
         if (
             classField &&
             userProfile.educationQualification
@@ -612,6 +712,7 @@ async function loadUserProfile() {
                 String(
                     userProfile.educationQualification
                 ).toLowerCase();
+
 
 
             if (
@@ -666,6 +767,7 @@ async function loadUserProfile() {
 }
 
 
+
 // ==========================================
 // GENERATE SUBJECT INPUTS
 // ==========================================
@@ -678,10 +780,12 @@ function generateSubjectInputs() {
         );
 
 
+
     if (!subjectCount) {
 
         return;
     }
+
 
 
     const count =
@@ -690,8 +794,10 @@ function generateSubjectInputs() {
         );
 
 
+
     subjectInputs.innerHTML =
         "";
+
 
 
     if (
@@ -701,6 +807,7 @@ function generateSubjectInputs() {
 
         return;
     }
+
 
 
     if (
@@ -714,8 +821,10 @@ function generateSubjectInputs() {
     }
 
 
+
     message.textContent =
         "";
+
 
 
     for (
@@ -730,8 +839,10 @@ function generateSubjectInputs() {
             );
 
 
+
         wrapper.className =
             "form-group";
+
 
 
         wrapper.innerHTML = `
@@ -750,11 +861,13 @@ function generateSubjectInputs() {
         `;
 
 
+
         subjectInputs.appendChild(
             wrapper
         );
     }
 }
+
 
 
 // ==========================================
@@ -769,16 +882,20 @@ async function loadExamSchedule() {
     }
 
 
+
     const selectedExam =
         examName.value.trim();
+
 
 
     const selectedGroup =
         examGroup.value.trim();
 
 
+
     const selectedYear =
         targetAttempt.value.trim();
+
 
 
     if (
@@ -793,13 +910,16 @@ async function loadExamSchedule() {
     }
 
 
+
     scheduleMessage.textContent =
         "Checking verified exam data...";
+
 
 
     examScheduleSection.classList.add(
         "hidden"
     );
+
 
 
     try {
@@ -818,6 +938,7 @@ async function loadExamSchedule() {
             });
 
 
+
         const response =
             await fetch(
                 API_URL +
@@ -826,8 +947,10 @@ async function loadExamSchedule() {
             );
 
 
+
         const data =
             await response.json();
+
 
 
         // ======================================
@@ -840,37 +963,41 @@ async function loadExamSchedule() {
                 null;
 
 
+
             notificationDate.textContent =
                 "Not announced";
+
 
 
             examDate.textContent =
                 "Not announced";
 
 
+
             availableDays.textContent =
                 "Not announced";
+
 
 
             minimumAge.textContent =
                 "Not verified";
 
 
+
             maximumAge.textContent =
                 "Not verified";
+
 
 
             requiredEducation.textContent =
                 "Not verified";
 
 
+
             eligibilityStatus.textContent =
                 "Not Verified";
 
 
-            // IMPORTANT:
-            // Even when database data is unavailable,
-            // show the correct official exam website.
 
             setOfficialSource(
                 selectedExam,
@@ -878,12 +1005,15 @@ async function loadExamSchedule() {
             );
 
 
+
             verifiedDate.textContent =
                 "";
 
 
+
             scheduleMessage.textContent =
                 "Official examination schedule has not been announced or verified for this attempt year.";
+
 
 
             examScheduleSection.classList.remove(
@@ -891,8 +1021,10 @@ async function loadExamSchedule() {
             );
 
 
+
             return false;
         }
+
 
 
         // ======================================
@@ -903,16 +1035,19 @@ async function loadExamSchedule() {
             data;
 
 
+
         notificationDate.textContent =
             formatDate(
                 data.notificationDate
             );
 
 
+
         examDate.textContent =
             formatDate(
                 data.examDate
             );
+
 
 
         availableDays.textContent =
@@ -924,6 +1059,7 @@ async function loadExamSchedule() {
                 : "Not announced";
 
 
+
         minimumAge.textContent =
             data.minimumAge !== null &&
             data.minimumAge !== undefined
@@ -931,6 +1067,7 @@ async function loadExamSchedule() {
                 ? data.minimumAge + " years"
 
                 : "Not specified";
+
 
 
         maximumAge.textContent =
@@ -942,14 +1079,17 @@ async function loadExamSchedule() {
                 : "No maximum specified";
 
 
+
         requiredEducation.textContent =
             data.educationQualification ||
             "Not specified";
 
 
+
         calculateEligibility(
             data
         );
+
 
 
         // ======================================
@@ -960,6 +1100,7 @@ async function loadExamSchedule() {
             selectedExam,
             data.sourceUrl
         );
+
 
 
         // ======================================
@@ -983,13 +1124,16 @@ async function loadExamSchedule() {
         }
 
 
+
         scheduleMessage.textContent =
             "✓ Verified exam data found.";
+
 
 
         examScheduleSection.classList.remove(
             "hidden"
         );
+
 
 
         return true;
@@ -1004,41 +1148,46 @@ async function loadExamSchedule() {
         );
 
 
+
         verifiedExamSchedule =
             null;
+
 
 
         notificationDate.textContent =
             "Not available";
 
 
+
         examDate.textContent =
             "Not available";
+
 
 
         availableDays.textContent =
             "Not available";
 
 
+
         minimumAge.textContent =
             "Not verified";
+
 
 
         maximumAge.textContent =
             "Not verified";
 
 
+
         requiredEducation.textContent =
             "Not verified";
+
 
 
         eligibilityStatus.textContent =
             "Not Verified";
 
 
-        // --------------------------------------
-        // FALLBACK OFFICIAL SOURCE
-        // --------------------------------------
 
         setOfficialSource(
             selectedExam,
@@ -1046,12 +1195,15 @@ async function loadExamSchedule() {
         );
 
 
+
         verifiedDate.textContent =
             "";
 
 
+
         scheduleMessage.textContent =
             "Unable to verify exam schedule. You can still save your goal.";
+
 
 
         examScheduleSection.classList.remove(
@@ -1059,9 +1211,11 @@ async function loadExamSchedule() {
         );
 
 
+
         return false;
     }
 }
+
 
 
 // ==========================================
@@ -1079,14 +1233,17 @@ function calculateEligibility(exam) {
     }
 
 
+
     const age =
         calculateAge(
             userProfile.dateOfBirth
         );
 
 
+
     let ageEligible =
         true;
+
 
 
     if (
@@ -1105,6 +1262,7 @@ function calculateEligibility(exam) {
     }
 
 
+
     if (
         exam.maximumAge !== null &&
         exam.maximumAge !== undefined
@@ -1121,11 +1279,13 @@ function calculateEligibility(exam) {
     }
 
 
+
     const educationEligible =
         checkEducationEligibility(
             userProfile.educationQualification,
             exam.educationQualification
         );
+
 
 
     if (
@@ -1146,6 +1306,7 @@ function calculateEligibility(exam) {
 }
 
 
+
 // ==========================================
 // CALCULATE AGE
 // ==========================================
@@ -1158,12 +1319,15 @@ function calculateAge(dateOfBirth) {
     }
 
 
+
     const dob =
         new Date(dateOfBirth);
 
 
+
     const today =
         new Date();
+
 
 
     if (
@@ -1176,14 +1340,17 @@ function calculateAge(dateOfBirth) {
     }
 
 
+
     let age =
         today.getFullYear() -
         dob.getFullYear();
 
 
+
     const monthDifference =
         today.getMonth() -
         dob.getMonth();
+
 
 
     if (
@@ -1198,8 +1365,10 @@ function calculateAge(dateOfBirth) {
     }
 
 
+
     return age;
 }
+
 
 
 // ==========================================
@@ -1217,16 +1386,19 @@ function checkEducationEligibility(
     }
 
 
+
     const user =
         String(
             userEducation || ""
         ).toLowerCase();
 
 
+
     const required =
         String(
             requiredEducation || ""
         ).toLowerCase();
+
 
 
     if (
@@ -1246,6 +1418,7 @@ function checkEducationEligibility(
     }
 
 
+
     if (
         required.includes("12")
     ) {
@@ -1259,6 +1432,7 @@ function checkEducationEligibility(
     }
 
 
+
     if (
         required.includes("10")
     ) {
@@ -1267,8 +1441,10 @@ function checkEducationEligibility(
     }
 
 
+
     return true;
 }
+
 
 
 // ==========================================
@@ -1283,8 +1459,10 @@ function formatDate(dateValue) {
     }
 
 
+
     const date =
         new Date(dateValue);
+
 
 
     if (
@@ -1295,6 +1473,7 @@ function formatDate(dateValue) {
 
         return "Not available";
     }
+
 
 
     return date.toLocaleDateString(
@@ -1308,6 +1487,7 @@ function formatDate(dateValue) {
 }
 
 
+
 // ==========================================
 // RESET EXAM SCHEDULE
 // ==========================================
@@ -1318,45 +1498,56 @@ function resetExamSchedule() {
         null;
 
 
+
     examScheduleSection.classList.add(
         "hidden"
     );
+
 
 
     notificationDate.textContent =
         "—";
 
 
+
     examDate.textContent =
         "—";
+
 
 
     availableDays.textContent =
         "—";
 
 
+
     minimumAge.textContent =
         "—";
+
 
 
     maximumAge.textContent =
         "—";
 
 
+
     requiredEducation.textContent =
         "—";
+
 
 
     eligibilityStatus.textContent =
         "—";
 
 
+
     sourceLink.href =
         "#";
 
 
+
     sourceLink.textContent =
         "Official Source";
+
 
 
     sourceLink.removeAttribute(
@@ -1364,17 +1555,21 @@ function resetExamSchedule() {
     );
 
 
+
     sourceLink.style.pointerEvents =
         "auto";
+
 
 
     verifiedDate.textContent =
         "";
 
 
+
     scheduleMessage.textContent =
         "";
 }
+
 
 
 // ==========================================
@@ -1390,6 +1585,7 @@ if (examName) {
 }
 
 
+
 if (examGroup) {
 
     examGroup.addEventListener(
@@ -1399,6 +1595,7 @@ if (examGroup) {
 }
 
 
+
 if (targetAttempt) {
 
     targetAttempt.addEventListener(
@@ -1406,6 +1603,7 @@ if (targetAttempt) {
         loadExamSchedule
     );
 }
+
 
 
 // ==========================================
@@ -1418,6 +1616,7 @@ function collectSubjects() {
         document.querySelectorAll(
             ".subject-name"
         );
+
 
 
     return Array.from(
@@ -1436,6 +1635,7 @@ function collectSubjects() {
 }
 
 
+
 // ==========================================
 // SAVE GOAL
 // ==========================================
@@ -1447,8 +1647,10 @@ goalForm.addEventListener(
         event.preventDefault();
 
 
+
         message.textContent =
             "Checking your goal details...";
+
 
 
         // ======================================
@@ -1463,6 +1665,7 @@ goalForm.addEventListener(
             );
 
 
+
         if (
             !dailyStudyHours ||
             dailyStudyHours < 1 ||
@@ -1474,6 +1677,7 @@ goalForm.addEventListener(
 
             return;
         }
+
 
 
         // ======================================
@@ -1496,6 +1700,7 @@ goalForm.addEventListener(
             [];
 
 
+
         // ======================================
         // COLLECT ACADEMIC DATA
         // ======================================
@@ -1508,10 +1713,12 @@ goalForm.addEventListener(
                 );
 
 
+
             const classField =
                 document.getElementById(
                     "studentClass"
                 );
+
 
 
             const schoolField =
@@ -1520,10 +1727,12 @@ goalForm.addEventListener(
                 );
 
 
+
             const examDateField =
                 document.getElementById(
                     "academicExamDate"
                 );
+
 
 
             educationQualification =
@@ -1532,10 +1741,12 @@ goalForm.addEventListener(
                     : "";
 
 
+
             studentClass =
                 classField
                     ? classField.value.trim()
                     : "";
+
 
 
             schoolName =
@@ -1544,14 +1755,17 @@ goalForm.addEventListener(
                     : "";
 
 
+
             academicExamDate =
                 examDateField
                     ? examDateField.value
                     : "";
 
 
+
             academicSubjects =
                 collectSubjects();
+
 
 
             // ----------------------------------
@@ -1564,12 +1778,14 @@ goalForm.addEventListener(
                 );
 
 
+
             const subjectCount =
                 subjectCountField
                     ? Number(
                         subjectCountField.value
                     )
                     : 0;
+
 
 
             if (
@@ -1583,6 +1799,7 @@ goalForm.addEventListener(
             }
 
 
+
             if (
                 !studentClass
             ) {
@@ -1594,6 +1811,7 @@ goalForm.addEventListener(
             }
 
 
+
             if (
                 !schoolName
             ) {
@@ -1603,6 +1821,7 @@ goalForm.addEventListener(
 
                 return;
             }
+
 
 
             if (
@@ -1618,6 +1837,7 @@ goalForm.addEventListener(
             }
 
 
+
             if (
                 academicSubjects.length !==
                 subjectCount
@@ -1630,6 +1850,7 @@ goalForm.addEventListener(
             }
 
 
+
             if (
                 !academicExamDate
             ) {
@@ -1639,7 +1860,49 @@ goalForm.addEventListener(
 
                 return;
             }
+
+
+
+            // ----------------------------------
+            // PREVENT PAST EXAM DATE
+            // ----------------------------------
+
+            const today =
+                new Date();
+
+
+
+            const todayString =
+                today.getFullYear() +
+                "-" +
+                String(
+                    today.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                ) +
+                "-" +
+                String(
+                    today.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+
+            if (
+                academicExamDate <
+                todayString
+            ) {
+
+                message.textContent =
+                    "Academic examination date cannot be in the past.";
+
+                return;
+            }
         }
+
 
 
         // ======================================
@@ -1659,6 +1922,7 @@ goalForm.addEventListener(
             "";
 
 
+
         // ======================================
         // COLLECT COMPETITIVE DATA
         // ======================================
@@ -1669,8 +1933,10 @@ goalForm.addEventListener(
                 examName.value.trim();
 
 
+
             selectedGroup =
                 examGroup.value.trim();
+
 
 
             const preparationField =
@@ -1679,14 +1945,17 @@ goalForm.addEventListener(
                 );
 
 
+
             preparationLevel =
                 preparationField
                     ? preparationField.value
                     : "";
 
 
+
             selectedYear =
                 targetAttempt.value.trim();
+
 
 
             // ----------------------------------
@@ -1704,6 +1973,7 @@ goalForm.addEventListener(
             }
 
 
+
             if (
                 !selectedGroup
             ) {
@@ -1713,6 +1983,7 @@ goalForm.addEventListener(
 
                 return;
             }
+
 
 
             if (
@@ -1726,6 +1997,7 @@ goalForm.addEventListener(
             }
 
 
+
             if (
                 !selectedYear
             ) {
@@ -1737,6 +2009,7 @@ goalForm.addEventListener(
             }
 
 
+
             // ----------------------------------
             // CHECK VERIFIED DATA
             // ----------------------------------
@@ -1745,11 +2018,13 @@ goalForm.addEventListener(
         }
 
 
+
         // ======================================
         // GOAL TYPE
         // ======================================
 
         let goalType = [];
+
 
 
         if (
@@ -1771,6 +2046,7 @@ goalForm.addEventListener(
         }
 
 
+
         // ======================================
         // FINAL GOAL DATA
         // ======================================
@@ -1779,6 +2055,7 @@ goalForm.addEventListener(
 
             goalType:
                 goalType,
+
 
 
             // ----------------------------------
@@ -1791,10 +2068,12 @@ goalForm.addEventListener(
                     : "",
 
 
+
             studentClass:
                 academicSelected
                     ? studentClass
                     : "",
+
 
 
             schoolName:
@@ -1803,16 +2082,19 @@ goalForm.addEventListener(
                     : "",
 
 
+
             subjects:
                 academicSelected
                     ? academicSubjects
                     : [],
 
 
+
             academicExamDate:
                 academicSelected
                     ? academicExamDate
                     : null,
+
 
 
             // ----------------------------------
@@ -1825,10 +2107,12 @@ goalForm.addEventListener(
                     : "",
 
 
+
             examGroup:
                 competitiveSelected
                     ? selectedGroup
                     : "",
+
 
 
             preparationLevel:
@@ -1837,10 +2121,12 @@ goalForm.addEventListener(
                     : "",
 
 
+
             targetAttempt:
                 competitiveSelected
                     ? selectedYear
                     : "",
+
 
 
             // ----------------------------------
@@ -1852,10 +2138,12 @@ goalForm.addEventListener(
         };
 
 
+
         console.log(
             "Final Goal Data:",
             goalData
         );
+
 
 
         // ======================================
@@ -1866,6 +2154,7 @@ goalForm.addEventListener(
 
             message.textContent =
                 "Saving your goals...";
+
 
 
             const response =
@@ -1893,14 +2182,17 @@ goalForm.addEventListener(
                 );
 
 
+
             const data =
                 await response.json();
+
 
 
             console.log(
                 "Goal Save Response:",
                 data
             );
+
 
 
             // ==================================
@@ -1922,6 +2214,7 @@ goalForm.addEventListener(
             }
 
 
+
             // ==================================
             // SAVE SUCCESS
             // ==================================
@@ -1930,10 +2223,12 @@ goalForm.addEventListener(
                 "Goal saved successfully!";
 
 
+
             console.log(
                 "Saved Goal:",
                 data.goal
             );
+
 
 
             // ==================================
@@ -1943,6 +2238,7 @@ goalForm.addEventListener(
             localStorage.removeItem(
                 "selectedGoalType"
             );
+
 
 
             // ==================================
@@ -1962,6 +2258,7 @@ goalForm.addEventListener(
         }
 
 
+
         catch (error) {
 
             console.error(
@@ -1970,12 +2267,14 @@ goalForm.addEventListener(
             );
 
 
+
             message.textContent =
                 "Unable to connect to the server. Please make sure the backend is running.";
         }
 
     }
 );
+
 
 
 // ==========================================
@@ -1987,6 +2286,7 @@ function goBack() {
     window.location.href =
         "goal-setup.html";
 }
+
 
 
 // ==========================================
